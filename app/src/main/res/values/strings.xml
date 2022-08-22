@@ -1,0 +1,304 @@
+<resources>
+    <string name="app_name">A2A</string>
+    <string name="app_tag_name">We bring your nostalgic tastes on plate</string>
+    <string name="title_activity_shop">ShopActivity</string>
+    <string name="title_activity_coupon">CouponActivity</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="facebook_app_id">752784741945467</string>
+    <string name="fb_login_protocol_scheme">fb[752784741945467]</string>
+
+
+    <string name="font_bold">fonts/GT-America-Bold.otf</string>
+    <string name="font_medium">fonts/GT-America-Medium.otf</string>
+    <string name="font_regular">fonts/GT-America-Regular.otf</string>
+    <string name="font_segoe">fonts/segoe.ttf</string>
+    <string name="title_activity_add_coupon">AddCouponActivity</string>
+    <string name="title_activity_coupons">CouponsActivity</string>
+    <string name="search_title">search</string>
+    <string name="search_hint">Search product</string>
+    <string name="title_activity_product_search">ProductSearchActivity</string>
+    <string name="title_activity_product">ProductActivity</string>
+    <string name="title_activity_navigatio_drawer">NavigatioDrawerActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="sort">
+        <item>Popularity</item>
+        <item>Date added</item>
+        <item>Price lowest first</item>
+        <item>Price highest first</item>
+    </string-array>
+
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>Home</item>
+        <item>Orders</item>
+        <item>Profile</item>
+        <item>Rate us</item>
+        <item>share</item>
+    </string-array>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="lorem">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>
+    <string name="title_activity_my_orders">MyOrdersActivity</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
+    <string name="title_activity_basic_customer_details">BasicCustomerDetailsActivity</string>
+    <string name="title_activity_billing_address">BillingAddressActivity</string>
+    <string name="title_activity_shipping_address">ShippingAddressActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="dummy_address">
+    953 Market\n
+    San Fransisco, CA 90248 \n
+    United States \n
+    (555) 555 555
+  </string>
+    <string name="title_activity_cart">CartActivity</string>
+    <string name="title_activity_checkout">CheckoutActivity</string>
+    <string name="title_activity_anonymous_sign_in">AnonymousSignInActivity</string>
+    <string name="title_activity_order">OrderActivity</string>
+    <string name="items">items in cart</string>
+    <string name="total">Total</string>
+    <string name="Rs">\u20B9 %d</string>
+    <string name="Rs_double">\u20B9 %.02f</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_profile">Profile</string>
+    <string name="openDrawer">Open Drawer</string>
+    <string name="closeDrawer">Close Drawer</string>
+    <string name="nav_rate">Rate App</string>
+    <string name="nav_share">Share App</string>
+    <string name="cash_on_delivery">Cash on delivery</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="nav_long_out">Logout</string>
+    <string name="imp_update_msg">There is an important update. You cannot proceed without updating the app. Would you like to update the app ?</string>
+    <string name="alert_ok">Ok</string>
+    <string name="alert_cancel">Cancel</string>
+    <string name="title_activity_address_list">Addresses</string>
+    <string name="track_order"><u>Track Order</u></string>
+    <string name="pincode">Pincode</string>
+    <string name="nav_contact_us">Contact Us</string>
+    <string name="more">read more</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
+    <string name="error_sending_notification">Error sending notification token</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="account_setup_title">Setting you up with an account</string>
+    <string name="account_setup_msg">This will only take a short while</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="hey">\"Hey \"</string>
+    <string name="share_via">Share via</string>
+    <string name="city">City</string>
+    <string name="brand">Brand</string>
+    <string name="category">Category</string>
+    <string name="bulk_order">Bulk Order</string>
+    <string name="h2p">h2p</string>
+    <string name="offers">Deals</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_title">This will only take a sec</string>
+    <string name="error_incorrect_data">Please correct the information entered</string>
+    <string name="enter_valid_details">Please enter valid details</string>
+    <string name="please_select_city">Please select the city</string>
+    <string name="confirm_order">Confirm Order</string>
+    <string name="full_name">Full name</string>
+
+    <string name="address">Address</string>
+    <string name="your_message">Your Message</string>
+    <string name="please_wait">Please wait</string>
+    <string name="ma_ka_khana">Maa ka Khana</string>
+    <string name="pickup_at">\"Pickup at \"</string>
+    <string name="deliver_at">\"Deliver at  \"</string>
+    <string name="select_pickup_time">Please select pickup time</string>
+    <string name="please_select_delivery_time">Please select deliver time</string>
+    <string name="from_detail">From Detail</string>
+    <string name="first_name">First name</string>
+    <string name="email">Email</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="whom_detail">Whom Detail</string>
+    <string name="product_detail">Product Detail</string>
+    <string name="weight_in_kg">Weight in KG</string>
+    <string name="time">Time</string>
+    <string name="Product">Product</string>
+    <string name="input_pincode">Please input pin-code</string>
+    <string name="error_add_product">Error while adding product</string>
+    <string name="error">\"error : \"</string>
+    <string name="not_serving_area">Oops! We are not currently servicing your area. \n</string>
+    <string name="serving">Great!! We are servicing your area.</string>
+    <string name="fetching_details">Fetching Details</string>
+    <string name="product_name">Product name</string>
+    <string name="check_availability">Check Availability</string>
+    <string name="check">Check</string>
+    <string name="sale">SALE!</string>
+    <string name="cart">Cart</string>
+    <string name="date">Date</string>
+    <string name="checkout">Checkout</string>
+    <string name="minimum_order_msg">\"Minimum order value to place an order should be greater than \"</string>
+    <string name="cod_non_available_msg">\"COD is not available for the order value greater than \"</string>
+    <string name="update_address_msg">Please update address</string>
+    <string name="payment_failed_msg">Payment failed, Please try again</string>
+    <string name="congratulation_title">Congratulations !!</string>
+    <string name="order_place_successfully">Your order has been successfully placed</string>
+    <string name="cash_on_delivery_title">Cash on delivery?</string>
+    <string name="pay_on_delivery">Would you like to pay cash on delivery?</string>
+    <string name="Profile">Profile</string>
+    <string name="update_address">Update Address</string>
+    <string name="add_new_address">Add New Address</string>
+    <string name="select_state">Please select state</string>
+    <string name="proceed_to_payment">Proceed to payment</string>
+    <string name="final_total">Final Total :</string>
+    <string name="select_date">Select Date</string>
+    <string name="custom_delivery_time">Custom delivery time</string>
+    <string name="select_update_address">Select / Update Address</string>
+    <string name="igst">IGST :</string>
+    <string name="sgst">SGST :</string>
+    <string name="cgst">CGST :</string>
+    <string name="packaging_charges">Packaging charges :</string>
+    <string name="shipping_charges">Shipping charges :</string>
+    <string name="total_item_cost">Total Item cost :</string>
+    <string name="last_name">Last name</string>
+    <string name="address_name">Address Name</string>
+    <string name="phone">Phone</string>
+    <string name="email_id">Email Id</string>
+    <string name="street_address">Street Address</string>
+    <string name="street_address_2">Street Address 2</string>
+    <string name="state">State:</string>
+    <string name="country">Country</string>
+    <string name="add">ADD</string>
+    <string name="basic_details">Basic details</string>
+    <string name="basic_info_about_you">Basic info about you</string>
+    <string name="edit">Edit</string>
+    <string name="your_addresses">Your Addresses</string>
+    <string name="billing_address">Billing Address</string>
+    <string name="your_billing_address">Your billing address</string>
+    <string name="my_orders">My Orders</string>
+    <string name="no_orders">No orders</string>
+    <string name="no_order_desc">Seems like you haven\'t ordered anything yet!</string>
+    <string name="login">     Login     </string>
+    <string name="signup">     Sign Up     </string>
+    <string name="when_you_add_items_to_cart_they_will_appear_here">When you add items to cart they will appear here</string>
+    <string name="browse_products">Browse Products</string>
+    <string name="address_list">Address List</string>
+    <string name="get_otp">GET OTP</string>
+    <string name="not_valid_email">Not a valid email address!</string>
+    <string name="please_enter_mobile_number">Please fill mobile number</string>
+    <string name="account_disable_msg">Your account has been disabled, Please try again later.</string>
+    <string name="apply_coupon"><u>Apply Coupon</u></string>
+    <string name="remove_coupon"><u>Remove Coupon</u></string>
+    <string name="alert">Alert</string>
+    <string name="select_zipcode">Please select zipcode</string>
+    <string name="no_plans">No Plans</string>
+    <string name="no_plan_description">No Membership plans are available for the current location</string>
+    <string name="plans_title">Membership Plans</string>
+    <string name="descriptions">Description</string>
+    <string name="benefits">Benefits</string>
+    <string name="plan">Plan</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="my_plan">My Plan</string>
+    <string name="wallet">Wallet</string>
+    <string name="nav_share_new"><![CDATA[Refer App & Earn Points]]></string>
+    <string name="no_purchased_plan">No Membership Plan Purchased</string>
+    <string name="plan_usage">Usage</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="referral">Referral Code (optional)</string>
+    <string name="or">Or</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="no_transactions">No Transactions</string>
+    <string name="no_wallet_transaction_message">No wallet transactions done</string>
+    <string name="subscription_discount">Subscription Discount</string>
+    <string name="wallet_discount">Wallet Discount</string>
+    <string name="wallet_hint">(600 x 0.1)</string>
+    <string name="check_to_use_wallet_discount">Check to use wallet discount</string>
+    <string name="total_points_earned">Total Points Earned</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="place_holder">Rs. 0</string>
+    <string name="gift">Gift</string>
+    <string name="rewards">Rewards</string>
+    <string name="min_order_price">Min. Order Price</string>
+    <string name="max_order_price">Max. Order Price</string>
+    <string name="point">Point</string>
+    <string name="no_rewards">No Rewards</string>
+    <string name="no_rewards_message">No Rewards yet, try again later!</string>
+    <string name="referral_info">Referral Point</string>
+    <string name="point_earn_info">Point earned on product review: %d</string>
+    <string name="point_cod_info">Point earned on COD order paid digitally: %d</string>
+    <string name="point_refer_info">Your friend get: %d\nYou get: %d</string>
+
+    <string-array name="city_list">
+        <item>Select city</item>
+        <item>Hydrabad</item>
+        <item>Inphal</item>
+        <item>Jaipur</item>
+        <item>Kolkata</item>
+        <item>Lacknow</item>
+    </string-array>
+
+    <string-array name="address_type">
+        <item>Address type</item>
+        <item>Home</item>
+        <item>Work</item>
+        <item>Other</item>
+
+    </string-array>
+
+    <string-array name="delivery_time">
+        <item>Select Time</item>
+        <item>Afternoon</item>
+        <item>Night</item>
+
+    </string-array>
+
+    <string-array name="country">
+        <item>India</item>
+    </string-array>
+
+    <string-array name="india_states">
+        <item>Select state</item>
+        <item>Andaman and Nicobar Islands</item>
+        <item>Andhra Pradesh</item>
+        <item>Arunachal Pradesh</item>
+        <item>Assam</item>
+        <item>Bihar</item>
+        <item>Chandigarh</item>
+        <item>Chhattisgarh</item>
+        <item>Dadra and Nagar Haveli</item>
+        <item>Daman and Diu</item>
+        <item>Delhi</item>
+        <item>Goa</item>
+        <item>Gujarat</item>
+        <item>Haryana</item>
+        <item>Himachal Pradesh</item>
+        <item>Jammu and Kashmir</item>
+        <item>Jharkhand</item>
+        <item>Karnataka</item>
+        <item>Kerala</item>
+        <item>Lakshadweep</item>
+        <item>Madhya Pradesh</item>
+        <item>Maharashtra</item>
+        <item>Manipur</item>
+        <item>Meghalaya</item>
+        <item>Mizoram</item>
+        <item>Nagaland</item>
+        <item>Orissa</item>
+        <item>Pondicherry</item>
+        <item>Punjab</item>
+        <item>Rajasthan</item>
+        <item>Sikkim</item>
+        <item>Tamil Nadu</item>
+        <item>Telangana</item>
+        <item>Tripura</item>
+        <item>Uttaranchal</item>
+        <item>Uttar Pradesh</item>
+        <item>West Bengal</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_dummy_drawer">DummyDrawer</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+</resources>

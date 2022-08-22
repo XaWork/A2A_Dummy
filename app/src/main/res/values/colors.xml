@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#F6C5A5</color>
+    <color name="purple_500">#076CA3</color>
+    <color name="purple_700">#0c3c8c</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <color name="colorPrimary">#076CA3</color>
+    <color name="blue">#1333E1</color>
+    <color name="colorPrimaryDark">#0c3c8c</color>
+    <color name="colorAccent">#ffffff</color>
+    <color name="bg">#e9ebf0</color>
+
+    <color name="text_white">#ffffff</color>
+    <color name="text">#2a2f35</color>
+    <color name="text_black_2">#2a2f35</color>
+    <color name="text_black_4">#474d59</color>
+    <color name="text_black_5">#5e6573</color>
+    <color name="text_black_9">#949aa6</color>
+
+    <color name="carnation_red">#fff35d55</color>
+    <color name="rose_pink">#f498bc</color>
+
+    <color name="grey">#7d7d7d</color>
+    <color name="light_gray1">#B1B1B1</color>
+    <color name="light_gray">#D3D3D3</color>
+    <color name="red">#c10c08</color>
+    <color name="yellow">#ffff00</color>
+    <color name="yellow_banner">#fce039</color>
+    <color name="logo_text_color">#FFFFFF</color>
+    <color name="purple">#c273c3</color>
+    <color name="our_journey_color">#7DA7D9</color>
+    <color name="imp_pkg_color">#F06EAA</color>
+    <color name="safe_pkg_color">#2FCF9C</color>
+    <color name="track_delivery_color">#C273C3</color>
+    <color name="when_do_pkg_color">#BDBDBD</color>
+    <color name="green">#4CAF50</color>
+
+    <color name="view_background">#ffffff</color>
+    <color name="screen_background">#D3D3D3</color>
+    <color name="item_tint">#0c3c8c</color>
+
+</resources>

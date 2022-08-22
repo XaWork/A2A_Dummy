@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/city"
+        android:icon="@drawable/city"
+        android:title="City" />
+
+    <item
+        android:id="@+id/serviceType"
+        android:icon="@drawable/sub_category"
+        android:title="Service Type" />
+
+    <item
+        android:id="@+id/category"
+        android:icon="@drawable/category"
+        android:title="Category" />
+
+    <item
+        android:id="@+id/deals"
+        android:icon="@drawable/deals"
+        android:title="Deals" />
+
+</menu>

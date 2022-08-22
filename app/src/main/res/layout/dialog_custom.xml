@@ -1,0 +1,80 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:card_view="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/card_view"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  card_view:cardCornerRadius="10dp"
+  card_view:cardElevation="4dp"
+  card_view:cardUseCompatPadding="true"
+  card_view:contentPadding="10dp">
+
+  <LinearLayout
+	android:id="@+id/llMainLayout"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/rectangle_outline_round"
+	android:orientation="vertical">
+
+	<TextView
+	  android:id="@+id/tvTitle"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:gravity="center"
+	  android:text="SORRY"
+	  android:textColor="#031f46"
+	  android:textSize="36sp"
+	  android:textStyle="bold" />
+
+	<TextView
+	  android:id="@+id/tvDesc"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_gravity="center"
+	  android:layout_margin="10dp"
+	  android:gravity="center"
+	  android:text="Please place one order from one city only. One order from two different cities is not possible"
+	  android:textColor="#031f46"
+	  android:textSize="20sp" />
+
+	<RadioButton
+	  android:id="@+id/rbDigitalCOD"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_gravity="center"
+	  android:layout_margin="10dp"
+	  android:checked="true"
+	  android:gravity="center"
+	  android:padding="5dp"
+	  android:textSize="16sp"
+	  android:theme="@style/CustomRadioTheme"
+	  android:visibility="gone" />
+
+	<TextView
+	  android:id="@+id/tvSubTitle"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_margin="10dp"
+	  android:gravity="center"
+	  android:text="Thanks for supporting us!"
+	  android:textColor="#c10c08"
+	  android:textSize="24sp"
+	  android:textStyle="bold" />
+
+
+	<Button
+	  android:id="@+id/okayClose"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_margin="15dp"
+	  android:background="@color/green"
+	  android:gravity="center"
+	  android:padding="10dp"
+	  android:text="@string/alert_ok"
+	  android:textAllCaps="true"
+	  android:textColor="@color/white"
+	  android:textSize="20sp"
+	  android:textStyle="bold">
+
+	</Button>
+  </LinearLayout>
+</androidx.cardview.widget.CardView>

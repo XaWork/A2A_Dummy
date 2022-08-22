@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:card_view="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:tag="cards main container">
+
+  <androidx.cardview.widget.CardView
+	android:id="@+id/card_view"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	card_view:cardBackgroundColor="@color/white"
+	card_view:cardCornerRadius="10dp"
+	card_view:cardElevation="8dp"
+	card_view:cardUseCompatPadding="true"
+	card_view:contentPadding="10dp">
+
+
+	<RelativeLayout
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content">
+
+	  <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="10dp"
+		android:layout_toStartOf="@+id/imgLayout"
+		android:layout_alignParentStart="true"
+		android:orientation="vertical">
+
+		<TextView
+		  android:id="@+id/tvTitle"
+		  android:layout_width="match_parent"
+		  android:layout_height="wrap_content"
+		  android:gravity="left"
+		  android:text="Title"
+		  android:textColor="@color/text"
+		  android:textSize="20dp" />
+
+
+		<TextView
+		  android:id="@+id/tvDescription"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_marginLeft="16dp"
+		  android:layout_marginTop="8dp"
+		  android:gravity="left"
+		  android:lineSpacingMultiplier="1.2"
+		  android:maxLines="2"
+		  android:text="@string/lorem"
+		  android:textColor="@color/text_black_5"
+		  android:textSize="14sp"
+		  android:visibility="gone"
+		  />
+
+		<TextView
+		  android:id="@+id/tvTotalItemCost"
+		  android:layout_width="wrap_content"
+		  android:layout_height="0dp"
+		  android:layout_weight="1"
+		  android:layout_marginTop="15dp"
+		  android:gravity="center"
+		  android:padding="4dp"
+		  android:text="hello"
+		  android:background="@drawable/rectangle_purple"
+		  android:textColor="@color/white"
+		  android:textSize="18sp" />
+
+	  </LinearLayout>
+
+
+	  <LinearLayout
+		android:id="@+id/imgLayout"
+		android:layout_width="130dp"
+		android:layout_height="100dp"
+		android:layout_alignParentRight="true">
+
+		<androidx.cardview.widget.CardView
+		  android:id="@+id/card_view1"
+		  android:layout_width="match_parent"
+		  android:layout_height="match_parent"
+		  card_view:cardCornerRadius="2dp"
+		  card_view:cardElevation="6dp"
+		  card_view:cardUseCompatPadding="true">
+
+		  <ImageView
+			android:id="@+id/ivImage"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@drawable/image_border"
+			android:src="@mipmap/ic_launcher"
+			android:tag="image_tag" />
+		</androidx.cardview.widget.CardView>
+	  </LinearLayout>
+
+	  <TextView
+		android:id="@+id/tvPriceQuantity"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_below="@+id/imgLayout"
+		android:layout_gravity="left"
+		android:layout_marginEnd="10dp"
+		android:gravity="left"
+		android:layout_marginTop="10dp"
+		android:text="$20.00"
+		android:textColor="#c10c08"
+		android:textSize="14sp" />
+
+
+
+	</RelativeLayout>
+
+	<!--<LinearLayout
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:gravity="top"
+	  android:orientation="horizontal"
+	  android:paddingLeft="16dp"
+	  android:paddingRight="16dp">
+
+
+	  <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<LinearLayout
+		  android:layout_width="match_parent"
+		  android:layout_height="wrap_content"
+		  android:orientation="horizontal">
+
+		  <LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="16dp"
+			android:layout_marginRight="16dp"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
+			<TextView
+			  android:id="@+id/tvTitle"
+			  fontPath="@string/font_medium"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:gravity="left"
+			  android:text="Title"
+			  android:textColor="@color/text"
+			  android:textSize="16sp" />
+
+			<TextView
+			  android:id="@+id/tvPriceQuantity"
+			  fontPath="@string/font_medium"
+			  android:layout_width="wrap_content"
+			  android:layout_height="wrap_content"
+			  android:layout_gravity="left"
+			  android:layout_marginRight="0dp"
+			  android:layout_marginBottom="0dp"
+			  android:gravity="left"
+			  android:text="$20.00"
+			  android:textColor="@color/colorPrimary"
+			  android:textSize="14sp" />
+
+
+		  </LinearLayout>
+
+		  <FrameLayout
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<TextView
+			  android:id="@+id/tvTotalItemCost"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:layout_weight="1"
+			  android:gravity="center"
+			  android:padding="4dp"
+			  android:text="&#8211;"
+			  android:textColor="@color/colorPrimary"
+			  android:textSize="18sp" />
+
+		  </FrameLayout>
+
+
+		</LinearLayout>
+
+
+		<TextView
+		  android:id="@+id/tvDescription"
+		  fontPath="@string/font_regular"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_marginLeft="16dp"
+		  android:layout_marginTop="8dp"
+		  android:gravity="left"
+		  android:lineSpacingMultiplier="1.2"
+		  android:maxLines="2"
+		  android:text="@string/lorem"
+		  android:textColor="@color/text_black_5"
+		  android:textSize="14sp"
+		  android:visibility="gone" />
+
+	  </LinearLayout>
+
+
+	</LinearLayout>
+
+	<View
+	  android:layout_width="match_parent"
+	  android:layout_height="1dp"
+	  android:layout_marginTop="16dp"
+	  android:background="@color/bg"
+	  android:visibility="gone" />-->
+
+
+  </androidx.cardview.widget.CardView>
+</LinearLayout>
+

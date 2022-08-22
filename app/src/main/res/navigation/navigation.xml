@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.a2a.app.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.a2a.app.ui.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.a2a.app.ui.user.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_basicCustomerDetailFragment"
+            app:destination="@id/basicCustomerDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addressListFragment"
+            app:destination="@id/addressListFragment" />
+    </fragment>
+    <action android:id="@+id/action_global_profileFragment"
+        app:destination="@id/profileFragment" />
+    <fragment
+        android:id="@+id/bulkOrderFragment"
+        android:name="com.a2a.app.ui.user.BulkOrderFragment"
+        android:label="fragment_bulk_order"
+        tools:layout="@layout/fragment_bulk_order" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.a2a.app.ui.ContactUsFragment"
+        android:label="fragment_contact_us"
+        tools:layout="@layout/fragment_contact_us" />
+    <fragment
+        android:id="@+id/memberShipFragment"
+        android:name="com.a2a.app.ui.membership.MemberShipFragment"
+        android:label="fragment_member_ship"
+        tools:layout="@layout/fragment_member_ship" />
+    <fragment
+        android:id="@+id/myPlanFragment"
+        android:name="com.a2a.app.ui.membership.MyPlanFragment"
+        android:label="fragment_my_plan"
+        tools:layout="@layout/fragment_my_plan" />
+    <fragment
+        android:id="@+id/walletFragment"
+        android:name="com.a2a.app.ui.wallet.WalletFragment"
+        android:label="fragment_wallet"
+        tools:layout="@layout/fragment_wallet"/>
+    <action
+        android:id="@+id/action_global_bulkOrderFragment"
+        app:destination="@id/bulkOrderFragment" />
+    <action
+        android:id="@+id/action_global_contactUsFragment"
+        app:destination="@id/contactUsFragment" />
+    <action
+        android:id="@+id/action_global_memberShipFragment"
+        app:destination="@id/memberShipFragment"/>
+    <action
+        android:id="@+id/action_global_myPlanFragment"
+        app:destination="@id/myPlanFragment"/>
+    <action
+        android:id="@+id/action_global_walletFragment"
+        app:destination="@id/walletFragment"/>
+    <fragment
+        android:id="@+id/onBoardingFragment"
+        android:name="com.a2a.app.ui.onboarding.OnBoardingFragment"
+        android:label="fragment_on_boarding"
+        tools:layout="@layout/fragment_on_boarding" />
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@id/navigation"
+        app:popUpToInclusive="true"/>
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.a2a.app.ui.order.OrderFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_order">
+        <action
+            android:id="@+id/action_orderFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="com.a2a.app.ui.order.OrderDetailsFragment"
+        android:label="fragment_order_details"
+        tools:layout="@layout/fragment_order_details" >
+        <argument
+            android:name="orderDetails"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="serverTime"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_orderFragment"
+        app:destination="@id/orderFragment"/>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.a2a.app.ui.category.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_categoryFragment_to_subCategoryFragment"
+            app:destination="@id/subCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cityFragment"
+        android:name="com.a2a.app.ui.city.CityFragment"
+        android:label="fragment_city"
+        tools:layout="@layout/fragment_city" />
+    <fragment
+        android:id="@+id/dealsFragment"
+        android:name="com.a2a.app.ui.deals.DealsFragment"
+        android:label="fragment_deals"
+        tools:layout="@layout/fragment_deals" />
+    <fragment
+        android:id="@+id/serviceTypeFragment"
+        android:name="com.a2a.app.ui.servicetype.ServiceTypeFragment"
+        android:label="fragment_service_type"
+        tools:layout="@layout/fragment_service_type" />
+    <action
+        android:id="@+id/action_global_serviceTypeFragment"
+        app:destination="@id/serviceTypeFragment"
+        app:popUpTo="@id/homeFragment"/>
+    <action
+        android:id="@+id/action_global_dealsFragment"
+        app:destination="@id/dealsFragment"
+        app:popUpTo="@id/homeFragment"/>
+    <action
+        android:id="@+id/action_global_categoryFragment"
+        app:destination="@id/categoryFragment"
+        app:popUpTo="@id/homeFragment" />
+    <action
+        android:id="@+id/action_global_cityFragment"
+        app:destination="@id/cityFragment"
+        app:popUpTo="@id/homeFragment"/>
+
+    <action android:id="@+id/action_global_onBoardingFragment"
+        app:destination="@id/onBoardingFragment"
+        app:popUpTo="@id/navigation"/>
+    <fragment
+        android:id="@+id/basicCustomerDetailFragment"
+        android:name="com.a2a.app.ui.user.BasicCustomerDetailFragment"
+        android:label="fragment_basic_customer_detail"
+        tools:layout="@layout/fragment_basic_customer_detail" />
+    <fragment
+        android:id="@+id/addressListFragment"
+        android:name="com.a2a.app.ui.address.AddressListFragment"
+        android:label="AddressListFragment" >
+        <action
+            android:id="@+id/action_addressListFragment_to_addNewAddressFragment"
+            app:destination="@id/addNewAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewAddressFragment"
+        android:name="com.a2a.app.ui.address.AddNewAddressFragment"
+        android:label="fragment_add_new_address"
+        tools:layout="@layout/fragment_add_new_address" >
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+        <action
+            android:id="@+id/action_addNewAddressFragment_to_locationPickerFragment"
+            app:destination="@id/locationPickerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subCategoryFragment"
+        android:name="com.a2a.app.ui.category.SubCategoryFragment"
+        android:label="fragment_sub_category"
+        tools:layout="@layout/fragment_sub_category" >
+        <argument
+            android:name="categoryId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/locationPickerFragment"
+        android:name="com.a2a.app.ui.address.LocationPickerFragment"
+        android:label="LocationPickerFragment" />
+
+
+</navigation>

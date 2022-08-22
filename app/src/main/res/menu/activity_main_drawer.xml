@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <group android:checkableBehavior="single">
+
+	<item
+	  android:id="@+id/nav_home"
+	  android:icon="@drawable/ic_store_mall_directory_green_24dp"
+	  android:title="@string/nav_home"/>
+	<item
+	  android:id="@+id/nav_orders"
+	  android:icon="@drawable/ic_local_dining_green_24dp"
+	  android:title="@string/nav_orders"/>
+	<item
+	  android:id="@+id/nav_profile"
+	  android:icon="@drawable/ic_person_pin_green_24dp"
+	  android:title="@string/nav_profile"/>
+	<item
+	  android:id="@+id/bulk_order"
+	  android:icon="@drawable/shopping_bag"
+	  android:title="@string/bulk_order"/>
+	<item
+	  android:id="@+id/member_ship"
+	  android:icon="@drawable/ic_rank"
+	  android:title="@string/plans_title"/>
+	<item
+	  android:id="@+id/my_plan"
+	  android:icon="@drawable/food_plan"
+	  android:title="@string/my_plan"/>
+	<item
+	  android:id="@+id/wallet"
+	  android:icon="@drawable/wallet"
+	  android:title="@string/wallet"/>
+	<item
+	  android:id="@+id/nav_rate"
+	  android:icon="@drawable/ic_thumb_up_green_24dp"
+	  android:title="@string/nav_rate"/>
+	<item
+	  android:id="@+id/nav_share"
+	  android:icon="@drawable/ic_share_green_24dp"
+	  android:title="@string/nav_share_new"/>
+	<item
+	  android:id="@+id/nav_contact_us"
+	  android:icon="@drawable/ic_person_pin_green_24dp"
+	  android:title="@string/nav_contact_us"/>
+	<item
+	  android:id="@+id/nav_logout"
+	  android:icon="@drawable/ic_logout"
+	  android:title="@string/nav_long_out"/>
+
+  </group>
+
+</menu>

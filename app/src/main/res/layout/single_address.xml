@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:card_view="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<data>
+
+		<variable
+			name="address"
+			type="com.a2a.app.data.model.AddressListModel.Result" />
+	</data>
+
+	<androidx.cardview.widget.CardView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="16dp"
+		card_view:cardBackgroundColor="@color/white"
+		card_view:cardCornerRadius="4dp"
+		android:layout_marginBottom="8dp">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="8dp"
+			tools:ignore="MissingPrefix">
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<TextView
+					android:id="@+id/tvNameAddress"
+					fontPath="@string/font_regular"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginHorizontal="8dp"
+					android:layout_weight="1"
+					android:text="@{address.address, default = Indore}"
+					android:textColor="@color/text_black_4"
+					android:textSize="18sp" />
+
+
+				<TextView
+					android:id="@+id/btnSelectAddress"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_weight="1"
+					android:visibility="invisible"
+					android:padding="8dp"
+					android:background="@drawable/rectangle_green_round"
+					android:gravity="center"
+					android:text="Select"
+					android:textColor="@color/white"
+					android:textStyle="bold" />
+
+			</LinearLayout>
+
+
+			<LinearLayout
+				android:id="@+id/control"
+				android:visibility="visible"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp">
+
+				<TextView
+					android:id="@+id/btnDeleteAddress"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="8dp"
+					android:layout_weight="1"
+					android:background="@drawable/rectangle_green_round"
+					android:gravity="center"
+					android:padding="8dp"
+					android:text="Delete"
+					android:textColor="@color/white"
+					android:textStyle="bold" />
+
+				<TextView
+					android:id="@+id/btnEditAddress"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="8dp"
+					android:layout_weight="1"
+					android:background="@drawable/rectangle_green_round"
+					android:gravity="center"
+					android:padding="8dp"
+					android:text="Edit"
+					android:textColor="@color/white"
+					android:textStyle="bold" />
+			</LinearLayout>
+		</LinearLayout>
+	</androidx.cardview.widget.CardView>
+</layout>
