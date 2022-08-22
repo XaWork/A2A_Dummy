@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import com.a2a.app.databinding.ActivityMainBinding
 import com.a2a.app.utils.AppUtils
@@ -106,6 +107,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpNavigationView() {
+
         setSupportActionBar(viewBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.title = getString(R.string.app_name)
@@ -242,6 +244,8 @@ class MainActivity : AppCompatActivity() {
             //Checking if the item is in checked state or not, if not make it in checked state
             menuItem.isChecked = !menuItem.isChecked
             menuItem.isChecked = true
+            //lock navigation drawer
+            viewBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
             true
         }
@@ -303,7 +307,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.qna -> {
+            R.id.book -> {
+                hideToolbarAndBottomNavigation()
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.action_global_bookFragment)
             }
             R.id.chat -> {
             }

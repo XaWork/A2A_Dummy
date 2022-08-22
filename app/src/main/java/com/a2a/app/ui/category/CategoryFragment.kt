@@ -18,6 +18,7 @@ import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCategoryBinding
 import com.a2a.app.ui.common.CommonAdapter
+import com.google.gson.Gson
 
 class CategoryFragment :
     BaseFragment<FragmentCategoryBinding, CustomViewModel, CustomRepository>(FragmentCategoryBinding::inflate) {
@@ -80,13 +81,26 @@ class CategoryFragment :
             layoutManager = LinearLayoutManager(context)
             adapter = CommonAdapter(allCategoryList, context, object : RvItemClick {
                 override fun clickWithPosition(name: String, position: Int) {
-                    mainActivity.hideToolbarAndBottomNavigation()
-                    val categoryId = allCategoryList[position].id
-                    val action =
-                        CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
-                            categoryId
-                        )
-                    findNavController().navigate(action)
+                    when(name){
+                        "details"->{
+                            mainActivity.hideToolbarAndBottomNavigation()
+                            val details = Gson().toJson(allCategoryList[position], CommonModel::class.java)
+                            val action = CategoryFragmentDirections.actionGlobalViewDetailsFragment(
+                                details = details,
+                                name = "Category Details")
+                            findNavController().navigate(action)
+                        }
+                        ""->{
+                            mainActivity.hideToolbarAndBottomNavigation()
+                            val categoryId = allCategoryList[position].id
+                            val action =
+                                CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
+                                    categoryId = categoryId,
+                                    categoryName = allCategoryList[position].name
+                                )
+                            findNavController().navigate(action)
+                        }
+                    }
                 }
             })
         }

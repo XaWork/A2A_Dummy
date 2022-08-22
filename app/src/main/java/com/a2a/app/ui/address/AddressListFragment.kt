@@ -39,6 +39,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
     }
 
     private fun setToolbar() {
+        viewBinding.incToolbar.toolbar.title = "Address List"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -79,7 +80,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
     private fun setData() {
         contentAddress.rvAddressList.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = AddressAdapter(context, addressList, object : RvItemClick {
+            adapter = AddressAdapter(context, addressList,"profile", object : RvItemClick {
                 override fun clickWithPosition(name: String, position: Int) {
                     when (name) {
                         "delete" -> {

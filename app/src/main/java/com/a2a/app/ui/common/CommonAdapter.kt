@@ -35,6 +35,9 @@ class CommonAdapter(
                 itemView.setOnClickListener{
                     itemClick.clickWithPosition("", position)
                 }
+                viewBinding.btnViewDetails.setOnClickListener{
+                    itemClick.clickWithPosition("details", position)
+                }
             }
         }
 

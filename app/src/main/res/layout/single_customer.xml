@@ -25,7 +25,7 @@
                 android:id="@+id/imageView2"
                 android:layout_width="@dimen/testimonial_image_size"
                 android:layout_height="@dimen/testimonial_image_size"
-                android:src="@drawable/a2a_logo_120x120"
+                android:src="@drawable/a2a_logo"
                 app:layout_constraintEnd_toEndOf="@+id/textView5"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"

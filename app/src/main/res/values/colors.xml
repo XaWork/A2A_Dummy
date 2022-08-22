@@ -29,6 +29,8 @@
     <color name="light_gray1">#B1B1B1</color>
     <color name="light_gray">#D3D3D3</color>
     <color name="red">#c10c08</color>
+    <color name="brown">#B74207</color>
+    <color name="orange">#EC7B01</color>
     <color name="yellow">#ffff00</color>
     <color name="yellow_banner">#fce039</color>
     <color name="logo_text_color">#FFFFFF</color>

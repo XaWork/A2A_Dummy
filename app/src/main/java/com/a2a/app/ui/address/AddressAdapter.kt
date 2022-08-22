@@ -2,6 +2,7 @@ package com.a2a.app.ui.address
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.a2a.app.BR
@@ -12,7 +13,8 @@ import com.a2a.app.databinding.SingleAddressBinding
 class AddressAdapter(
     private val context: Context,
     private var data: List<AddressListModel.Result>,
-    private val itemClick: RvItemClick
+    private val fromScreen: String,
+    private val itemClick: RvItemClick,
 ) : RecyclerView.Adapter<AddressAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(private val viewBinding: SingleAddressBinding) :
@@ -21,6 +23,11 @@ class AddressAdapter(
         fun bind(position: Int, itemClick: RvItemClick) {
 
             with(viewBinding) {
+                if(fromScreen == "sheet"){
+                    btnDeleteAddress.visibility = View.GONE
+                    btnEditAddress.visibility = View.GONE
+                }
+
                 setVariable(BR.address, data[position])
                 executePendingBindings()
 
@@ -29,6 +36,9 @@ class AddressAdapter(
                 }
                 btnEditAddress.setOnClickListener {
                     itemClick.clickWithPosition("edit", position)
+                }
+                itemView.setOnClickListener{
+                    itemClick.clickWithPosition("select", position)
                 }
             }
         }

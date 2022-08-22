@@ -44,7 +44,7 @@ class FirebaseInstanceService : FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         var builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.a2a_logo_35x35)
+            .setSmallIcon(R.drawable.a2a_logo)
             .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
@@ -67,7 +67,7 @@ class FirebaseInstanceService : FirebaseMessagingService() {
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun addNotification(title: String, desc: String) {
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.a2a_logo_35x35)
+            .setSmallIcon(R.drawable.a2a_logo)
             .setContentTitle(title)
             .setContentText(desc)
             .setAutoCancel(true)
@@ -107,7 +107,7 @@ class FirebaseInstanceService : FirebaseMessagingService() {
 
         remoteViews.setTextViewText(R.id.notificationTitle, title)
         remoteViews.setTextViewText(R.id.notificationMessage, desc)
-        remoteViews.setImageViewResource(R.id.notificationImage, R.drawable.a2a_logo_120x120)
+        remoteViews.setImageViewResource(R.id.notificationImage, R.drawable.a2a_logo)
 
         return remoteViews
     }

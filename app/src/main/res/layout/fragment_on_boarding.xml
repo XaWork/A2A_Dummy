@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/a2a_logo_120x120"
+            android:src="@drawable/a2a_logo"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"

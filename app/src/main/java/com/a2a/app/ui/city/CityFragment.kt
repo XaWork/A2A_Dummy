@@ -20,6 +20,7 @@ import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCityBinding
 import com.a2a.app.ui.category.CategoryFragmentDirections
 import com.a2a.app.ui.common.CommonAdapter
+import com.google.gson.Gson
 
 class CityFragment : BaseFragment<
         FragmentCityBinding,
@@ -84,13 +85,17 @@ class CityFragment : BaseFragment<
             layoutManager = LinearLayoutManager(context)
             adapter = CommonAdapter(cityList, context, object : RvItemClick {
                 override fun clickWithPosition(name: String, position: Int) {
-                   /* mainActivity.hideToolbarAndBottomNavigation()
-                    val categoryId = cityList[position].id
-                    val action =
-                        CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
-                            categoryId
-                        )
-                    findNavController().navigate(action)*/
+                    when(name){
+                        "details" -> {
+                            mainActivity.hideToolbarAndBottomNavigation()
+                            val details = Gson().toJson(cityList[position], CommonModel::class.java)
+                            val action = CityFragmentDirections.actionGlobalViewDetailsFragment(
+                                details = details,
+                                name = "City Details"
+                            )
+                            findNavController().navigate(action)
+                        }
+                    }
                 }
             })
         }

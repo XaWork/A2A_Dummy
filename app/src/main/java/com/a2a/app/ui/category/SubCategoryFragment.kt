@@ -23,14 +23,17 @@ class SubCategoryFragment :
     ) {
 
     private var categoryId: String? = null
+    private var categoryName: String? = ""
     private lateinit var subCategoryList: List<AllSubCategoryModel.Result>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setToolbar()
         val args : SubCategoryFragmentArgs by navArgs()
         categoryId = args.categoryId.toString()
+        categoryName = args.categoryName.toString()
+
+        setToolbar()
 
         if(this::subCategoryList.isInitialized)
             setData()
@@ -39,6 +42,7 @@ class SubCategoryFragment :
     }
 
     private fun setToolbar(){
+        viewBinding.incToolbar.toolbar.title = categoryName
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }

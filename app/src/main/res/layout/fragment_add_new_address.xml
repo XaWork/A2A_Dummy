@@ -18,7 +18,7 @@
             android:layout_height="48dp"
             android:background="?attr/colorPrimary"
             app:contentInsetStartWithNavigation="0dp"
-            app:logo="@drawable/a2a_logo_35x35"
+            app:logo="@drawable/a2a_logo"
             app:navigationIcon="@drawable/ic_back_1"
             app:subtitleTextAppearance="@style/ToolbarSubtitleAppearance"
             app:titleTextAppearance="@style/ToolbarTitleAppearance"

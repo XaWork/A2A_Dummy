@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<TextView
+	  android:layout_marginTop="8dp"
+	  android:id="@+id/select_title"
+	  app:layout_constraintTop_toTopOf="parent"
+	  android:layout_width="match_parent"
+	  android:text="Select Address"
+	  android:paddingHorizontal="16dp"
+	  android:paddingVertical="8dp"
+	  android:textSize="20sp"
+	  android:textColor="@color/black"
+	  android:layout_height="wrap_content"/>
+
+	<androidx.recyclerview.widget.RecyclerView
+	  android:id="@+id/address_list"
+	  app:layout_constraintTop_toBottomOf="@id/select_title"
+	  android:layout_width="match_parent"
+	  android:layout_height="500dp" />
+
+	<ProgressBar
+	  android:id="@+id/loader"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:layout_gravity="center"
+	  app:layout_constraintBottom_toBottomOf="parent"
+	  app:layout_constraintEnd_toEndOf="parent"
+	  app:layout_constraintStart_toStartOf="parent"
+	  app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+	  android:visibility="gone"
+	  android:id="@+id/emptyHint"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:layout_gravity="center"
+	  android:gravity="center"
+	  android:text="No Address Saved"
+	  android:textColor="@color/black"
+	  android:textSize="24sp"
+	  app:layout_constraintBottom_toBottomOf="parent"
+	  app:layout_constraintTop_toTopOf="parent" />
+
+	<TextView
+	  android:id="@+id/newAddress"
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:background="@color/colorPrimary"
+	  android:padding="16dp"
+	  android:gravity="center"
+	  android:textColor="@color/white"
+	  android:textSize="16sp"
+	  android:text="Add New Address"
+	  app:layout_constraintBottom_toBottomOf="parent" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

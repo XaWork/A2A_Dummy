@@ -4,9 +4,9 @@
 
 
     <item
-        android:id="@+id/qna"
+        android:id="@+id/book"
         android:icon="@drawable/home_app_bar_icon1"
-        android:title="qna"
+        android:title="book"
         app:showAsAction="always" />
 
     <item

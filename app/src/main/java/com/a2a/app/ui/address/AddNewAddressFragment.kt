@@ -34,8 +34,8 @@ class AddNewAddressFragment :
         FragmentAddNewAddressBinding::inflate
     ) {
 
-    private lateinit var stateResponse:StateListModel
-    lateinit var cites:List<CityListModel.Result>
+    private lateinit var stateResponse: StateListModel
+    lateinit var cites: List<CityListModel.Result>
     var selectedStateId: String? = null
     var selectedCityId: String? = null
     var lat: Double = 0.toDouble()
@@ -48,9 +48,10 @@ class AddNewAddressFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        customViewModel = getCustomViewModel()
+        customViewModel = getCutomViewModel()
         val args: AddNewAddressFragmentArgs by navArgs()
         address = Gson().fromJson(args.address, AddressListModel.Result::class.java)
+        setToolbar()
 
         with(viewBinding) {
             addressType.setOnCheckedChangeListener { _, checkedId ->
@@ -136,26 +137,17 @@ class AddNewAddressFragment :
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==23 && resultCode == RESULT_OK){
-            lat =  data!!.getDoubleExtra("lat", 0.toDouble())
+        if (requestCode == 23 && resultCode == RESULT_OK) {
+            lat = data!!.getDoubleExtra("lat", 0.toDouble())
             long = data.getDoubleExtra("long", 0.toDouble())
         }
     }
 
     private fun setToolbar() {
+        viewBinding.tool.title = getString(R.string.app_full_name)
         viewBinding.tool.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-    }
-
-    fun getCustomViewModel(): CustomViewModel {
-        val respository =
-            CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
-
-        return ViewModelProvider(
-            this,
-            CustomViewModelFactory(respository)
-        )[CustomViewModel::class.java]
     }
 
     private fun saveAddress() {
@@ -174,7 +166,7 @@ class AddNewAddressFragment :
                     lat = lat.toString(),
                     lng = long.toString(),
                     contactName = name.text.toString()
-                ).observe(viewLifecycleOwner){response->
+                ).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Loading -> {
                             showLoading()
@@ -206,7 +198,7 @@ class AddNewAddressFragment :
                     lat = lat.toString(),
                     lng = long.toString(),
                     contactName = name.text.toString()
-                ).observe(viewLifecycleOwner){response->
+                ).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Success -> {
                             stopShowingLoading()
@@ -260,7 +252,7 @@ class AddNewAddressFragment :
 
     private fun getCityAndZip() {
         customViewModel.getAllStates()
-        customViewModel.allStates.observe(viewLifecycleOwner){response ->
+        customViewModel.allStates.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Loading -> {
                     showLoading()
@@ -279,15 +271,16 @@ class AddNewAddressFragment :
                 else -> {
                     stopShowingLoading()
                     showError("Something went wrong!")
-                   // finish()
+                    // finish()
                 }
-            }}
+            }
+        }
     }
 
-    private fun getZipList(){
+    private fun getZipList() {
         validPin = false
         customViewModel.getZipByCity(selectedCityId!!)
-        customViewModel.zipByCity.observe(viewLifecycleOwner){ response ->
+        customViewModel.zipByCity.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Success -> {
                     stopShowingLoading()
@@ -308,7 +301,6 @@ class AddNewAddressFragment :
                     }
                 }
                 is Status.Loading -> {
-                    showLoading()
                 }
                 else -> {
                     stopShowingLoading()
@@ -320,9 +312,9 @@ class AddNewAddressFragment :
         }
     }
 
-    private fun getCityByState(){
+    private fun getCityByState() {
         customViewModel.getAllCityByState(selectedStateId!!)
-        customViewModel.cityByState.observe(viewLifecycleOwner){ response ->
+        customViewModel.cityByState.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Success -> {
                     stopShowingLoading()
@@ -342,7 +334,6 @@ class AddNewAddressFragment :
                     })
                 }
                 is Status.Loading -> {
-                    showLoading()
                 }
                 else -> {
                     stopShowingLoading()
@@ -350,7 +341,8 @@ class AddNewAddressFragment :
                     //finish()
                     findNavController().popBackStack()
                 }
-            }}
+            }
+        }
     }
 
     private fun setupOptions() {
@@ -373,7 +365,10 @@ class AddNewAddressFragment :
 
     override fun onResume() {
         super.onResume()
-        getCityAndZip()
+        if (this::stateResponse.isInitialized)
+            setupOptions()
+        else
+            getCityAndZip()
     }
 
     override fun getFragmentBinding(

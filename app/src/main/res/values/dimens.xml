@@ -30,4 +30,7 @@
     <dimen name="common_image_size">100dp</dimen>
 
     <dimen name="arrow_size">40dp</dimen>
+    <dimen name="horizontalLinewidht">0.5dp</dimen>
+
+    <dimen name="book_screen_image_size">50dp</dimen>
 </resources>

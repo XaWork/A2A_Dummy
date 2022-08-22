@@ -176,9 +176,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
-        <action
+        <!--<action
             android:id="@+id/action_addNewAddressFragment_to_locationPickerFragment"
-            app:destination="@id/locationPickerFragment" />
+            app:destination="@id/locationPickerFragment" />-->
     </fragment>
     <fragment
         android:id="@+id/subCategoryFragment"
@@ -190,11 +190,43 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="categoryName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
-        android:id="@+id/locationPickerFragment"
-        android:name="com.a2a.app.ui.address.LocationPickerFragment"
-        android:label="LocationPickerFragment" />
+        android:id="@+id/viewDetailsFragment"
+        android:name="com.a2a.app.ui.common.ViewDetailsFragment"
+        android:label="fragment_view_details"
+        tools:layout="@layout/fragment_view_details" >
+        <argument
+            android:name="details"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="name"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <action android:id="@+id/action_global_viewDetailsFragment" app:destination="@id/viewDetailsFragment" />
+    <fragment
+        android:id="@+id/bookFragment"
+        android:name="com.a2a.app.ui.book.BookFragment"
+        android:label="fragment_book"
+        tools:layout="@layout/fragment_book" />
+    <action android:id="@+id/action_global_bookFragment" app:destination="@id/bookFragment"/>
 
 
+    <fragment
+        android:id="@+id/locationSelection"
+        android:name="com.a2a.app.ui.address.AddressSelectionFragment"
+        android:label="fragment_book"
+        tools:layout="@layout/location_selection_fragment" >
+    </fragment>
+
+    <action android:id="@+id/action_global_addNewAddressFragment" app:destination="@id/addNewAddressFragment"/>
 </navigation>
