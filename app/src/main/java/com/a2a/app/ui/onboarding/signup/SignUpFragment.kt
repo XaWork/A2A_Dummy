@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
@@ -59,6 +60,44 @@ class SignUpFragment :
             terms.setOnClickListener {
                 //startActivity(Intent(context, TermsActivity::class.java))
             }
+            rgUserType.setOnCheckedChangeListener { _, checkedId ->
+                when(checkedId){
+                    R.id.rbCorporate -> {
+                        showCorporateUserFields()
+                    }
+                    R.id.rbIndividual -> {
+                        showIndividualUserFields()
+                    }
+            }
+            }
+        }
+    }
+
+    private fun showCorporateUserFields() {
+        with(viewBinding){
+            //set radio button background
+            rbCorporate.setBackgroundResource(R.drawable.storke)
+            rbIndividual.setBackgroundResource(0)
+
+            etFullName.visibility = View.VISIBLE
+            etCompanyAddress.visibility = View.VISIBLE
+            etCompanyName.visibility = View.VISIBLE
+            etGST.visibility = View.VISIBLE
+            etPan.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showIndividualUserFields() {
+        with(viewBinding){
+            //set radio button background
+            rbIndividual.setBackgroundResource(R.drawable.storke)
+            rbCorporate.setBackgroundResource(0)
+
+            etFullName.visibility = View.GONE
+            etCompanyAddress.visibility = View.GONE
+            etCompanyName.visibility = View.GONE
+            etGST.visibility = View.GONE
+            etPan.visibility = View.GONE
         }
     }
 

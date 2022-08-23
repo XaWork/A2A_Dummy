@@ -244,8 +244,6 @@ class MainActivity : AppCompatActivity() {
             //Checking if the item is in checked state or not, if not make it in checked state
             menuItem.isChecked = !menuItem.isChecked
             menuItem.isChecked = true
-            //lock navigation drawer
-            viewBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
             true
         }

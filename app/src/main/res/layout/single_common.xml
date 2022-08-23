@@ -7,10 +7,14 @@
         <variable
             name="common"
             type="com.a2a.app.data.model.CommonModel" />
+        <variable
+            name="itemClick"
+            type="com.a2a.app.common.ItemClick" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/itemMain"
+        android:onClick="@{()->itemClick.clickRvItem(`sub`, common)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -55,6 +59,7 @@
                     android:fontFamily="@font/poppins_bold"
                     android:gravity="center"
                     android:maxLines="1"
+                    android:onClick="@{()->itemClick.clickRvItem(`details`, common)}"
                     android:paddingVertical="@dimen/medium_padding"
                     android:paddingHorizontal="@dimen/high_padding"
                     android:text="View Details"

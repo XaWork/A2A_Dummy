@@ -6,3 +6,7 @@ interface RvItemClick {
     fun clickWithPosition(name: String, position:Int)
     //fun clickWithView(name: String, position:Int, view: View)
 }
+
+interface ItemClick{
+    fun clickRvItem(name: String, model: Any)
+}

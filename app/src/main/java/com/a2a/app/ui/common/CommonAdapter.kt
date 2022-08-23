@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.a2a.app.BR
 import com.a2a.app.R
+import com.a2a.app.common.ItemClick
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.data.model.CommonModel
 import com.a2a.app.databinding.SingleCommonBinding
@@ -18,36 +19,35 @@ import com.bumptech.glide.Glide
 class CommonAdapter(
     private var data: MutableList<CommonModel>,
     private val context: Context,
-    private val itemClick: RvItemClick
-)
-    : RecyclerView.Adapter<CommonAdapter.MyViewHolder>() {
+    private val itemClick: ItemClick
+) : RecyclerView.Adapter<CommonAdapter.MyViewHolder>() {
 
-    inner class MyViewHolder(private val viewBinding: SingleCommonBinding):
+    inner class MyViewHolder(private val viewBinding: SingleCommonBinding) :
         RecyclerView.ViewHolder(viewBinding.root) {
 
-            fun bind(position: Int, itemClick: RvItemClick){
+        fun bind(position: Int, itemClick: ItemClick) {
 
-                with(viewBinding){
+            with(viewBinding) {
                 setVariable(BR.common, data[position])
-                    //common = data[position]
-                    executePendingBindings()
-                }
-                itemView.setOnClickListener{
-                    itemClick.clickWithPosition("", position)
-                }
-                viewBinding.btnViewDetails.setOnClickListener{
-                    itemClick.clickWithPosition("details", position)
-                }
+                setVariable(BR.itemClick, itemClick)
+                executePendingBindings()
             }
+            /*itemView.setOnClickListener {
+                itemClick.clickWithPosition("", position)
+            }*/
+            /*viewBinding.btnViewDetails.setOnClickListener {
+                itemClick.clickWithPosition("details", position)
+            }*/
         }
+    }
 
-    fun updateDataList(dataList: List<CommonModel>?){
+    fun updateDataList(dataList: List<CommonModel>?) {
         data.clear()
         data.addAll(dataList!!)
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)=
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         MyViewHolder(SingleCommonBinding.inflate(LayoutInflater.from(context), parent, false))
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

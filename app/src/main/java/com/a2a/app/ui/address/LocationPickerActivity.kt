@@ -87,8 +87,11 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
                     finish()
                 }
             }).check()*/
+
         if(checkLocationPermission()){
+            Log.d("location", "Allowed location permission")
             if (!gps_enabled) {
+                Log.d("location", "Gps is not enabled")
                 MaterialAlertDialogBuilder(this@LocationPickerActivity)
                     .setTitle("Location Disabled")
                     .setCancelable(false)
@@ -99,6 +102,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
                     }
                     .show()
             }else{
+                Log.d("location", "Gps enabled")
                 setupMap()
             }
         }

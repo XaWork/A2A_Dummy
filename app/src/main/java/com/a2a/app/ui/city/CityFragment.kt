@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.BR
 import com.a2a.app.MainActivity
 import com.a2a.app.common.BaseFragment
+import com.a2a.app.common.ItemClick
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.CityModel
@@ -29,6 +30,7 @@ class CityFragment : BaseFragment<
 
     private lateinit var mainActivity: MainActivity
     private lateinit var allCities: CityModel
+    val cityList = ArrayList<CommonModel>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -69,7 +71,6 @@ class CityFragment : BaseFragment<
     }
 
     private fun setData() {
-        val cityList = ArrayList<CommonModel>()
         //cityList.add(CommonModel("1", "", "customer name", "", "", ""))
         for (city in allCities.result) {
             city.run {
@@ -83,12 +84,12 @@ class CityFragment : BaseFragment<
        // viewBinding.setVariable(BR.dataList, cityList.toList())
         viewBinding.rvCity.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = CommonAdapter(cityList, context, object : RvItemClick {
-                override fun clickWithPosition(name: String, position: Int) {
+            adapter = CommonAdapter(cityList, context, object : ItemClick {
+                override fun clickRvItem(name: String, model: Any) {
                     when(name){
                         "details" -> {
                             mainActivity.hideToolbarAndBottomNavigation()
-                            val details = Gson().toJson(cityList[position], CommonModel::class.java)
+                            val details = Gson().toJson(model as CommonModel, CommonModel::class.java)
                             val action = CityFragmentDirections.actionGlobalViewDetailsFragment(
                                 details = details,
                                 name = "City Details"
@@ -97,6 +98,7 @@ class CityFragment : BaseFragment<
                         }
                     }
                 }
+
             })
         }
     }

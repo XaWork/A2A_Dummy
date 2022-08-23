@@ -42,6 +42,7 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding, UserViewModel, UserR
     }
 
     private fun setToolbar() {
+        viewBinding.includeToolbar.toolbar.title = getString(R.string.profile)
         viewBinding.includeToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }

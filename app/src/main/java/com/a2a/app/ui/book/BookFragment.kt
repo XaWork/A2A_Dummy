@@ -46,7 +46,7 @@ class BookFragment :
 
         with(viewBinding.contentBook){
             val user = appUtils.getUser()
-            tvPickupUserName.text = user?.fatherName
+            tvPickupUserName.text = user?.fullName
             tvDestinationUserName.text = user?.fullName
 
             pickLocation.setOnClickListener {

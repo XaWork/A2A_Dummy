@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.MainActivity
 import com.a2a.app.common.BaseFragment
+import com.a2a.app.common.ItemClick
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.AllCategoryModel
@@ -79,24 +80,25 @@ class CategoryFragment :
         //viewBinding.setVariable(BR.dataList, allCategoryList)
         viewBinding.rvCategory.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = CommonAdapter(allCategoryList, context, object : RvItemClick {
-                override fun clickWithPosition(name: String, position: Int) {
+            adapter = CommonAdapter(allCategoryList, context, object : ItemClick {
+                override fun clickRvItem(name: String, model: Any) {
+                    val category = model as CommonModel
                     when(name){
                         "details"->{
                             mainActivity.hideToolbarAndBottomNavigation()
-                            val details = Gson().toJson(allCategoryList[position], CommonModel::class.java)
+                            val details = Gson().toJson(category, CommonModel::class.java)
                             val action = CategoryFragmentDirections.actionGlobalViewDetailsFragment(
                                 details = details,
                                 name = "Category Details")
                             findNavController().navigate(action)
                         }
-                        ""->{
+                        "sub"->{
                             mainActivity.hideToolbarAndBottomNavigation()
-                            val categoryId = allCategoryList[position].id
+                            val categoryId = category.id
                             val action =
                                 CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
                                     categoryId = categoryId,
-                                    categoryName = allCategoryList[position].name
+                                    categoryName = category.name
                                 )
                             findNavController().navigate(action)
                         }

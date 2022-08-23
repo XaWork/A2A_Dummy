@@ -25,7 +25,7 @@ fun setRecycleViewAdapter(
 
     val adapter: CommonAdapter? = view.adapter as? CommonAdapter
     if(adapter == null)
-       // view.adapter = CommonAdapter(data = dataList.toMutableList(), context = view.context)
+        //view.adapter = CommonAdapter(data = dataList.toMutableList(), context = view.context)
     else
         adapter.updateDataList(dataList)
 

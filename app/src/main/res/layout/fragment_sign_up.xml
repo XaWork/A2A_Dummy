@@ -6,9 +6,9 @@
 
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="16dp"
         android:orientation="vertical"
         tools:context=".ui.onboarding.signup.SignUpFragment"
@@ -16,14 +16,31 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/rgUserType">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
                 android:orientation="vertical"
+                android:layout_margin="16dp"
                 android:padding="16dp">
+
+                <EditText
+                    android:id="@+id/etFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/storke"
+                    android:drawableTint="@color/grey"
+                    android:drawableStart="@drawable/ic_person_pin_green_24dp"
+                    android:drawablePadding="8dp"
+                    android:hint="Name"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:textColor="#5f6368"
+                    android:textColorHint="#9e9e9e"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/etEmail"
@@ -32,6 +49,7 @@
                     android:background="@drawable/storke"
                     android:drawableStart="@drawable/mail"
                     android:drawablePadding="8dp"
+                    android:layout_marginTop="32dp"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:padding="16dp"
@@ -54,7 +72,80 @@
                     android:textColor="#5f6368"
                     android:textColorHint="#9e9e9e"
                     android:textSize="16sp"
+                    />
 
+                <EditText
+                    android:id="@+id/etCompanyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/storke"
+                    android:drawableStart="@drawable/ic_baseline_account_balance_24"
+                    android:drawableTint="@color/grey"
+                    android:drawablePadding="8dp"
+                    android:hint="Company Name"
+                    android:inputType="textPersonName"
+                    android:maxLength="10"
+                    android:padding="16dp"
+                    android:textColor="#5f6368"
+                    android:textColorHint="#9e9e9e"
+                    android:textSize="16sp"
+                    />
+
+                <EditText
+                    android:id="@+id/etCompanyAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/storke"
+                    android:drawableStart="@drawable/ic_outline_location_on_24"
+                    android:drawableTint="@color/grey"
+                    android:gravity="left|top"
+                    android:drawablePadding="8dp"
+                    android:hint="Company Address"
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:padding="16dp"
+                    android:textColor="#5f6368"
+                    android:textColorHint="#9e9e9e"
+                    android:textSize="16sp"
+                    />
+
+                <EditText
+                    android:id="@+id/etGST"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/storke"
+                    android:drawableStart="@drawable/ic_baseline_ballot_24"
+                    android:drawableTint="@color/grey"
+                    android:drawablePadding="8dp"
+                    android:hint="GST Number"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:padding="16dp"
+                    android:textColor="#5f6368"
+                    android:textColorHint="#9e9e9e"
+                    android:textSize="16sp"
+                    />
+
+                <EditText
+                    android:id="@+id/etPan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:background="@drawable/storke"
+                    android:drawableStart="@drawable/ic_baseline_ballot_24"
+                    android:drawableTint="@color/grey"
+                    android:drawablePadding="8dp"
+                    android:hint="PAN Number"
+                    android:inputType="text"
+                    android:textAllCaps="true"
+                    android:maxLength="10"
+                    android:padding="16dp"
+                    android:textColor="#5f6368"
+                    android:textColorHint="#9e9e9e"
+                    android:textSize="16sp"
                     />
 
                 <EditText
@@ -81,8 +172,8 @@
                     android:drawableStart="@drawable/password_left"
                     android:drawablePadding="8dp"
                     android:hint="Otp"
-                    android:maxLength="6"
                     android:inputType="textPersonName"
+                    android:maxLength="6"
                     android:padding="16dp"
                     android:textColor="#5f6368"
                     android:textColorHint="#9e9e9e"
@@ -120,6 +211,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:padding="16dp"
+                    android:layout_marginBottom="16dp"
                     android:text="GET OTP"
                     android:textAllCaps="false"
                     android:textColor="#ffffff"
@@ -130,5 +222,31 @@
             </LinearLayout>
         </ScrollView>
 
-    </LinearLayout>
+        <RadioGroup
+            android:id="@+id/rgUserType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            android:weightSum="2"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Individual"
+                android:layout_weight="1"
+                android:id="@+id/rbIndividual"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:background="@drawable/storke"
+                android:text="Corporate"
+                android:id="@+id/rbCorporate"/>
+        </RadioGroup>
+
+    </RelativeLayout>
 </layout>

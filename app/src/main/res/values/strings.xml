@@ -309,5 +309,6 @@
     <string name="normal">Normal</string>
     <string name="express">Express</string>
     <string name="super_fast">Super Fast</string>
+    <string name="profile">Profile</string>
 
 </resources>
