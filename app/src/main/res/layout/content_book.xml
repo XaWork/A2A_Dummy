@@ -13,8 +13,8 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
             android:layout_width="match_parent"
-            android:layout_margin="5dp"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:elevation="@dimen/card_elevation"
             app:cardCornerRadius="@dimen/card_corner_radius"
             app:layout_constraintEnd_toEndOf="parent"
@@ -288,8 +288,8 @@
             <AutoCompleteTextView
                 android:id="@+id/acSubCategory"
                 android:layout_width="match_parent"
-                android:focusable="false"
                 android:layout_height="match_parent"
+                android:focusable="false"
                 android:hint="@string/sub_category" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -308,8 +308,8 @@
                 android:id="@+id/edtPickupRange"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="number"
-                android:hint="Pickup Range in KM" />
+                android:hint="Pickup Range in KM"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -328,8 +328,8 @@
                 android:id="@+id/edtWight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:hint="Weight" />
+                android:hint="Weight"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -347,8 +347,8 @@
                 android:id="@+id/edtWidth"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:hint="Width" />
+                android:hint="Width"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -366,9 +366,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edtHeight"
                 android:layout_width="match_parent"
-                android:inputType="numberDecimal"
                 android:layout_height="match_parent"
-                android:hint="Height" />
+                android:hint="Height"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -386,8 +386,8 @@
                 android:id="@+id/edtLength"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="numberDecimal"
-                android:hint="Length" />
+                android:hint="Length"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -440,35 +440,36 @@
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
         <RadioGroup
+            android:id="@+id/rgDeliveryType"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/checkBox">
 
             <RadioButton
                 android:id="@+id/rbNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/normal"/>
+                android:text="@string/normal" />
 
             <RadioButton
                 android:id="@+id/rbExpress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/express"/>
+                android:text="@string/express" />
 
             <RadioButton
                 android:id="@+id/rbSuperFast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/super_fast"/>
+                android:text="@string/super_fast" />
 
         </RadioGroup>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.core.widget.NestedScrollView>

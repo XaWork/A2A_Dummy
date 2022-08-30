@@ -83,8 +83,9 @@
                     app:layout_constraintTop_toBottomOf="@+id/rvCarousal">
 
                     <EditText
-                        android:id="@+id/editTextTextPersonName"
+                        android:id="@+id/edtPickup"
                         android:layout_width="0dp"
+                        android:focusable="false"
                         android:layout_height="@dimen/home_edt_height"
                         android:background="@drawable/rec_full_rounded"
                         android:drawableStart="@drawable/ic_outline_location_on_24"
@@ -99,8 +100,9 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <EditText
-                        android:id="@+id/editTextTextPersonName2"
+                        android:id="@+id/edtDropOf"
                         android:layout_width="0dp"
+                        android:focusable="false"
                         android:layout_height="@dimen/home_edt_height"
                         android:layout_marginTop="@dimen/space_between_views"
                         android:background="@drawable/rec_full_rounded"
@@ -113,7 +115,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+                        app:layout_constraintTop_toBottomOf="@+id/edtPickup" />
 
                     <TextView
                         android:id="@+id/textView2"
@@ -125,9 +127,9 @@
                         android:gravity="center"
                         android:text="Calculate the price"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName2"
-                        app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
-                        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+                        app:layout_constraintEnd_toEndOf="@+id/edtDropOf"
+                        app:layout_constraintStart_toStartOf="@+id/edtDropOf"
+                        app:layout_constraintTop_toBottomOf="@+id/edtDropOf" />
 
                     <TextView
                         android:id="@+id/textView3"

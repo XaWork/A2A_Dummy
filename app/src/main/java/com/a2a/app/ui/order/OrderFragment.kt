@@ -83,7 +83,7 @@ class OrderFragment :
     }
 
     private fun setToolbar() {
-        viewBinding.toolbar.toolbar.setNavigationOnClickListener {
+        viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }

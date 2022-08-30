@@ -285,3 +285,8 @@ data class OrderModel(
         }
     }
 }
+
+
+fun OrderModel.Result.tCgst() = if(totalCGST.isNotEmpty()) totalCGST else "0"
+fun OrderModel.Result.tIGST() = if(totalIGST.isNotEmpty()) totalIGST else "0"
+fun OrderModel.Result.tSGST() = if(totalSGST.isNotEmpty()) totalSGST else "0"

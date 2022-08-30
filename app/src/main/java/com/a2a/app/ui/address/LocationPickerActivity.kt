@@ -38,6 +38,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
     private val AUTOCOMPLETE_REQUEST_CODE = 1000
     lateinit var googleMap: GoogleMap
     var addresses: List<Address>? = null
+    var markAddress: String = ""
     private val MIN_TIME: Long = 400
     private var MIN_DISTANCE = 1000f
     private var lat:Double? = null
@@ -50,6 +51,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e("location", "Inside onCreate")
         binding = LocationPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -89,20 +91,26 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
             }).check()*/
 
         if(checkLocationPermission()){
-            Log.d("location", "Allowed location permission")
+            Log.e("location", "Allowed location permission")
+            gps_enabled = try {
+                locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            } catch (ex: Exception) {
+                false
+            }
+
             if (!gps_enabled) {
-                Log.d("location", "Gps is not enabled")
+                Log.e("location", "Gps is not enabled")
                 MaterialAlertDialogBuilder(this@LocationPickerActivity)
                     .setTitle("Location Disabled")
                     .setCancelable(false)
                     .setMessage("Location services are disabled")
-                    .setPositiveButton("Start") { dialog, _ ->
+                    .setPositiveButton("Start") { _, _ ->
                         finish()
                         startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                     .show()
             }else{
-                Log.d("location", "Gps enabled")
+                Log.e("location", "Gps enabled")
                 setupMap()
             }
         }
@@ -112,6 +120,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
                 val resultIntent = Intent()
                 resultIntent.putExtra("lat", lat!!)
                 resultIntent.putExtra("long", long!!)
+                resultIntent.putExtra("address", markAddress)
                 setResult(RESULT_OK, resultIntent)
                 finish()
             }else{
@@ -184,11 +193,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
                             android.Manifest.permission.ACCESS_FINE_LOCATION
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
-                        gps_enabled = try {
-                            locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                        } catch (ex: Exception) {
-                            false
-                        }
+
                     }
                 } else {
                     if(!permissionDoNotAllowed){
@@ -230,7 +235,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
     }
 
     private fun setupMap(){
-        Log.d("map", "inside set up map function")
+        Log.e("map", "inside set up map function")
         geocoder = Geocoder(this, Locale.getDefault())
         val mapFragment = this@LocationPickerActivity.supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -265,13 +270,14 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
             lat = latLng.latitude
             long = latLng.longitude
             val address = addresses?.first()
-            binding.address1.text = buildString {
+            markAddress = buildString {
                 address?.run {
                     appendln(this.getAddressLine(0))
                     appendln(this.locality)
                     append(this.adminArea)
                 }
             }
+            binding.address1.text = markAddress
         }catch (e:Exception){
             e.printStackTrace()
             finish()
@@ -291,13 +297,14 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
                     1
                 )
                 val ad2 = addresses?.first()
-                binding.address1.text = buildString {
+                markAddress = buildString {
                     ad2?.run {
                         appendln(this.getAddressLine(0))
                         appendln(this.locality)
                         append(this.adminArea)
                     }
                 }
+                binding.address1.text = markAddress
                 lat = arg0.position.latitude
                 long = arg0.position.longitude
             }
@@ -339,13 +346,14 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
                             lat = place.latLng!!.latitude
                             long = place.latLng!!.longitude
                             val address = addresses?.first()
-                            binding.address1.text = buildString {
+                            markAddress = buildString {
                                 address?.run {
                                     appendln(this.getAddressLine(0))
                                     appendln(this.locality)
                                     append(this.adminArea)
                                 }
                             }
+                            binding.address1.text = markAddress
                         }catch (e:Exception){
                             e.printStackTrace()
                             Toast.makeText(this@LocationPickerActivity, "Retry later!", Toast.LENGTH_LONG).show()

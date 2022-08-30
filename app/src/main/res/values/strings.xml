@@ -104,6 +104,7 @@
     <string name="enter_valid_details">Please enter valid details</string>
     <string name="please_select_city">Please select the city</string>
     <string name="confirm_order">Confirm Order</string>
+    <string name="confirm">Confirm</string>
     <string name="full_name">Full name</string>
 
     <string name="address">Address</string>
@@ -170,6 +171,8 @@
     <string name="country">Country</string>
     <string name="add">ADD</string>
     <string name="book_now">Book Now</string>
+    <string name="book">Book</string>
+    <string name="schedule">Schedule</string>
     <string name="location">Location</string>
     <string name="basic_details">Basic details</string>
     <string name="basic_info_about_you">Basic info about you</string>

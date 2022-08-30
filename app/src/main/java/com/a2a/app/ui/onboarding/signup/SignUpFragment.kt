@@ -76,6 +76,7 @@ class SignUpFragment :
     private fun showCorporateUserFields() {
         with(viewBinding){
             //set radio button background
+            scrollView.stopNestedScroll()
             rbCorporate.setBackgroundResource(R.drawable.storke)
             rbIndividual.setBackgroundResource(0)
 
@@ -84,6 +85,7 @@ class SignUpFragment :
             etCompanyName.visibility = View.VISIBLE
             etGST.visibility = View.VISIBLE
             etPan.visibility = View.VISIBLE
+            etCompanyRegistrationCertificate.visibility = View.VISIBLE
         }
     }
 
@@ -98,6 +100,7 @@ class SignUpFragment :
             etCompanyName.visibility = View.GONE
             etGST.visibility = View.GONE
             etPan.visibility = View.GONE
+            etCompanyRegistrationCertificate.visibility = View.GONE
         }
     }
 

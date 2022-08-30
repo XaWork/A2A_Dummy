@@ -33,4 +33,5 @@ class OnBoardingFragment : Fragment(R.layout.fragment_on_boarding) {
             }.attach()
         }
     }
+
 }

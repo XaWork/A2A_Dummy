@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/screen_padding">
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_between_views"
+        android:text="@string/lorem"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtTime" />
+
+    <TextView
+        android:id="@+id/tvEstimateCost"
+        style="@style/poppins_regular_14_black_bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_between_views"
+        android:background="@color/light_grey2"
+        android:gravity="center"
+        android:text="Estimate Cost: Rs.220/\."
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/btnScheduleConfirm"
+        style="@style/poppins_regular_14_black_bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_between_views"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:letterSpacing="0.1"
+        android:paddingHorizontal="@dimen/high_padding"
+        android:paddingVertical="@dimen/medium_padding"
+        android:text="@string/confirm"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEstimateCost" />
+
+
+    <EditText
+        android:id="@+id/edtDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/storke"
+        android:drawableStart="@drawable/schedule"
+        android:drawablePadding="8dp"
+        android:focusable="false"
+        android:hint="dd-mm-yyyy"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:padding="16dp"
+        android:textColor="#5f6368"
+        android:textColorHint="#9e9e9e"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/space_between_views"
+        android:background="@drawable/storke"
+        android:drawableStart="@drawable/smartphone"
+        android:drawablePadding="8dp"
+        android:focusable="false"
+        android:hint="00:00"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:padding="16dp"
+        android:textColor="#5f6368"
+        android:textColorHint="#9e9e9e"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtDate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

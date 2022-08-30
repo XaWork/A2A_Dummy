@@ -12,7 +12,9 @@ import com.a2a.app.data.model.CommonModel
 import com.a2a.app.data.model.OrderModel
 import com.a2a.app.databinding.SingleCommonBinding
 import com.a2a.app.databinding.SingleOrderItemBinding
+import com.a2a.app.toDate
 import com.bumptech.glide.Glide
+import java.util.*
 
 class OrderAdapter(
     private val data: List<OrderModel.Result>,
@@ -26,7 +28,13 @@ class OrderAdapter(
 
             fun bind(position: Int, itemClick: RvItemClick){
                 with(viewBinding){
-                    orderItem = data[position]
+                   // orderItem = data[position]
+                    data[position].run {
+                        orderId.text = orderid
+                        orderStatus.text = status.replace("_", " ")
+                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                        orderDate.text = createdDate.toDate()
+                    }
                 }
 
                 itemView.setOnClickListener{

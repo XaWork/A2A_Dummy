@@ -32,7 +32,7 @@
 				android:id="@+id/orderDate"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@{orderItem.createdDate, default = 08032018}"
+
 				android:textColor="@color/black"
 				android:textSize="18sp" />
 
@@ -42,13 +42,11 @@
 				android:layout_height="wrap_content"
 				android:layout_gravity="left"
 				android:layout_marginTop="4dp"
-				android:text="@{orderItem.orderid, default = TCP12312123123}"
 				android:textColor="@color/black"
 				android:textSize="14sp" />
 
 			<TextView
 				android:id="@+id/orderStatus"
-				android:text="@{orderItem.status, default = Delivered}"
 				android:layout_marginTop="4dp"
 				android:textColor="@color/colorPrimary"
 				android:textSize="16sp"

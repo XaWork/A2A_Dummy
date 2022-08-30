@@ -3,22 +3,36 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/drawable-v24/rec_outline_round_grey.xml" value="0.141" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/drawable-v24/rec_outline_round_primary.xml" value="0.141" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/drawable-v24/rec_outline_sharp.xml" value="0.141" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/drawable-v24/rectangle_outline_round.xml" value="0.141" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/drawable-xxxhdpi/bg_bottom_sheet_dialog_fragment.xml" value="0.141" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/drawable/a2a_logo.xml" value="0.1705" />
-        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/activity_main.xml" value="0.2" />
-        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/content_book.xml" value="0.22" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/activity_main.xml" value="0.10666666666666667" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/content_book.xml" value="0.2" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/content_order_details.xml" value="0.2" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/dialog_instant_booking.xml" value="0.2" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/dialog_schedule_booking.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_add_new_address.xml" value="0.1" />
-        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_book.xml" value="0.1859375" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_book.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_city.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_contact_us.xml" value="0.1" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_on_boarding.xml" value="0.16666666666666666" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_order.xml" value="0.2" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_order_details.xml" value="0.2" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_sign_in.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_sign_up.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/fragment_view_details.xml" value="0.2" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/location_picker.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/location_selection_fragment.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/lyt_notification.xml" value="0.1" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/nav_header_main.xml" value="0.1" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/single_checkout_item.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/single_common.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/single_customer.xml" value="0.1" />
+        <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/single_order_item.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/single_testimonial.xml" value="0.1" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/single_text_view.xml" value="0.2" />
         <entry key="..\:/Android/Laysan Projects/A2A/app/src/main/res/layout/toolbar.xml" value="0.16666666666666666" />

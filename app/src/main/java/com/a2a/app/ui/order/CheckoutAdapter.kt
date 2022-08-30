@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.data.model.CommonModel
+import com.a2a.app.data.model.OrderModel
 import com.a2a.app.databinding.SingleCheckoutItemBinding
 
 class CheckoutAdapter(
     private val context: Context,
-    private var data: MutableList<CommonModel>,
+    private var data: List<OrderModel.Result.CargoPosition>,
     private val itemClick: RvItemClick
 ) : RecyclerView.Adapter<CheckoutAdapter.MyViewHolder>() {
 
@@ -20,14 +21,9 @@ class CheckoutAdapter(
         fun bind(position: Int, itemClick: RvItemClick) {
 
             with(viewBinding) {
+
             }
         }
-    }
-
-    fun updateDataList(dataList: List<CommonModel>?) {
-        data.clear()
-        data.addAll(dataList!!)
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
