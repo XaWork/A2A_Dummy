@@ -77,4 +77,17 @@ class CustomViewModel @Inject constructor(private val customRepository: CustomRe
         }
 
     }
+
+    fun checkCutOffTime(
+        startCity: String,
+        endCity: String,
+    ): MutableLiveData<Status<CheckCutOffTimeModel>>{
+        val result = MutableLiveData<Status<CheckCutOffTimeModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = customRepository.checkCutOffTime(startCity, endCity)
+        }
+
+        return result
+    }
 }

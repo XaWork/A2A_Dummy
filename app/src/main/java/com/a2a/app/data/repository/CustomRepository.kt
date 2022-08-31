@@ -29,4 +29,9 @@ class CustomRepository @Inject constructor(private val customApi: CustomApi): Ba
         city: String
     ) =
         safeApiCall { customApi.zipByCity(city) }
+
+    suspend fun checkCutOffTime(
+        startCity: String,
+        endCity: String,
+    ) = safeApiCall { customApi.checkCutOffTime(startCity, endCity) }
 }

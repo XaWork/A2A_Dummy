@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtTime" />
+        app:layout_constraintTop_toBottomOf="@+id/deliveryTime" />
 
     <TextView
         android:id="@+id/tvEstimateCost"
@@ -54,18 +54,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvEstimateCost" />
 
-
-    <EditText
-        android:id="@+id/edtDate"
+    <TextView
+        android:id="@+id/deliveryTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/storke"
-        android:drawableStart="@drawable/schedule"
         android:drawablePadding="8dp"
         android:focusable="false"
-        android:hint="dd-mm-yyyy"
-        android:inputType="phone"
+        android:hint="Select Delivery Time"
         android:maxLength="10"
         android:padding="16dp"
         android:textColor="#5f6368"
@@ -74,28 +71,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edtTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/space_between_views"
-        android:background="@drawable/storke"
-        android:drawableStart="@drawable/smartphone"
-        android:drawablePadding="8dp"
-        android:focusable="false"
-        android:hint="00:00"
-        android:inputType="phone"
-        android:maxLength="10"
-        android:padding="16dp"
-        android:textColor="#5f6368"
-        android:textColorHint="#9e9e9e"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtDate" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:drawableStartCompat="@drawable/ic_baseline_access_time_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

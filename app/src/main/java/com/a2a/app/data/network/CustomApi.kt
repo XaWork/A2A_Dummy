@@ -29,4 +29,10 @@ interface CustomApi {
     suspend fun zipByCity(
     @Query("city")city: String
     ): ZipListModel
+
+    @GET("cutofftime-check")
+    suspend fun checkCutOffTime(
+        @Query("start-city")startCity: String,
+        @Query("end-city")endCity: String,
+    ):CheckCutOffTimeModel
 }

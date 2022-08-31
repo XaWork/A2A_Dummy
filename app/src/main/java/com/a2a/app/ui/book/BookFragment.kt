@@ -7,12 +7,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.common.BaseFragment
@@ -20,16 +18,16 @@ import com.a2a.app.common.Status
 import com.a2a.app.data.model.AddressListModel
 import com.a2a.app.data.model.AllCategoryModel
 import com.a2a.app.data.model.AllSubCategoryModel
-import com.a2a.app.data.network.CustomApi
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentBookBinding
+import com.a2a.app.hideSoftKeyboard
+import com.a2a.app.setupDropDown
 import com.a2a.app.ui.address.AddressSelectionFragment
 import com.a2a.app.ui.address.SaveAddressListener
 import com.a2a.app.utils.AppUtils
-import okhttp3.internal.assertThreadDoesntHoldLock
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,8 +47,8 @@ class BookFragment :
     private var subCategoryName = ""
     private var bookingDate = ""
     private var bookingTime = ""
-    private var pickUpLocation = ""
-    private var destinationLocation = ""
+    private var pickUpLocation: AddressListModel.Result? = null
+    private var destinationLocation: AddressListModel.Result? = null
     private var pickupRange = ""
     private var weight = ""
     private var width = ""
@@ -74,7 +72,7 @@ class BookFragment :
                 addressSelection.saveSetSaveListener(object : SaveAddressListener {
                     override fun onSaved(address: AddressListModel.Result) {
                         tvPickupAddress.text = address.address
-                        pickUpLocation = address.id
+                        pickUpLocation = address
                     }
                 })
                 addressSelection.show(parentFragmentManager, addressSelection.tag)
@@ -84,7 +82,7 @@ class BookFragment :
                 addressSelection.saveSetSaveListener(object : SaveAddressListener {
                     override fun onSaved(address: AddressListModel.Result) {
                         tvDestinationAddress.text = address.address
-                        destinationLocation = address.id
+                        destinationLocation = address
                     }
                 })
                 addressSelection.show(parentFragmentManager, addressSelection.tag)
@@ -134,9 +132,9 @@ class BookFragment :
             )
 
             //check any value is not null or empty
-            if (pickUpLocation.isEmpty())
+            if (pickUpLocation!!.id.isEmpty())
                 toast("Select Pickup Location")
-            else if (destinationLocation.isEmpty())
+            else if (destinationLocation!!.id.isEmpty())
                 toast("Select Destination Location")
             else if (categoryId.isEmpty())
                 toast("Select Category")
@@ -153,25 +151,36 @@ class BookFragment :
             else if (length.isEmpty())
                 edtLength.error = "Enter Length"
             else {
-                when (deliveryType) {
-                    "" -> {
-                        toast("Please specify delivery type(Normal/Express/Super Fast")
-                    }
-                    "Normal" -> {
-                        showScheduleBookingConfirmDialog()
-                    }
-                    else -> {
-                        showInstantBookingConfirmDialog()
-                    }
-                }
+                if (deliveryType.isEmpty())
+                    toast("Please specify delivery type(Normal/Express/Super Fast")
+                else
+                    checkCutOffTime()
             }
         }
     }
 
-    private fun showInstantBookingConfirmDialog() {
+    private fun showNormalDeliveryDialog() {
         val dialog = Dialog(context!!)
-        dialog.setContentView(R.layout.dialog_instant_booking)
+        val slots = mutableListOf<String>()
+        dialog.setContentView(R.layout.dialog_normal_delivery)
         val confirmButton = dialog.findViewById(R.id.btnInstantConfirm) as TextView
+        val pickupTimePicker = dialog.findViewById<EditText>(R.id.edtPickupTime)
+        val deliveryTimePicker = dialog.findViewById<TextView>(R.id.edtDeliveryTime)
+
+        slots.clear()
+        slots.add("Night")
+        slots.add("Afternoon")
+        deliveryTimePicker.setupDropDown(slots.toTypedArray(), { it }, {
+            deliveryTimePicker.text = it
+        }, {
+            it.show()
+            hideSoftKeyboard()
+        })
+
+        pickupTimePicker.setOnClickListener {
+            showTimePickerDialog(pickupTimePicker)
+        }
+
         confirmButton.setOnClickListener {
             dialog.dismiss()
             confirmInstantBooking()
@@ -183,20 +192,23 @@ class BookFragment :
         viewModel.addressList
     }
 
-    private fun showScheduleBookingConfirmDialog() {
+    private fun showExpressDeliveryDialog() {
+        val slots = mutableListOf<String>()
         val dialog = Dialog(context!!)
-        dialog.setContentView(R.layout.dialog_schedule_booking)
+        dialog.setContentView(R.layout.dialog_express_delivery)
         val confirmButton = dialog.findViewById(R.id.btnScheduleConfirm) as TextView
-        val datePicker = dialog.findViewById<EditText>(R.id.edtDate)
-        val timePicker = dialog.findViewById<EditText>(R.id.edtTime)
+        val timePicker = dialog.findViewById<TextView>(R.id.deliveryTime)
 
-        datePicker.setOnClickListener {
-            showDatePickerDialog(datePicker)
-            Log.d("date", bookingDate)
-        }
-        timePicker.setOnClickListener {
-            showTimePickerDialog(timePicker)
-        }
+        slots.clear()
+        slots.add("Night")
+        slots.add("Afternoon")
+
+        timePicker.setupDropDown(slots.toTypedArray(), { it }, {
+            timePicker.text = it
+        }, {
+            it.show()
+            hideSoftKeyboard()
+        })
 
         confirmButton.setOnClickListener {
             dialog.dismiss()
@@ -209,8 +221,8 @@ class BookFragment :
         val userId = AppUtils(context!!).getUser()!!.id
         viewModel.confirmScheduleBooking(
             userId = userId,
-            pickupAddress = pickUpLocation,
-            destinationAddress = destinationLocation,
+            pickupAddress = pickUpLocation!!.id,
+            destinationAddress = destinationLocation!!.id,
             category = categoryId,
             subCategory = subCategoryId,
             pickupRange = pickupRange,
@@ -221,8 +233,8 @@ class BookFragment :
             pickupType = deliveryType,
             scheduleTime = bookingTime,
             deliveryType = deliveryType
-        ).observe(viewLifecycleOwner){
-            when(it){
+        ).observe(viewLifecycleOwner) {
+            when (it) {
                 is Status.Loading -> {
                     showLoading()
                 }
@@ -263,12 +275,57 @@ class BookFragment :
         val minute = calendar.get(Calendar.MINUTE)
 
         val timePickerDialog = TimePickerDialog(context, { _, selectedHour, selectedMinute ->
-            bookingTime = "$selectedHour : $selectedMinute"
-            timePicker.setText(bookingTime)
-        }, hour, minute, false)
+            bookingTime = "$selectedHour:$selectedMinute"
+            checkTiming(bookingTime)
+            //timePicker.setText(bookingTime)
+        }, hour, minute, true)
 
         timePickerDialog.setTitle("Select time")
         timePickerDialog.show()
+    }
+
+    private fun checkTiming(selectedTime: String): Boolean{
+        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+        val pattern = "HH:mm"
+        val sdf = SimpleDateFormat(pattern)
+
+        Log.e("time", "Selected Time : $selectedTime\nCurrent Time : $currentTime")
+        try {
+            val time1 = sdf.parse(selectedTime)
+            val time2 = sdf.parse(currentTime.toString())
+
+            Log.e("time", "Time difference is : ${time1!!.before(time2)}")
+
+            return time1.before(time2)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    private fun checkCutOffTime() {
+        val customViewModel = getCutomViewModel()
+        val startCity = pickUpLocation!!.city.id
+        val endCity = destinationLocation!!.city.id
+
+        customViewModel.checkCutOffTime(startCity, endCity).observe(viewLifecycleOwner) {
+            when (it) {
+                is Status.Loading -> {
+                    showLoading()
+                }
+                is Status.Success -> {
+                    stopShowingLoading()
+                    if (deliveryType == "Normal")
+                        showNormalDeliveryDialog()
+                    else
+                        showExpressDeliveryDialog()
+
+                }
+                is Status.Failure -> {
+                    stopShowingLoading()
+                }
+            }
+        }
     }
 
     private fun getAllCategories() {
