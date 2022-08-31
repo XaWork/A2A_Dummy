@@ -101,4 +101,39 @@ interface UserApi {
     suspend fun getWalletTransactions(
         @Query("id")userId: String
     ): WalletTransactionModel
+
+    @FormUrlEncoded
+    @POST("confirm-booking")
+    suspend fun confirmInstantBooking(
+        @Field("id")userId: String,
+        @Field("pickup_address")pickupAddress: String,
+        @Field("destination_address")destinationAddress: String,
+        @Field("category")category: String,
+        @Field("sub_category")subCategory: String,
+        @Field("pickup_range")pickupRange: String,
+        @Field("weight")weight: String,
+        @Field("width")width: String,
+        @Field("height")height: String,
+        @Field("length")length: String,
+        @Field("pickup_type")pickupType: String,
+        @Field("delivery_type")deliveryType: String,
+    ): ScheduleBookingModel
+
+    @FormUrlEncoded
+    @POST("estimate-booking")
+    suspend fun confirmScheduleBooking(
+        @Field("id")userId: String,
+        @Field("pickup_address")pickupAddress: String,
+        @Field("destination_address")destinationAddress: String,
+        @Field("category")category: String,
+        @Field("sub_category")subCategory: String,
+        @Field("pickup_range")pickupRange: String,
+        @Field("weight")weight: String,
+        @Field("width")width: String,
+        @Field("height")height: String,
+        @Field("length")length: String,
+        @Field("pickup_type")pickupType: String,
+        @Field("schedule_time")scheduleTime: String,
+        @Field("delivery_type")deliveryType: String,
+    ): ScheduleBookingModel
 }

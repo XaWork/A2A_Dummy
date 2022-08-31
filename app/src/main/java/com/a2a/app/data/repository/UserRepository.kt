@@ -112,5 +112,66 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         userId: String
     ) = safeApiCall { userAPI.getWalletTransactions(userId) }
 
+    suspend fun confirmInstantBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+    ) = safeApiCall {
+        userAPI.confirmInstantBooking(
+            userId,
+            pickupAddress,
+            destinationAddress,
+            category,
+            subCategory,
+            pickupRange,
+            weight,
+            width,
+            height,
+            length,
+            pickupType,
+            deliveryType
+        )
+    }
+
+    suspend fun confirmScheduleBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        scheduleTime: String,
+        deliveryType: String,
+    ) = safeApiCall {
+        userAPI.confirmScheduleBooking(
+            userId,
+            pickupAddress,
+            destinationAddress,
+            category,
+            subCategory,
+            pickupRange,
+            weight,
+            width,
+            height,
+            length,
+            pickupType,
+            scheduleTime,
+            deliveryType
+        )
+    }
 
 }

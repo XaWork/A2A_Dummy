@@ -217,7 +217,11 @@
         android:id="@+id/bookFragment"
         android:name="com.a2a.app.ui.book.BookFragment"
         android:label="fragment_book"
-        tools:layout="@layout/fragment_book" />
+        tools:layout="@layout/fragment_book" >
+        <action
+            android:id="@+id/action_bookFragment_to_bookingConfrimFragment"
+            app:destination="@id/bookingConfrimFragment" />
+    </fragment>
     <action android:id="@+id/action_global_bookFragment" app:destination="@id/bookFragment"/>
 
 
@@ -229,4 +233,8 @@
     </fragment>
 
     <action android:id="@+id/action_global_addNewAddressFragment" app:destination="@id/addNewAddressFragment"/>
+    <fragment
+        android:id="@+id/bookingConfrimFragment"
+        android:name="com.a2a.app.ui.book.BookingConfrimFragment"
+        android:label="BookingConfrimFragment" />
 </navigation>

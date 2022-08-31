@@ -27,7 +27,7 @@
                 android:weightSum="4">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/pickLocation"
+                    android:id="@+id/clPickUpLocation"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
@@ -139,7 +139,7 @@
                 android:weightSum="4">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/destinationLocation"
+                    android:id="@+id/clDestinationLocation"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
@@ -430,14 +430,44 @@
             app:layout_constraintTop_toBottomOf="@id/view2" />
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/cbVideoRecording"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Video Recording and Photo Required"
+            android:text="Video Recording of Pickup and Delivery"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+        <CheckBox
+            android:id="@+id/cbGps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Live GPS Tracking"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbVideoRecording" />
+
+        <CheckBox
+            android:id="@+id/cbTemperature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Live Temperature Tracking"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbGps" />
+
+        <CheckBox
+            android:id="@+id/cbPictureOfPickupAndDelivery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Picture Of Pickup And Delivery"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbTemperature" />
 
         <RadioGroup
             android:id="@+id/rgDeliveryType"
@@ -446,7 +476,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBox">
+            app:layout_constraintTop_toBottomOf="@+id/cbPictureOfPickupAndDelivery">
 
             <RadioButton
                 android:id="@+id/rbNormal"

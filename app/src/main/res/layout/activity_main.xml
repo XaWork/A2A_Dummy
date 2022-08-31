@@ -30,7 +30,7 @@
                 app:contentInsetStartWithNavigation="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:logo="@drawable/logo_92_x_92"
+                app:logo="@drawable/logo_35_x_35"
                 app:subtitle="Intercity Logistics Service"
                 app:subtitleTextAppearance="@style/ToolbarSubtitleAppearance"
                 app:subtitleTextColor="@color/white"

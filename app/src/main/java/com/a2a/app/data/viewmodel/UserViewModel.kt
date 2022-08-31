@@ -8,7 +8,7 @@ import com.a2a.app.data.model.*
 import com.a2a.app.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-class UserViewModel (private val userRepository: UserRepository) : ViewModel() {
+class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     //private val viewUtils: ViewUtils? = null
     //var mobile: String? = null
@@ -73,7 +73,7 @@ class UserViewModel (private val userRepository: UserRepository) : ViewModel() {
     val addressList = _addressList
     fun allAddress(
         userId: String
-    ){
+    ) {
         viewModelScope.launch {
             _addressList.value = Status.Loading
             _addressList.value = userRepository.allAddress(userId)
@@ -84,7 +84,7 @@ class UserViewModel (private val userRepository: UserRepository) : ViewModel() {
     val walletData = _walletData
     fun getWalletData(
         userId: String
-    ){
+    ) {
         viewModelScope.launch {
             _walletData.value = Status.Loading
             _walletData.value = userRepository.getWalletData(userId)
@@ -95,7 +95,7 @@ class UserViewModel (private val userRepository: UserRepository) : ViewModel() {
     val walletTransaction = _walletTransaction
     fun getWalletTransactions(
         userId: String
-    ){
+    ) {
         viewModelScope.launch {
             _walletTransaction.value = Status.Loading
             _walletTransaction.value = userRepository.getWalletTransactions(userId)
@@ -198,5 +198,77 @@ class UserViewModel (private val userRepository: UserRepository) : ViewModel() {
             _myOrders.value = Status.Loading
             _myOrders.value = userRepository.getMyOrders(userId, page, perPage)
         }
+    }
+
+    fun confirmInstantBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String
+    ): MutableLiveData<Status<ScheduleBookingModel>> {
+        val result = MutableLiveData<Status<ScheduleBookingModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository.confirmInstantBooking(
+                userId,
+                pickupAddress,
+                destinationAddress,
+                category,
+                subCategory,
+                pickupRange,
+                weight,
+                width,
+                height,
+                length,
+                pickupType,
+                deliveryType
+            )
+        }
+        return result
+    }
+
+    fun confirmScheduleBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        scheduleTime: String,
+        deliveryType: String
+    ): MutableLiveData<Status<ScheduleBookingModel>> {
+        val result = MutableLiveData<Status<ScheduleBookingModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository.confirmScheduleBooking(
+                userId,
+                pickupAddress,
+                destinationAddress,
+                category,
+                subCategory,
+                pickupRange,
+                weight,
+                width,
+                height,
+                length,
+                pickupType,
+                scheduleTime,
+                deliveryType
+            )
+        }
+        return result
     }
 }
