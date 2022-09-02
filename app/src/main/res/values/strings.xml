@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">A2A</string>
+    <string name="map_api_key">AIzaSyC3GgiT8g5sokSH4ILnYKwO9jnim25oFtk</string>
     <string name="app_full_name">Anything2AnyPlace</string>
     <string name="app_tag_name">We bring your nostalgic tastes on plate</string>
     <string name="title_activity_shop">ShopActivity</string>
@@ -44,6 +45,7 @@
     </string-array>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="lorem_short">Lorem Ipsum is simply dummy text of the printing</string>
     <string name="lorem">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>
     <string name="title_activity_my_orders">MyOrdersActivity</string>
     <string name="title_activity_user_details">UserDetailsActivity</string>

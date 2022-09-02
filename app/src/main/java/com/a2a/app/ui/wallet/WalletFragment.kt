@@ -88,6 +88,7 @@ class WalletFragment :
     }
 
     private fun setToolbar() {
+        viewBinding.incToolbar.toolbar.title = "Wallet"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }

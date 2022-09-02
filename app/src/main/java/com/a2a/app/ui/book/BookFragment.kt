@@ -18,6 +18,7 @@ import com.a2a.app.common.Status
 import com.a2a.app.data.model.AddressListModel
 import com.a2a.app.data.model.AllCategoryModel
 import com.a2a.app.data.model.AllSubCategoryModel
+import com.a2a.app.data.model.CheckCutOffTimeModel
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
@@ -45,8 +46,13 @@ class BookFragment :
     var subCategoryId = ""
     var deliveryType = ""
     private var subCategoryName = ""
+    var checkAvailability: CheckCutOffTimeModel? = null
     private var bookingDate = ""
-    private var bookingTime = ""
+    private var pickupDate = ""
+    private var pickupTime = ""
+    private var deliveryDate = ""
+    private var deliveryTimeSlot = ""
+    private var bookingDateTime = ""
     private var pickUpLocation: AddressListModel.Result? = null
     private var destinationLocation: AddressListModel.Result? = null
     private var pickupRange = ""
@@ -55,6 +61,7 @@ class BookFragment :
     private var height = ""
     private var length = ""
     private var remarks = ""
+    private val slots = mutableListOf<String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -128,19 +135,19 @@ class BookFragment :
                         "Length - $length\n" +
                         "Delivery Type - $deliveryType\n" +
                         "Booking Date - $bookingDate\n" +
-                        "Booking time - $bookingTime\n"
+                        "Booking time - $bookingDateTime\n"
             )
 
             //check any value is not null or empty
-            if (pickUpLocation!!.id.isEmpty())
+            if (pickUpLocation == null)
                 toast("Select Pickup Location")
-            else if (destinationLocation!!.id.isEmpty())
+            else if (destinationLocation == null)
                 toast("Select Destination Location")
             else if (categoryId.isEmpty())
                 toast("Select Category")
             else if (subCategoryId.isEmpty())
                 toast("Select SubCategory")
-            else if (pickupRange.isEmpty())
+            /*else if (pickupRange.isEmpty())
                 edtPickupRange.error = "Enter Pickup Range"
             else if (weight.isEmpty())
                 edtWight.error = "Enter Weight"
@@ -149,7 +156,7 @@ class BookFragment :
             else if (height.isEmpty())
                 edtHeight.error = "Enter Height"
             else if (length.isEmpty())
-                edtLength.error = "Enter Length"
+                edtLength.error = "Enter Length"*/
             else {
                 if (deliveryType.isEmpty())
                     toast("Please specify delivery type(Normal/Express/Super Fast")
@@ -159,26 +166,32 @@ class BookFragment :
         }
     }
 
-    private fun showNormalDeliveryDialog() {
+    private fun showNormalDeliveryDialog(estimateCost: Int) {
         val dialog = Dialog(context!!)
-        val slots = mutableListOf<String>()
         dialog.setContentView(R.layout.dialog_normal_delivery)
         val confirmButton = dialog.findViewById(R.id.btnInstantConfirm) as TextView
         val pickupTimePicker = dialog.findViewById<EditText>(R.id.edtPickupTime)
-        val deliveryTimePicker = dialog.findViewById<TextView>(R.id.edtDeliveryTime)
+        val pickupDatePicker = dialog.findViewById<EditText>(R.id.edtPickupDate)
+        val deliveryDatePicker = dialog.findViewById<EditText>(R.id.edtDeliveryDate)
+        val deliveryTimeSlot = dialog.findViewById<TextView>(R.id.tvDeliveryTimeSlot)
+        val tvEstimateCost = dialog.findViewById<TextView>(R.id.tvEstimateCost)
 
-        slots.clear()
-        slots.add("Night")
-        slots.add("Afternoon")
-        deliveryTimePicker.setupDropDown(slots.toTypedArray(), { it }, {
-            deliveryTimePicker.text = it
+        tvEstimateCost.text = "Estimate Cost: \nRs.$estimateCost/."
+        deliveryTimeSlot.setupDropDown(slots.toTypedArray(), { it }, {
+            deliveryTimeSlot.text = it
         }, {
             it.show()
             hideSoftKeyboard()
         })
 
+        pickupDatePicker.setOnClickListener {
+            showDatePickerDialog("pickup", pickupDatePicker)
+        }
         pickupTimePicker.setOnClickListener {
             showTimePickerDialog(pickupTimePicker)
+        }
+        deliveryDatePicker.setOnClickListener {
+            showDatePickerDialog("delivery", deliveryDatePicker)
         }
 
         confirmButton.setOnClickListener {
@@ -189,19 +202,17 @@ class BookFragment :
     }
 
     private fun confirmInstantBooking() {
-        viewModel.addressList
     }
 
-    private fun showExpressDeliveryDialog() {
-        val slots = mutableListOf<String>()
+    private fun showExpressDeliveryDialog(estimateCost: Int) {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_express_delivery)
         val confirmButton = dialog.findViewById(R.id.btnScheduleConfirm) as TextView
-        val timePicker = dialog.findViewById<TextView>(R.id.deliveryTime)
+        val timePicker = dialog.findViewById<TextView>(R.id.tvDeliveryTimeSlot)
+        val deliveryDatePicker = dialog.findViewById<EditText>(R.id.edtDeliveryDate)
+        val tvEstimateCost = dialog.findViewById<TextView>(R.id.tvEstimateCost)
 
-        slots.clear()
-        slots.add("Night")
-        slots.add("Afternoon")
+        tvEstimateCost.text = "Estimate Cost: \nRs.$estimateCost/."
 
         timePicker.setupDropDown(slots.toTypedArray(), { it }, {
             timePicker.text = it
@@ -210,16 +221,20 @@ class BookFragment :
             hideSoftKeyboard()
         })
 
+        deliveryDatePicker.setOnClickListener {
+            showDatePickerDialog("delivery", deliveryDatePicker)
+        }
+
         confirmButton.setOnClickListener {
             dialog.dismiss()
-            confirmScheduleBooking()
+
         }
         dialog.show()
     }
 
-    private fun confirmScheduleBooking() {
+    private fun estimateBooking() {
         val userId = AppUtils(context!!).getUser()!!.id
-        viewModel.confirmScheduleBooking(
+        viewModel.estimateBooking(
             userId = userId,
             pickupAddress = pickUpLocation!!.id,
             destinationAddress = destinationLocation!!.id,
@@ -231,7 +246,6 @@ class BookFragment :
             height = height,
             length = length,
             pickupType = deliveryType,
-            scheduleTime = bookingTime,
             deliveryType = deliveryType
         ).observe(viewLifecycleOwner) {
             when (it) {
@@ -240,9 +254,17 @@ class BookFragment :
                 }
                 is Status.Success -> {
                     stopShowingLoading()
-                    toast("Booking confirm")
+                    /*toast("Booking confirm")
                     val action = BookFragmentDirections.actionBookFragmentToBookingConfrimFragment()
-                    findNavController().navigate(action)
+                    findNavController().navigate(action)*/
+                    if (deliveryType == "Normal")
+                        showNormalDeliveryDialog(
+                            estimateCost = it.value.estimated_price
+                        )
+                    else
+                        showExpressDeliveryDialog(
+                            estimateCost = it.value.estimated_price
+                        )
                 }
                 is Status.Failure -> {
                     stopShowingLoading()
@@ -251,7 +273,7 @@ class BookFragment :
         }
     }
 
-    private fun showDatePickerDialog(datePicker: EditText) {
+    private fun showDatePickerDialog(type: String, dateTimePicker: EditText) {
         val calendar: Calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -260,8 +282,11 @@ class BookFragment :
         val datePickerDialog = DatePickerDialog(
             context!!,
             { _, year1, month1, day1 ->
-                bookingDate = "$day1-${month1 + 1}-$year1"
-                datePicker.setText(bookingDate)
+                when (type) {
+                    "pickup" -> pickupDate = "${month1 + 1}/$day1/$year1"
+                    "delivery" -> deliveryDate = "${month1 + 1}/$day1/$year1"
+                }
+                dateTimePicker.setText("${month1 + 1}/$day1/$year1")
             }, year, month, dayOfMonth
         )
 
@@ -275,29 +300,45 @@ class BookFragment :
         val minute = calendar.get(Calendar.MINUTE)
 
         val timePickerDialog = TimePickerDialog(context, { _, selectedHour, selectedMinute ->
-            bookingTime = "$selectedHour:$selectedMinute"
-            checkTiming(bookingTime)
-            //timePicker.setText(bookingTime)
-        }, hour, minute, true)
+            bookingDateTime = "$pickupDate $selectedHour:$selectedMinute"
+            /*bookingDateTime = if (selectedHour > 12)
+                "$bookingDate ${selectedHour - 12}:$selectedMinute pm"
+            else if (selectedHour == 12)
+                "$bookingDate 12:$selectedMinute pm"
+            else {
+                if (selectedHour != 0)
+                    "$bookingDate $selectedHour:$selectedMinute am"
+                else
+                    "$bookingDate 12:$selectedMinute am"
+            }*/
+            if (checkTiming())
+                timePicker.setText("$selectedHour:$selectedMinute")
+            else {
+                toast("Please select 6 hours later of the current time")
+                showTimePickerDialog(timePicker)
+            }
+        }, hour, minute, false)
 
         timePickerDialog.setTitle("Select time")
         timePickerDialog.show()
     }
 
-    private fun checkTiming(selectedTime: String): Boolean{
-        val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-        val pattern = "HH:mm"
-        val sdf = SimpleDateFormat(pattern)
+    private fun checkTiming(): Boolean {
+        val sdf = SimpleDateFormat("MM/dd/yyyy HH:mm")
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.HOUR_OF_DAY, 6)
+        val currentDateTime = sdf.format(calendar.time)
 
-        Log.e("time", "Selected Time : $selectedTime\nCurrent Time : $currentTime")
+        Log.e("time", "Booking Time : $bookingDateTime\nCurrent Time : $currentDateTime")
+
         try {
-            val time1 = sdf.parse(selectedTime)
-            val time2 = sdf.parse(currentTime.toString())
+            val time1 = sdf.parse(bookingDateTime)
+            val time2 = sdf.parse(currentDateTime.toString())
 
-            Log.e("time", "Time difference is : ${time1!!.before(time2)}")
+            Log.e("time", "Time difference is : ${time1!!.after(time2)}")
 
-            return time1.before(time2)
-        }catch (e:Exception){
+            return time1.after(time2)
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return false
@@ -315,11 +356,31 @@ class BookFragment :
                 }
                 is Status.Success -> {
                     stopShowingLoading()
-                    if (deliveryType == "Normal")
-                        showNormalDeliveryDialog()
-                    else
-                        showExpressDeliveryDialog()
+                    checkAvailability = it.value
 
+                    /*if (checkAvailability?.result?.timeslot != null) {
+                        if (checkAvailability!!.result.timeslot.contentEquals("Both")) {
+                            slots.clear()
+                            slots.add("Night")
+                            slots.add("Afternoon")
+                            estimateBooking()
+                        } else {
+                            slots.clear()
+                            slots.add(checkAvailability!!.result.timeslot)
+                            estimateBooking()
+                        }
+                    }
+                    else {
+                        showError("No available slots!, retry later")
+                        stopShowingLoading()
+                        findNavController().popBackStack()
+                    }
+                    estimateBooking()*/
+
+                    slots.clear()
+                    slots.add("Night")
+                    slots.add("Afternoon")
+                    estimateBooking()
                 }
                 is Status.Failure -> {
                     stopShowingLoading()

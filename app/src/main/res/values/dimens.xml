@@ -33,4 +33,6 @@
     <dimen name="horizontalLinewidht">0.5dp</dimen>
 
     <dimen name="book_screen_image_size">50dp</dimen>
+
+    <dimen name="toolbar_logo_size">40dp</dimen>
 </resources>

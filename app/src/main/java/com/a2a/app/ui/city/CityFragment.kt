@@ -45,12 +45,13 @@ class CityFragment : BaseFragment<
         //get all cities
         if (this::allCities.isInitialized)
             setData()
-        else
+        else {
+            viewModel.getAllCities()
             getAllCities()
+        }
     }
 
     private fun getAllCities() {
-        viewModel.getAllCities()
         viewModel.allCities.observe(viewLifecycleOwner) {
             when (it) {
                 is Status.Loading -> {

@@ -10,6 +10,7 @@ val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
 data class CheckCutOffTimeModel(
     val message: String,
+    val result: Result,
     val status: String
 ){
     @Keep
@@ -37,9 +38,7 @@ data class CheckCutOffTimeModel(
         val timeslot_second: String,
         val update_date: String
     )
-
 }
-
 
 fun CheckCutOffTimeModel.Result.cutOffTime(): Date {
     return formatter.parse(cut_of_time)!!

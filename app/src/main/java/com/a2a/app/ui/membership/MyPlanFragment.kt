@@ -23,6 +23,7 @@ class MyPlanFragment : Fragment(R.layout.fragment_my_plan) {
     }
 
     private fun setToolbar() {
+        viewBinding.incToolbar.toolbar.title = "My Plans"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }

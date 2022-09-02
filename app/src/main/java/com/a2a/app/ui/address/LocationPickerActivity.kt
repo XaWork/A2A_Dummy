@@ -24,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
@@ -129,6 +130,9 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
         }
 
         binding.searchContainer.setOnClickListener {
+            if (!Places.isInitialized()) {
+                Places.initialize(applicationContext, "AIzaSyC3GgiT8g5sokSH4ILnYKwO9jnim25oFtk")
+            }
             val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.NAME)
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).setCountry("IN")
                 .build(this)

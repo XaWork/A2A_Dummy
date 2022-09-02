@@ -17,11 +17,11 @@ interface UserApi {
     @FormUrlEncoded
     @POST("registration")
     suspend fun registration(
-        @Field("mobile")mobile: String,
-        @Field("email")email: String,
-        @Field("device_token")deviceToken: String,
-        @Field("device_type")deviceType: String = "Android",
-        @Field("reffer")reffer: String = "",
+        @Field("mobile") mobile: String,
+        @Field("email") email: String,
+        @Field("device_token") deviceToken: String,
+        @Field("device_type") deviceType: String = "Android",
+        @Field("reffer") reffer: String = "",
     ): RegistrationModel
 
     @FormUrlEncoded
@@ -35,105 +35,104 @@ interface UserApi {
     @FormUrlEncoded
     @POST("edit-profile")
     suspend fun editProfile(
-        @Field("id")id: String,
-        @Field("full_name")fullName: String,
-        @Field("mobile")mobile: String
+        @Field("id") id: String,
+        @Field("full_name") fullName: String,
+        @Field("mobile") mobile: String
     ): CommonResponseModel
 
     @GET("all-address")
     suspend fun allAddress(
-        @Query("id")userId: String
+        @Query("id") userId: String
     ): AddressListModel
 
     @GET("delete-address")
     suspend fun deleteAddress(
-        @Query("id")userId: String,
+        @Query("id") userId: String,
         @Query("addressId") addressId: String
     ): CommonResponseModel
 
     @FormUrlEncoded
     @POST("add-address")
     suspend fun addAddress(
-        @Field("userid")userId: String,
-        @Field("title")title: String,
-        @Field("address")address: String,
-        @Field("address2")address2: String,
-        @Field("city")city: String,
-        @Field("pincode")pinCode: String,
-        @Field("contact_name")contactName: String,
-        @Field("contact_mobile")contactMobile: String,
-        @Field("lat")lat: String,
-        @Field("lng")lng: String,
-        @Field("state")state: String,
-        @Field("post_office")postOffice: String,
-    ):AddAddressModel
+        @Field("userid") userId: String,
+        @Field("title") title: String,
+        @Field("address") address: String,
+        @Field("address2") address2: String,
+        @Field("city") city: String,
+        @Field("pincode") pinCode: String,
+        @Field("contact_name") contactName: String,
+        @Field("contact_mobile") contactMobile: String,
+        @Field("lat") lat: String,
+        @Field("lng") lng: String,
+        @Field("state") state: String,
+        @Field("post_office") postOffice: String,
+    ): AddAddressModel
 
     @FormUrlEncoded
     @POST("edit-address")
     suspend fun editAddress(
-        @Field("id")userId: String,
-        @Field("title")title: String,
-        @Field("address")address: String,
-        @Field("address2")address2: String,
-        @Field("city")city: String,
-        @Field("pincode")pinCode: String,
-        @Field("contact_name")contactName: String,
-        @Field("contact_mobile")contactMobile: String,
-        @Field("lat")lat: String,
-        @Field("lng")lng: String,
-        @Field("state")state: String,
-        @Field("post_office")postOffice: String,
-    ):CommonResponseModel
+        @Field("id") userId: String,
+        @Field("title") title: String,
+        @Field("address") address: String,
+        @Field("address2") address2: String,
+        @Field("city") city: String,
+        @Field("pincode") pinCode: String,
+        @Field("contact_name") contactName: String,
+        @Field("contact_mobile") contactMobile: String,
+        @Field("lat") lat: String,
+        @Field("lng") lng: String,
+        @Field("state") state: String,
+        @Field("post_office") postOffice: String,
+    ): CommonResponseModel
 
     @GET("my-orders")
     suspend fun getMyOrders(
-        @Query("id")userId: String,
-        @Query("page")page: String,
-        @Query("per_page")perPage: String
+        @Query("id") userId: String,
+        @Query("page") page: String,
+        @Query("per_page") perPage: String
     ): OrderModel
 
     @GET("get-wallet-data")
     suspend fun getWalletData(
-        @Query("id")userId: String
+        @Query("id") userId: String
     ): WalletDataModel
 
     @POST("wallet-transactions")
     suspend fun getWalletTransactions(
-        @Query("id")userId: String
+        @Query("id") userId: String
     ): WalletTransactionModel
 
     @FormUrlEncoded
     @POST("confirm-booking")
     suspend fun confirmInstantBooking(
-        @Field("id")userId: String,
-        @Field("pickup_address")pickupAddress: String,
-        @Field("destination_address")destinationAddress: String,
-        @Field("category")category: String,
-        @Field("sub_category")subCategory: String,
-        @Field("pickup_range")pickupRange: String,
-        @Field("weight")weight: String,
-        @Field("width")width: String,
-        @Field("height")height: String,
-        @Field("length")length: String,
-        @Field("pickup_type")pickupType: String,
-        @Field("delivery_type")deliveryType: String,
+        @Field("id") userId: String,
+        @Field("pickup_address") pickupAddress: String,
+        @Field("destination_address") destinationAddress: String,
+        @Field("category") category: String,
+        @Field("sub_category") subCategory: String,
+        @Field("pickup_range") pickupRange: String,
+        @Field("weight") weight: String = "",
+        @Field("width") width: String,
+        @Field("height") height: String,
+        @Field("length") length: String,
+        @Field("pickup_type") pickupType: String,
+        @Field("delivery_type") deliveryType: String,
     ): ScheduleBookingModel
 
     @FormUrlEncoded
     @POST("estimate-booking")
-    suspend fun confirmScheduleBooking(
-        @Field("id")userId: String,
-        @Field("pickup_address")pickupAddress: String,
-        @Field("destination_address")destinationAddress: String,
-        @Field("category")category: String,
-        @Field("sub_category")subCategory: String,
-        @Field("pickup_range")pickupRange: String,
-        @Field("weight")weight: String,
-        @Field("width")width: String,
-        @Field("height")height: String,
-        @Field("length")length: String,
-        @Field("pickup_type")pickupType: String,
-        @Field("schedule_time")scheduleTime: String,
-        @Field("delivery_type")deliveryType: String,
+    suspend fun estimateBooking(
+        @Field("id") userId: String,
+        @Field("pickup_address") pickupAddress: String,
+        @Field("destination_address") destinationAddress: String,
+        @Field("category") category: String,
+        @Field("sub_category") subCategory: String,
+        @Field("pickup_range") pickupRange: String,
+        @Field("weight") weight: String = "",
+        @Field("width") width: String,
+        @Field("height") height: String,
+        @Field("length") length: String,
+        @Field("pickup_type") pickupType: String,
+        @Field("delivery_type") deliveryType: String,
     ): ScheduleBookingModel
 }

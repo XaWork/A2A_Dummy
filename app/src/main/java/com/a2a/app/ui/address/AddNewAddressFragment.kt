@@ -92,10 +92,10 @@ class AddNewAddressFragment :
                         }
                         etCity.text.toString().trim().isEmpty() -> {
                             showError("Select City")
-                        }
+                        }/*
                         etpostOffice.text.toString().trim().isEmpty() -> {
                             showError("Enter landmark")
-                        }
+                        }*/
                         tilOtherText.visibility == View.VISIBLE && otherAddress.text.toString()
                             .trim().isEmpty() -> {
                             showError("Enter address type, or select an option!")
@@ -144,8 +144,9 @@ class AddNewAddressFragment :
     }
 
     private fun setToolbar() {
-        viewBinding.tool.title = getString(R.string.app_full_name)
-        viewBinding.tool.setNavigationOnClickListener {
+        val toolbarBinding = viewBinding.incToolbar
+        toolbarBinding.tvTitle.text = getString(R.string.app_full_name)
+        toolbarBinding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }

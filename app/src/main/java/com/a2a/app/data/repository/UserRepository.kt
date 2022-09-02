@@ -142,7 +142,7 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         )
     }
 
-    suspend fun confirmScheduleBooking(
+    suspend fun estimateBooking(
         userId: String,
         pickupAddress: String,
         destinationAddress: String,
@@ -154,10 +154,9 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         height: String,
         length: String,
         pickupType: String,
-        scheduleTime: String,
         deliveryType: String,
     ) = safeApiCall {
-        userAPI.confirmScheduleBooking(
+        userAPI.estimateBooking(
             userId,
             pickupAddress,
             destinationAddress,
@@ -169,7 +168,6 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
             height,
             length,
             pickupType,
-            scheduleTime,
             deliveryType
         )
     }
