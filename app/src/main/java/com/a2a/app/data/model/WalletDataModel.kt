@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class WalletDataModel(
     @SerializedName("customer_point")
     val customerPoint: Int, // 0
-    val plan: Plan,
+    val plan: Plan?,
     @SerializedName("point_settings")
     val pointSettings: PointSettings
 ) {
@@ -18,14 +18,24 @@ data class WalletDataModel(
         @SerializedName("discount_percentage")
         val discountPercentage: Int, // 0
         @SerializedName("exp_date")
-        val expDate: Any?, // null
+        val expDate: String?, // null
         @SerializedName("plan_expired")
         val planExpired: Boolean, // true
         @SerializedName("plan_name")
         val planName: String,
         @SerializedName("plan_price")
         val planPrice: String
-    )
+    ){
+        val benefits:String
+            get() = buildString {
+                if(cartMaxPrice>0) appendLine("\u2022 Max Price : ₹ $cartMaxPrice")
+                if(cartMinPrice>0) appendLine("\u2022 Min Price : ₹ $cartMinPrice")
+                if(discountPercentage>0) append("\u2022 Discount : $discountPercentage%")
+            }
+
+        val itemPrice: String
+            get() = "\u20B9 $planPrice"
+    }
 
     data class PointSettings(
         @SerializedName("max_redeem_point_per_order")

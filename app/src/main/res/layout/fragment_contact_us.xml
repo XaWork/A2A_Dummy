@@ -36,11 +36,11 @@
             android:textSize="24sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:src="@drawable/a2a_logo" />
+            android:src="@drawable/logo_1024_x_1024" />
 
 
         <View
@@ -61,7 +61,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/call"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/tvMobile"
@@ -91,7 +91,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/call"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/whatsapp"
@@ -121,7 +121,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/mail"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/supportMail"
@@ -151,7 +151,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/location"
-                android:tint="@color/colorPrimary" />
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/location"

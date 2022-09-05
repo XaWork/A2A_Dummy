@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">A2A</string>
-    <string name="map_api_key">AIzaSyC3GgiT8g5sokSH4ILnYKwO9jnim25oFtk</string>
     <string name="app_full_name">Anything2AnyPlace</string>
+
+    <string name="map_api_key">AIzaSyC9Hr5n1hoGJjFRuoY293Ejcm-GBaaDswQ</string>
+    <string name="one_signal_app_id">f70c1467-1f66-4ce7-9f1c-7517d440fabb</string>
+
     <string name="app_tag_name">We bring your nostalgic tastes on plate</string>
     <string name="title_activity_shop">ShopActivity</string>
     <string name="title_activity_coupon">CouponActivity</string>

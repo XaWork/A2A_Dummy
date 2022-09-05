@@ -86,7 +86,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:background="#A74D18"
+                    android:background="@color/colorPrimaryDark"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toTopOf="@id/guideline_half"
@@ -128,7 +128,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:background="#F39431"
+                    android:background="@color/colorPrimary"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"

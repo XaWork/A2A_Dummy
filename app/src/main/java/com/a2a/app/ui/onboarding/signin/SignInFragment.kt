@@ -37,11 +37,17 @@ class SignInFragment : BaseFragment<
             btnLogin.text = "GET OTP"
             btnLogin.setOnClickListener {
                 if (TextUtils.isEmpty(detailId)) {
-                    login()
+                    with(viewBinding) {
+                        val mobile = etPhoneNumber.text.toString()
+                        if (mobile.isNotEmpty()) {
+                            val deviceToken = appUtils.getToken()
+                            viewModel.fetchOtp(mobile, deviceToken!!)
+                            login()
+                        }
+                    }
                 } else {
                     validateOtp(detailId)
                 }
-
             }
         }
     }
@@ -49,10 +55,10 @@ class SignInFragment : BaseFragment<
     private fun login() {
         with(viewBinding) {
             val mobile = etPhoneNumber.text.toString()
-            if (mobile.isNotEmpty()) {
-                var deviceToken = appUtils.getToken()
+            if (mobile.isNotEmpty()) {/*
+                val deviceToken = appUtils.getToken()
 
-                viewModel.fetchOtp(mobile, deviceToken!!)
+                viewModel.fetchOtp(mobile, deviceToken!!)*/
                 viewModel.fetchOtpResponse.observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Loading -> {
@@ -153,7 +159,8 @@ class SignInFragment : BaseFragment<
         val phoneNumber = viewBinding.etPhoneNumber.text.toString()
 
         if (phoneNumber.isEmpty()) {
-            Toast.makeText(context, "Mobile Number cannot be left blank!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Mobile Number cannot be left blank!", Toast.LENGTH_LONG)
+                .show()
             validation = false
         } else if (viewBinding.etOtp.text.toString().isEmpty()) {
             Toast.makeText(context, "Otp cannot be left blank!", Toast.LENGTH_LONG).show()

@@ -8,8 +8,10 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.a2a.app.data.model.AppDataModel
 import com.a2a.app.data.model.VerifyOtpModel
 import com.google.gson.Gson
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class AppUtils(private val context: Context) {
+class AppUtils @Inject constructor(@ApplicationContext private val context: Context) {
 
     companion object {
         private val KEY_TOKEN = stringPreferencesKey("key_token")

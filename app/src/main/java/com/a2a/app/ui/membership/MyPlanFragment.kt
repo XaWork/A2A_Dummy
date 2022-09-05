@@ -7,25 +7,99 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
+import com.a2a.app.common.BaseFragment
+import com.a2a.app.common.Status
+import com.a2a.app.data.model.WalletDataModel
+import com.a2a.app.data.network.UserApi
+import com.a2a.app.data.repository.UserRepository
+import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentBulkOrderBinding
 import com.a2a.app.databinding.FragmentMyPlanBinding
+import com.a2a.app.toDate
+import com.a2a.app.utils.AppUtils
 
 
-class MyPlanFragment : Fragment(R.layout.fragment_my_plan) {
+class MyPlanFragment : BaseFragment<
+        FragmentMyPlanBinding,
+        UserViewModel,
+        UserRepository
+        >(FragmentMyPlanBinding::inflate) {
 
-    private lateinit var viewBinding: FragmentMyPlanBinding
+    private lateinit var allPlans: WalletDataModel
+
+    override fun getFragmentBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentMyPlanBinding.inflate(inflater, container, false)
+
+    override fun getViewModel() = UserViewModel::class.java
+
+    override fun getFragmentRepository() =
+        UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding = FragmentMyPlanBinding.bind(view)
 
         setToolbar()
+
+        viewBinding.planContainer.visibility = View.GONE
+
+        if (this::allPlans.isInitialized)
+            setData()
+        else
+            getAllPlans()
     }
 
     private fun setToolbar() {
         viewBinding.incToolbar.toolbar.title = "My Plans"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+
+    private fun getAllPlans() {
+        val userId = AppUtils(context!!).getUser()!!.id
+        viewModel.getWalletData(userId)
+        viewModel.walletData.observe(viewLifecycleOwner) {
+            when (it) {
+                is Status.Loading -> {
+                    showLoading()
+                }
+                is Status.Success -> {
+                    stopShowingLoading()
+                    allPlans = it.value
+                    setData()
+                }
+                is Status.Failure -> {
+                    stopShowingLoading()
+                }
+            }
+        }
+    }
+
+    private fun setData() {
+        with(viewBinding) {
+            if (allPlans.plan != null && allPlans.plan!!.planName.isNotEmpty()) {
+                errorLayout.visibility = View.GONE
+                planContainer.visibility = View.VISIBLE
+                run {
+                    allPlans.run {
+                        usageText.text = customerPoint.toString()
+                        expiryDate.text = plan!!.expDate?.toDate("MMMM dd, yyyy")
+                        benefitsContent.text = plan.benefits
+                        planName.text = plan.planName
+                        planPrice.text = plan.itemPrice
+                    }
+
+                    upgrade.setOnClickListener {
+                        findNavController().navigate(R.id.action_global_memberShipFragment)
+                    }
+                }
+            } else {
+                errorLayout.visibility = View.VISIBLE
+                planContainer.visibility = View.GONE
+            }
         }
     }
 }

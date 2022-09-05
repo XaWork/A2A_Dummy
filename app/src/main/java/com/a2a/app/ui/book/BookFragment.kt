@@ -202,6 +202,7 @@ class BookFragment :
     }
 
     private fun confirmInstantBooking() {
+        findNavController().navigate(R.id.action_bookFragment_to_bookingConfrimFragment)
     }
 
     private fun showExpressDeliveryDialog(estimateCost: Int) {
@@ -227,6 +228,7 @@ class BookFragment :
 
         confirmButton.setOnClickListener {
             dialog.dismiss()
+            confirmInstantBooking()
 
         }
         dialog.show()

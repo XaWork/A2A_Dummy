@@ -21,6 +21,7 @@ import com.a2a.app.databinding.ActivityMainBinding
 import com.a2a.app.utils.AppUtils
 import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
+import com.onesignal.OneSignal
 import java.io.IOException
 import java.util.*
 
@@ -341,7 +342,5 @@ class MainActivity : AppCompatActivity() {
         invalidateOptionsMenu()
         selectNavMenu()
     }
-
-
 
 }

@@ -13,11 +13,13 @@ import androidx.core.app.NotificationCompat
 import com.a2a.app.MainActivity
 import com.a2a.app.R
 import com.a2a.app.utils.AppUtils
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.firebase.messaging.ktx.messaging
 import kotlinx.coroutines.DelicateCoroutinesApi
 
-const val channelId = "channelId"
+const val  channelId = "channelId"
 const val channelName = "channelName"
 
 class FirebaseInstanceService : FirebaseMessagingService() {
@@ -29,6 +31,7 @@ class FirebaseInstanceService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        Firebase.messaging.isAutoInitEnabled = true
         if (message.notification != null) {
             Log.e("notification message", "onMessageReceived: ${message.notification!!.title!!}")
             addNotification(message.notification!!.title!!, message.notification!!.body!!)
@@ -103,7 +106,7 @@ class FirebaseInstanceService : FirebaseMessagingService() {
 
     @SuppressLint("RemoteViewLayout")
     private fun getRemoteView(title: String, desc: String): RemoteViews? {
-        val remoteViews = RemoteViews("me.taste2plate.app.customer", R.layout.lyt_notification)
+        val remoteViews = RemoteViews("com.a2a.app.services", R.layout.lyt_notification)
 
         remoteViews.setTextViewText(R.id.notificationTitle, title)
         remoteViews.setTextViewText(R.id.notificationMessage, desc)

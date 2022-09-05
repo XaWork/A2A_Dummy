@@ -35,4 +35,10 @@
     <dimen name="book_screen_image_size">50dp</dimen>
 
     <dimen name="toolbar_logo_size">40dp</dimen>
+
+    <dimen name="input_label_vertical_spacing">8dp</dimen>
+    <dimen name="input_label_horizontal_spacing">4dp</dimen>
+
+    <dimen name="product_wishlist_icon_margin">10dp</dimen>
+    <dimen name="product_wishlist_icon_size">24dp</dimen>
 </resources>
