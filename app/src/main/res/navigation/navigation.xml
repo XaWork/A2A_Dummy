@@ -236,5 +236,11 @@
     <fragment
         android:id="@+id/bookingConfrimFragment"
         android:name="com.a2a.app.ui.book.BookingConfrimFragment"
-        android:label="BookingConfrimFragment" />
+        android:label="BookingConfrimFragment" >
+        <argument
+            android:name="confirmation"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

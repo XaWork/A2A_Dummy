@@ -5,8 +5,8 @@ import java.time.ZoneId
 import java.util.*
 
 
-fun String.toDate(format: String = "dd-MM-yy HH:mm"): String {
-    val converter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+fun String.toDate(format: String = "dd-MM-yy HH:mm", serverDateFormat: String = "yyyy-MM-dd'T'HH:mm:ss"): String {
+    val converter = SimpleDateFormat(serverDateFormat, Locale.getDefault())
     converter.timeZone = TimeZone.getTimeZone("+5:30")
     val formatter = SimpleDateFormat(format, Locale.getDefault())
     return formatter.format(converter.parse(this)!!)

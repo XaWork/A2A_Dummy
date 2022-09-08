@@ -318,5 +318,6 @@
     <string name="express">Express</string>
     <string name="super_fast">Super Fast</string>
     <string name="profile">Profile</string>
+    <string name="calculate_price">Calculate Price</string>
 
 </resources>

@@ -200,7 +200,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    fun confirmInstantBooking(
+    fun confirmBooking(
         userId: String,
         pickupAddress: String,
         destinationAddress: String,
@@ -212,12 +212,17 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         height: String,
         length: String,
         pickupType: String,
-        deliveryType: String
-    ): MutableLiveData<Status<ScheduleBookingModel>> {
-        val result = MutableLiveData<Status<ScheduleBookingModel>>()
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        price: String,
+        finalPrice: String,
+        timeslot: String,
+    ): MutableLiveData<Status<ConfirmBookingModel>> {
+        val result = MutableLiveData<Status<ConfirmBookingModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.confirmInstantBooking(
+            result.value = userRepository.confirmBooking(
                 userId,
                 pickupAddress,
                 destinationAddress,
@@ -229,7 +234,8 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 height,
                 length,
                 pickupType,
-                deliveryType
+                deliveryType,
+                scheduleTime, scheduleDate, price, finalPrice, timeslot
             )
         }
         return result
@@ -247,9 +253,16 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         height: String,
         length: String,
         pickupType: String,
-        deliveryType: String
-    ): MutableLiveData<Status<ScheduleBookingModel>> {
-        val result = MutableLiveData<Status<ScheduleBookingModel>>()
+        deliveryType: String,
+        scheduleTime: String = "",
+        scheduleDate: String = "",
+        pickupVideoRecording: String,
+        pickupPicture: String,
+        videoRecording: String,
+        picture: String,
+        liveTracking: String
+    ): MutableLiveData<Status<EstimateBookingModel>> {
+        val result = MutableLiveData<Status<EstimateBookingModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
             result.value = userRepository.estimateBooking(
@@ -264,7 +277,14 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 height,
                 length,
                 pickupType,
-                deliveryType
+                deliveryType,
+                scheduleTime,
+                scheduleDate,
+                pickupVideoRecording,
+                pickupPicture,
+                videoRecording,
+                picture,
+                liveTracking
             )
         }
         return result

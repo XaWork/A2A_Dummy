@@ -15,10 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.Status
-import com.a2a.app.data.model.AddressListModel
-import com.a2a.app.data.model.AllCategoryModel
-import com.a2a.app.data.model.AllSubCategoryModel
-import com.a2a.app.data.model.CheckCutOffTimeModel
+import com.a2a.app.data.model.*
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
@@ -26,9 +23,11 @@ import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentBookBinding
 import com.a2a.app.hideSoftKeyboard
 import com.a2a.app.setupDropDown
+import com.a2a.app.toDate
 import com.a2a.app.ui.address.AddressSelectionFragment
 import com.a2a.app.ui.address.SaveAddressListener
 import com.a2a.app.utils.AppUtils
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -49,19 +48,30 @@ class BookFragment :
     var checkAvailability: CheckCutOffTimeModel? = null
     private var bookingDate = ""
     private var pickupDate = ""
-    private var pickupTime = ""
+    private var choosedPickupTimeSlot = ""
     private var deliveryDate = ""
     private var deliveryTimeSlot = ""
     private var bookingDateTime = ""
     private var pickUpLocation: AddressListModel.Result? = null
     private var destinationLocation: AddressListModel.Result? = null
-    private var pickupRange = ""
-    private var weight = ""
-    private var width = ""
-    private var height = ""
-    private var length = ""
+    private var pickupRange = "0"
+    private var weight = "0"
+    private var width = "0"
+    private var height = "0"
+    private var length = "0"
     private var remarks = ""
-    private val slots = mutableListOf<String>()
+    private var timeslot = ""
+    private var price = ""
+    private var finalPrice = ""
+    private var videoRecordingOfPickupAndDelivery = ""
+    private var liveGPS = ""
+    private var liveTemperatureTracking = ""
+    private var pictureOfDeliveryAndPickup = ""
+    private val deliveryTimeslots = mutableListOf<String>()
+    private val pickupTimeSlots = mutableListOf<String>()
+    private lateinit var tvEstimateCost: TextView
+    private lateinit var normalDialogConfirmButton: TextView
+    private lateinit var estimateBookingResponse: EstimateBookingModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -121,6 +131,22 @@ class BookFragment :
             width = edtWidth.text.toString().trim()
             height = edtHeight.text.toString().trim()
             length = edtLength.text.toString().trim()
+            liveGPS = if (cbGps.isChecked)
+                "Y"
+            else
+                "N"
+            videoRecordingOfPickupAndDelivery = if (cbVideoRecording.isChecked)
+                "Y"
+            else
+                "N"
+            liveTemperatureTracking = if (cbTemperature.isChecked)
+                "Y"
+            else
+                "N"
+            pictureOfDeliveryAndPickup = if (cbPictureOfPickupAndDelivery.isChecked)
+                "Y"
+            else
+                "N"
 
             Log.d(
                 "booking",
@@ -159,53 +185,91 @@ class BookFragment :
                 edtLength.error = "Enter Length"*/
             else {
                 if (deliveryType.isEmpty())
-                    toast("Please specify delivery type(Normal/Express/Super Fast")
-                else
-                    checkCutOffTime()
+                    toast("Please specify delivery type(Normal/Express/Super Fast)")
+                else {
+                    if (deliveryType == "Normal")
+                        showNormalDeliveryDialog("show")
+                    else
+                        showExpressDeliveryDialog("show")
+                }
             }
         }
     }
 
-    private fun showNormalDeliveryDialog(estimateCost: Int) {
+    private fun showNormalDeliveryDialog(whatToDo: String) {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_normal_delivery)
-        val confirmButton = dialog.findViewById(R.id.btnInstantConfirm) as TextView
-        val pickupTimePicker = dialog.findViewById<EditText>(R.id.edtPickupTime)
+        normalDialogConfirmButton = dialog.findViewById(R.id.btnConfirm)
+        val tvPickupTimeSlot = dialog.findViewById<TextView>(R.id.tvPickupTimeslot)
         val pickupDatePicker = dialog.findViewById<EditText>(R.id.edtPickupDate)
         val deliveryDatePicker = dialog.findViewById<EditText>(R.id.edtDeliveryDate)
-        val deliveryTimeSlot = dialog.findViewById<TextView>(R.id.tvDeliveryTimeSlot)
-        val tvEstimateCost = dialog.findViewById<TextView>(R.id.tvEstimateCost)
-
-        tvEstimateCost.text = "Estimate Cost: \nRs.$estimateCost/."
-        deliveryTimeSlot.setupDropDown(slots.toTypedArray(), { it }, {
-            deliveryTimeSlot.text = it
-        }, {
-            it.show()
-            hideSoftKeyboard()
-        })
+        val tvDeliveryTimeSlot = dialog.findViewById<TextView>(R.id.tvDeliveryTimeSlot)
+        tvEstimateCost = dialog.findViewById(R.id.tvEstimateCost)
 
         pickupDatePicker.setOnClickListener {
             showDatePickerDialog("pickup", pickupDatePicker)
-        }
-        pickupTimePicker.setOnClickListener {
-            showTimePickerDialog(pickupTimePicker)
         }
         deliveryDatePicker.setOnClickListener {
             showDatePickerDialog("delivery", deliveryDatePicker)
         }
 
-        confirmButton.setOnClickListener {
+        normalDialogConfirmButton.setOnClickListener {
             dialog.dismiss()
-            confirmInstantBooking()
+            when (normalDialogConfirmButton.text) {
+                "Calculate Price" -> {
+                    estimateBooking()
+                }
+                "Confirm" -> {
+                    confirmBooking()
+                }
+            }
         }
-        dialog.show()
+
+        when (whatToDo) {
+            "show" -> dialog.show()
+            "edit" -> {
+                estimateBookingResponse.estimations[0].run {
+                    tvEstimateCost.text =
+                        "Estimate Cost: \nRs.${pickup.estimated_price}/."
+                    normalDialogConfirmButton.text = getString(R.string.confirm)
+
+                    //pickup
+                    pickupDatePicker.setText(pickup.pickup_date.toDate("dd/MM/yy", "yyyy-MM-dd"))
+                    pickupTimeSlots.clear()
+                    pickupTimeSlots.add(pickup.time)
+                    choosedPickupTimeSlot = pickupTimeSlots[0]
+                    tvPickupTimeSlot.text = choosedPickupTimeSlot
+                    tvPickupTimeSlot.setupDropDown(pickupTimeSlots.toTypedArray(), { it }, {
+                        choosedPickupTimeSlot = it
+                        tvPickupTimeSlot.text = choosedPickupTimeSlot
+                    }, {
+                        it.show()
+                        hideSoftKeyboard()
+                    })
+
+                    //delivery
+                    deliveryDatePicker.setText(
+                        delivery.delivery_date.toDate(
+                            "dd/MM/yy",
+                            "yyyy-MM-dd"
+                        )
+                    )
+                    deliveryTimeslots.clear()
+                    deliveryTimeslots.add(delivery.delivery_slot)
+                    tvDeliveryTimeSlot.text = deliveryTimeslots[0]
+                    tvDeliveryTimeSlot.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
+                        tvDeliveryTimeSlot.text = it
+                    }, {
+                        it.show()
+                        hideSoftKeyboard()
+                    })
+                }
+                dialog.show()
+            }
+        }
     }
 
-    private fun confirmInstantBooking() {
-        findNavController().navigate(R.id.action_bookFragment_to_bookingConfrimFragment)
-    }
-
-    private fun showExpressDeliveryDialog(estimateCost: Int) {
+    private fun showExpressDeliveryDialog(whatToDo: String) {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_express_delivery)
         val confirmButton = dialog.findViewById(R.id.btnScheduleConfirm) as TextView
@@ -213,64 +277,44 @@ class BookFragment :
         val deliveryDatePicker = dialog.findViewById<EditText>(R.id.edtDeliveryDate)
         val tvEstimateCost = dialog.findViewById<TextView>(R.id.tvEstimateCost)
 
-        tvEstimateCost.text = "Estimate Cost: \nRs.$estimateCost/."
-
-        timePicker.setupDropDown(slots.toTypedArray(), { it }, {
-            timePicker.text = it
-        }, {
-            it.show()
-            hideSoftKeyboard()
-        })
-
         deliveryDatePicker.setOnClickListener {
             showDatePickerDialog("delivery", deliveryDatePicker)
         }
 
         confirmButton.setOnClickListener {
             dialog.dismiss()
-            confirmInstantBooking()
-
+            when (confirmButton.text) {
+                "Calculate Price" -> estimateBooking()
+                else -> confirmBooking()
+            }
         }
-        dialog.show()
-    }
 
-    private fun estimateBooking() {
-        val userId = AppUtils(context!!).getUser()!!.id
-        viewModel.estimateBooking(
-            userId = userId,
-            pickupAddress = pickUpLocation!!.id,
-            destinationAddress = destinationLocation!!.id,
-            category = categoryId,
-            subCategory = subCategoryId,
-            pickupRange = pickupRange,
-            weight = weight,
-            width = width,
-            height = height,
-            length = length,
-            pickupType = deliveryType,
-            deliveryType = deliveryType
-        ).observe(viewLifecycleOwner) {
-            when (it) {
-                is Status.Loading -> {
-                    showLoading()
-                }
-                is Status.Success -> {
-                    stopShowingLoading()
-                    /*toast("Booking confirm")
-                    val action = BookFragmentDirections.actionBookFragmentToBookingConfrimFragment()
-                    findNavController().navigate(action)*/
-                    if (deliveryType == "Normal")
-                        showNormalDeliveryDialog(
-                            estimateCost = it.value.estimated_price
-                        )
-                    else
-                        showExpressDeliveryDialog(
-                            estimateCost = it.value.estimated_price
-                        )
-                }
-                is Status.Failure -> {
-                    stopShowingLoading()
-                }
+        when (whatToDo) {
+            "show" -> dialog.show()
+            "edit" -> {
+                confirmButton.text = getString(R.string.confirm)
+
+                tvEstimateCost.text =
+                    "Estimate Cost: \nRs.${estimateBookingResponse.estimations[0].pickup.estimated_price}/."
+
+                deliveryDatePicker.setText(
+                    estimateBookingResponse.estimations[0].delivery.delivery_date.toDate(
+                        "dd/MM/yy",
+                        "yyyy-MM-dd"
+                    )
+                )
+                deliveryTimeslots.clear()
+                deliveryTimeslots.add(estimateBookingResponse.estimations[0].delivery.delivery_slot)
+                deliveryTimeSlot = estimateBookingResponse.estimations[0].delivery.delivery_slot
+                timePicker.text = deliveryTimeSlot
+                timePicker.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
+                    deliveryTimeSlot = it
+                    timePicker.text = deliveryTimeSlot
+                }, {
+                    it.show()
+                    hideSoftKeyboard()
+                })
+                dialog.show()
             }
         }
     }
@@ -346,6 +390,112 @@ class BookFragment :
         return false
     }
 
+    private fun estimateBooking() {
+        val userId = AppUtils(context!!).getUser()!!.id
+        viewModel.estimateBooking(
+            userId = userId,
+            pickupAddress = "61baeddf53355a0009697687",
+            destinationAddress = "61ae19f4630eda331431616d",
+            category = categoryId,
+            subCategory = subCategoryId,
+            pickupRange = pickupRange,
+            weight = weight,
+            width = width,
+            height = height,
+            length = length,
+            pickupType = "Superfast",
+            deliveryType = deliveryType,
+            pickupVideoRecording = videoRecordingOfPickupAndDelivery,
+            videoRecording = videoRecordingOfPickupAndDelivery,
+            pickupPicture = pictureOfDeliveryAndPickup,
+            picture = pictureOfDeliveryAndPickup,
+            liveTracking = liveGPS,
+        ).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> {
+                    showLoading()
+                }
+                is Status.Success -> {
+                    stopShowingLoading()
+                    if (result.value.status == "success") {
+                        estimateBookingResponse = result.value
+                        when (deliveryType) {
+                            "Normal" -> showNormalDeliveryDialog("edit")
+                            else -> showExpressDeliveryDialog("edit")
+                        }
+                    }
+                }
+                is Status.Failure -> {
+                    stopShowingLoading()
+                }
+            }
+        }
+    }
+
+    private fun confirmBooking() {
+        val sdfDate = SimpleDateFormat("MM/dd/yyyy")
+        val sdfTime = SimpleDateFormat("HH:mm")
+        val calendar = Calendar.getInstance()
+        val currentDate = sdfDate.format(calendar.time)
+        val currentTime = sdfTime.format(calendar.time)
+
+        val userId = AppUtils(context!!).getUser()?.id
+        viewModel.confirmBooking(
+            userId = userId!!,
+            pickupAddress = pickUpLocation!!.id,
+            destinationAddress = destinationLocation!!.id,
+            category = categoryId,
+            subCategory = subCategoryId,
+            pickupRange = pickupRange,
+            weight = weight,
+            width = width,
+            height = height,
+            length = length,
+            pickupType = deliveryType,
+            deliveryType = deliveryType,
+            scheduleTime = when (deliveryType) {
+                "Normal" -> {
+                    choosedPickupTimeSlot
+                }
+                else -> {
+                    currentTime
+                }
+            },
+            scheduleDate = when (deliveryType) {
+                "Normal" -> {
+                    pickupDate
+                }
+                else -> {
+                    currentDate
+                }
+            },
+            price = price,
+            finalPrice = finalPrice,
+            timeslot = timeslot
+        ).observe(viewLifecycleOwner) {
+            when (it) {
+                is Status.Loading -> {
+                    showLoading()
+                }
+                is Status.Success -> {
+                    stopShowingLoading()
+                    if (it.value.status == "success") {
+                        val stringResponse =
+                            Gson().toJson(it.value, ConfirmBookingModel::class.java)
+                        val action =
+                            BookFragmentDirections.actionBookFragmentToBookingConfrimFragment(
+                                stringResponse
+                            )
+                        findNavController().navigate(action)
+                    }
+                }
+                is Status.Failure -> {
+                    stopShowingLoading()
+                }
+            }
+        }
+    }
+
     private fun checkCutOffTime() {
         val customViewModel = getCutomViewModel()
         val startCity = pickUpLocation!!.city.id
@@ -379,9 +529,9 @@ class BookFragment :
                     }
                     estimateBooking()*/
 
-                    slots.clear()
-                    slots.add("Night")
-                    slots.add("Afternoon")
+                    deliveryTimeslots.clear()
+                    deliveryTimeslots.add("Night")
+                    deliveryTimeslots.add("Afternoon")
                     estimateBooking()
                 }
                 is Status.Failure -> {

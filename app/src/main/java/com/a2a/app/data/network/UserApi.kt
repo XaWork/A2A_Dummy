@@ -104,7 +104,7 @@ interface UserApi {
 
     @FormUrlEncoded
     @POST("confirm-booking")
-    suspend fun confirmInstantBooking(
+    suspend fun confirmBooking(
         @Field("id") userId: String,
         @Field("pickup_address") pickupAddress: String,
         @Field("destination_address") destinationAddress: String,
@@ -117,7 +117,12 @@ interface UserApi {
         @Field("length") length: String,
         @Field("pickup_type") pickupType: String,
         @Field("delivery_type") deliveryType: String,
-    ): ScheduleBookingModel
+        @Field("schedule_time") scheduleTime: String,
+        @Field("schedule_date") scheduleDate: String,
+        @Field("price") price: String,
+        @Field("finalprice") finalPrice: String,
+        @Field("timeslot") timeslot: String,
+    ): ConfirmBookingModel
 
     @FormUrlEncoded
     @POST("estimate-booking")
@@ -128,11 +133,18 @@ interface UserApi {
         @Field("category") category: String,
         @Field("sub_category") subCategory: String,
         @Field("pickup_range") pickupRange: String,
-        @Field("weight") weight: String = "",
+        @Field("weight") weight: String,
         @Field("width") width: String,
         @Field("height") height: String,
         @Field("length") length: String,
         @Field("pickup_type") pickupType: String,
         @Field("delivery_type") deliveryType: String,
-    ): ScheduleBookingModel
+        @Field("schedule_time") scheduleTime: String,
+        @Field("schedule_date") scheduleDate: String,
+        @Field("pickup_video_recording_price") pickupVideoRecording: String,
+        @Field("pickup_picture_price") pickupPicture: String,
+        @Field("video_recording_price") videoRecording: String,
+        @Field("picture_price") picture: String,
+        @Field("live_tracking") liveTracking: String,
+    ): EstimateBookingModel
 }

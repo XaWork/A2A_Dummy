@@ -112,7 +112,7 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         userId: String
     ) = safeApiCall { userAPI.getWalletTransactions(userId) }
 
-    suspend fun confirmInstantBooking(
+    suspend fun confirmBooking(
         userId: String,
         pickupAddress: String,
         destinationAddress: String,
@@ -125,8 +125,13 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         length: String,
         pickupType: String,
         deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        price: String,
+        finalPrice: String,
+        timeslot: String,
     ) = safeApiCall {
-        userAPI.confirmInstantBooking(
+        userAPI.confirmBooking(
             userId,
             pickupAddress,
             destinationAddress,
@@ -138,7 +143,8 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
             height,
             length,
             pickupType,
-            deliveryType
+            deliveryType,
+            scheduleTime, scheduleDate, price, finalPrice, timeslot
         )
     }
 
@@ -155,6 +161,13 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         length: String,
         pickupType: String,
         deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        pickupVideoRecording: String,
+        pickupPicture: String,
+        videoRecording: String,
+        picture: String,
+        liveTracking: String,
     ) = safeApiCall {
         userAPI.estimateBooking(
             userId,
@@ -168,7 +181,14 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
             height,
             length,
             pickupType,
-            deliveryType
+            deliveryType,
+            scheduleTime,
+            scheduleDate,
+            pickupVideoRecording,
+            pickupPicture,
+            videoRecording,
+            picture,
+            liveTracking
         )
     }
 
