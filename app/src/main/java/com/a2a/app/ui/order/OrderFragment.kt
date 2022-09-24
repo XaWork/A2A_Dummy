@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.R
@@ -15,19 +17,32 @@ import com.a2a.app.data.model.OrderModel
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentOrderBinding
 import com.a2a.app.databinding.StateEmptyBinding
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class OrderFragment :
-    BaseFragment<FragmentOrderBinding, UserViewModel, UserRepository>(FragmentOrderBinding::inflate) {
+@AndroidEntryPoint
+class OrderFragment : Fragment(R.layout.fragment_order) {
 
     private lateinit var orderList: List<OrderModel.Result>
     private lateinit var order: OrderModel
+    private lateinit var viewBinding: FragmentOrderBinding
+    private val viewModel by viewModels<UserViewModel1>()
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+
+    @Inject
+    lateinit var appUtils: AppUtils
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentOrderBinding.bind(view)
 
         setToolbar()
 
@@ -35,50 +50,56 @@ class OrderFragment :
             setData()
         else
             getOrders()
+
+        viewBinding.bNext.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun getOrders() {
+
+
         viewModel.getMyOrders(
             userId = AppUtils(context!!).getUser()!!.id,
             page = "0",
             perPage = "10"
-        )
-
-        viewModel.myOrders.observe(viewLifecycleOwner) {
+        ).observe(viewLifecycleOwner) {
             when (it) {
-                is Status.Loading -> showLoading()
+                is Status.Loading -> viewUtils.showLoading(parentFragmentManager)
                 is Status.Success -> {
-                    stopShowingLoading()
-                    order =it.value
+                    viewUtils.stopShowingLoading()
+                    order = it.value
                     orderList = it.value.result
                     setData()
                 }
-                is Status.Failure -> stopShowingLoading()
+                is Status.Failure -> viewUtils.stopShowingLoading()
             }
         }
     }
 
     private fun setData() {
-        if(orderList.isEmpty())
+        if (orderList.isEmpty())
             showEmpty(getString(R.string.no_orders), getString(R.string.no_order_desc))
         else
-            viewBinding.contentMyOrders.rvOrders.run{
+            viewBinding.contentMyOrders.rvOrders.run {
                 layoutManager = LinearLayoutManager(context)
-                 adapter = OrderAdapter(
-                     data = orderList,
-                     context =context,
-                     object: RvItemClick {
-                         override fun clickWithPosition(name: String, position: Int) {
-                            val orderDetails = Gson().toJson(orderList[position], OrderModel.Result::class.java)
-                             val serverTime = order.serverTime
-                             val action = OrderFragmentDirections.actionOrderFragmentToOrderDetailsFragment(
-                                 orderDetails = orderDetails,
-                                 serverTime = serverTime
-                             )
-                             findNavController().navigate(action)
-                         }
-                     }
-                 )
+                adapter = OrderAdapter(
+                    data = orderList,
+                    context = context,
+                    object : RvItemClick {
+                        override fun clickWithPosition(name: String, position: Int) {
+                            val orderDetails =
+                                Gson().toJson(orderList[position], OrderModel.Result::class.java)
+                            val serverTime = order.serverTime
+                            val action =
+                                OrderFragmentDirections.actionOrderFragmentToOrderDetailsFragment(
+                                    orderDetails = orderDetails,
+                                    serverTime = serverTime
+                                )
+                            findNavController().navigate(action)
+                        }
+                    }
+                )
             }
     }
 
@@ -100,18 +121,5 @@ class OrderFragment :
             }
         }
     }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentOrderBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() = UserRepository(
-        remoteDataSource.getBaseUrl().create(
-            UserApi::class.java
-        )
-    )
 }
 

@@ -92,11 +92,11 @@ data class OrderModel(
         @SerializedName("sub_category")
         val subCategory: String, // 61ae1a5c630eda331431617c
         val timeslot: String,
-        val totalCGST: String,
-        val totalIGST: String,
-        val totalPackingPrice: String,
-        val totalSGST: String,
-        val totalShippingPrice: String,
+        val totalCGST: String?,
+        val totalIGST: String?,
+        val totalPackingPrice: String?,
+        val totalSGST: String?,
+        val totalShippingPrice: String?,
         @SerializedName("total_weight")
         val totalWeight: String, // 25
         val transactionid: Any?, // null
@@ -287,6 +287,6 @@ data class OrderModel(
 }
 
 
-fun OrderModel.Result.tCgst() = if(totalCGST.isNotEmpty()) totalCGST else "0"
-fun OrderModel.Result.tIGST() = if(totalIGST.isNotEmpty()) totalIGST else "0"
-fun OrderModel.Result.tSGST() = if(totalSGST.isNotEmpty()) totalSGST else "0"
+fun OrderModel.Result.tCgst() = if(totalCGST.isNullOrEmpty()) "0" else totalCGST
+fun OrderModel.Result.tIGST() = if(totalIGST.isNullOrEmpty()) "0" else totalIGST
+fun OrderModel.Result.tSGST() = if(totalSGST.isNullOrEmpty()) "0" else totalSGST

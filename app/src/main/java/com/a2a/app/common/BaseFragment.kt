@@ -11,16 +11,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.a2a.app.R
 import com.a2a.app.data.network.CustomApi
+import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.CustomRepository
+import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
+import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.data.viewmodelfactory.CustomViewModelFactory
+import com.a2a.app.data.viewmodelfactory.UserViewModelFactory
 import com.a2a.app.services.RemoteDataSource
 import com.a2a.app.ui.common.ProgressDialogFragment
 import com.a2a.app.utils.AppUtils
 
 abstract class BaseFragment<VB : ViewBinding, VM : ViewModel, BR : BaseRepository>(
     private val bindingInflate: (inflater: LayoutInflater) -> VB
-) : Fragment() {
+) : Fragment()   {
 
     private lateinit var progressDialog: ProgressDialogFragment
     protected lateinit var appUtils: AppUtils
@@ -62,6 +66,16 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel, BR : BaseRepositor
             this,
             CustomViewModelFactory(userRepository)
         )[CustomViewModel::class.java]
+    }
+
+    fun getUserViewModel(): UserViewModel {
+        val userRepository =
+            UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
+
+        return ViewModelProvider(
+            this,
+            UserViewModelFactory(userRepository)
+        )[UserViewModel::class.java]
     }
 
     fun showLoading() {

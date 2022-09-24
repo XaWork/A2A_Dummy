@@ -54,6 +54,38 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         return result
     }
 
+
+    fun assignPlan(
+        userId: String,
+        planId: String
+    ): MutableLiveData<Status<AssignPlanModel>> {
+
+        val result = MutableLiveData<Status<AssignPlanModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository.assignPlan(userId, planId)
+        }
+
+        return result
+    }
+
+
+    fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ): MutableLiveData<Status<NormalTimeslotModel>> {
+
+        val result = MutableLiveData<Status<NormalTimeslotModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value =
+                userRepository.normalTimeSlots(scheduleDate, destinationAddress, pickupAddress)
+        }
+
+        return result
+    }
+
     fun editProfile(
         id: String,
         fullName: String,
@@ -218,6 +250,10 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         price: String,
         finalPrice: String,
         timeslot: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String,
     ): MutableLiveData<Status<ConfirmBookingModel>> {
         val result = MutableLiveData<Status<ConfirmBookingModel>>()
         viewModelScope.launch {
@@ -235,7 +271,15 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 length,
                 pickupType,
                 deliveryType,
-                scheduleTime, scheduleDate, price, finalPrice, timeslot
+                scheduleTime,
+                scheduleDate,
+                price,
+                finalPrice,
+                timeslot,
+                videoRecording,
+                pictureRecording,
+                liveTemparature,
+                liveTracking
             )
         }
         return result
@@ -254,12 +298,11 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         length: String,
         pickupType: String,
         deliveryType: String,
-        scheduleTime: String = "",
-        scheduleDate: String = "",
-        pickupVideoRecording: String,
-        pickupPicture: String,
+        scheduleTime: String,
+        scheduleDate: String,
         videoRecording: String,
-        picture: String,
+        pictureRecording: String,
+        liveTempreture: String,
         liveTracking: String
     ): MutableLiveData<Status<EstimateBookingModel>> {
         val result = MutableLiveData<Status<EstimateBookingModel>>()
@@ -280,10 +323,9 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 deliveryType,
                 scheduleTime,
                 scheduleDate,
-                pickupVideoRecording,
-                pickupPicture,
                 videoRecording,
-                picture,
+                pictureRecording,
+                liveTempreture,
                 liveTracking
             )
         }

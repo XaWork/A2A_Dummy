@@ -14,7 +14,7 @@ data class EstimateBookingModel(
         )
 
         data class Pickup(
-            val estimated_price: Int,
+            val estimated_price: Float,
             val pickup_date: String,
             val remarks: String,
             val time: String

@@ -233,17 +233,61 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+
+        <TextView
+            android:id="@+id/tvSelectServiceType"
+            style="@style/poppins_regular_14_black_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_between_views"
+            android:text="Select Service Type"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView2" />
+
+
+        <RadioGroup
+            android:id="@+id/rgDeliveryType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/rec_outline_sharp"
+            android:paddingHorizontal="@dimen/high_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSelectServiceType">
+
+            <RadioButton
+                android:id="@+id/rbNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/normal" />
+
+            <RadioButton
+                android:id="@+id/rbExpress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/express" />
+
+            <RadioButton
+                android:id="@+id/rbSuperFast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/super_fast" />
+
+        </RadioGroup>
+
+
         <TextView
             android:id="@+id/tvMoreInfo"
             style="@style/poppins_bold_18_blue_bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/space_between_views"
             android:text="More Information"
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView2" />
+            app:layout_constraintTop_toBottomOf="@+id/rgDeliveryType" />
 
         <TextView
             android:id="@+id/textView12"
@@ -309,7 +353,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Pickup Range in KM"
-                android:text="5"
+                android:text="0"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -330,6 +374,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Weight"
+                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -349,6 +394,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Width"
+                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -369,6 +415,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Height"
+                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -388,6 +435,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Length"
+                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -469,36 +517,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cbTemperature" />
-
-        <RadioGroup
-            android:id="@+id/rgDeliveryType"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cbPictureOfPickupAndDelivery">
-
-            <RadioButton
-                android:id="@+id/rbNormal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/normal" />
-
-            <RadioButton
-                android:id="@+id/rbExpress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/express" />
-
-            <RadioButton
-                android:id="@+id/rbSuperFast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/super_fast" />
-
-        </RadioGroup>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

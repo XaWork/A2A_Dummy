@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnBack"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_256_x_256" />
+        app:srcCompat="@drawable/logo_256x256" />
 
     <ImageView
         android:id="@+id/btnBack"

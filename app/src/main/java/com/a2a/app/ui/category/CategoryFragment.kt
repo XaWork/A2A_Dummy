@@ -18,6 +18,7 @@ import com.a2a.app.data.network.CustomApi
 import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCategoryBinding
+import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.common.CommonAdapter
 import com.google.gson.Gson
 
@@ -63,7 +64,8 @@ class CategoryFragment :
         val allCategoryList = ArrayList<CommonModel>()
 
         for (category in allCategories.result) {
-            category.run {
+            allCategoryList.add(category.toCommonModel())
+            /*category.run {
                 allCategoryList.add(
                     CommonModel(
                         id,
@@ -74,7 +76,7 @@ class CategoryFragment :
                         subHeading = ""
                     )
                 )
-            }
+            }*/
         }
 
         //viewBinding.setVariable(BR.dataList, allCategoryList)

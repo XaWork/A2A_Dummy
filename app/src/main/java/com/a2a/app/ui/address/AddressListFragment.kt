@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.R
@@ -14,26 +16,39 @@ import com.a2a.app.data.model.AddressListModel
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.ContentAddressBinding
 import com.a2a.app.databinding.FragmentAddressListBinding
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
-class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewModel, UserRepository>(
-    FragmentAddressListBinding::inflate
-) {
+@AndroidEntryPoint
+class AddressListFragment : Fragment(R.layout.fragment_address_list) {
 
     private lateinit var contentAddress: ContentAddressBinding
+    private lateinit var viewBinding: FragmentAddressListBinding
+
+    @Inject
+    lateinit var appUtils: AppUtils
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+
+    private val viewModel by viewModels<UserViewModel1>()
     private var addressList: ArrayList<AddressListModel.Result> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentAddressListBinding.bind(view)
+
         contentAddress = viewBinding.contentAddress
 
         setToolbar()
 
-        viewBinding.contentAddress.tvAddNewAddress.setOnClickListener{
+        viewBinding.contentAddress.tvAddNewAddress.setOnClickListener {
             findNavController().navigate(R.id.action_addressListFragment_to_addNewAddressFragment)
         }
     }
@@ -46,16 +61,15 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
     }
 
     private fun getAddressList() {
-        val userId = AppUtils(context!!).getUser()?.id
-        viewModel.allAddress(userId!!)
+        val userId = appUtils.getUser()!!.id
 
-        viewModel.addressList.observe(viewLifecycleOwner) { response ->
+        viewModel.addressList(userId).observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     addressList.clear()
                     addressList.addAll(response.value.result)
 
@@ -71,7 +85,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
                     }
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
@@ -80,7 +94,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
     private fun setData() {
         contentAddress.rvAddressList.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = AddressAdapter(context, addressList,"profile", object : RvItemClick {
+            adapter = AddressAdapter(context, addressList, "profile", object : RvItemClick {
                 override fun clickWithPosition(name: String, position: Int) {
                     when (name) {
                         "delete" -> {
@@ -108,10 +122,10 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
         viewModel.deleteAddress(userId!!, addressId).observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     with(contentAddress) {
                         removeFromAddressList(addressId);
                         if (addressList.isNotEmpty()) {
@@ -125,7 +139,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
                     }
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
@@ -148,16 +162,4 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding, UserViewMod
         getAddressList()
     }
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentAddressListBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() = UserRepository(
-        remoteDataSource.getBaseUrl().create(
-            UserApi::class.java
-        )
-    )
 }

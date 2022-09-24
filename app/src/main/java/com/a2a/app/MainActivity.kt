@@ -22,10 +22,11 @@ import com.a2a.app.utils.AppUtils
 import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
 import com.onesignal.OneSignal
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.util.*
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     // var cartCounter: String? = ""
     private lateinit var viewBinding: ActivityMainBinding
@@ -85,7 +86,8 @@ class MainActivity : AppCompatActivity() {
                     val navHostFragment =
                         supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
                     val navController = navHostFragment.navController
-                    navController.navigate(R.id.action_global_categoryFragment)}
+                    navController.navigate(R.id.action_global_categoryFragment)
+                }
             }
             return@setOnNavigationItemSelectedListener true
         }
@@ -95,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         viewBinding.navView.menu.getItem(navItemIndex).isChecked = true
     }
 
-     fun selectHomeNavMenu() {
+    fun selectHomeNavMenu() {
         viewBinding.navView.menu.getItem(0).isChecked = true
     }
 
@@ -103,19 +105,18 @@ class MainActivity : AppCompatActivity() {
         viewBinding.navView.menu.getItem(navItemIndex).isChecked = false
     }
 
-    private fun closeDrawer(){
+    private fun closeDrawer() {
         viewBinding.drawerLayout.closeDrawer(Gravity.LEFT)
     }
 
     private fun setUpNavigationView() {
-
         setSupportActionBar(viewBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.title = getString(R.string.app_name)
         title = getString(R.string.app_name)
 
         actionBarDrawerToggle =
-             ActionBarDrawerToggle(
+            ActionBarDrawerToggle(
                 this,
                 viewBinding.drawerLayout,
                 viewBinding.toolbar,
@@ -132,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         viewBinding.navView.setNavigationItemSelectedListener { menuItem ->
             // This method will trigger on item Click of navigation menu
             //Check to see which item was being clicked and perform appropriate action
-               // Log.e("navigation drawer", menuItem.title.toString())
+            // Log.e("navigation drawer", menuItem.title.toString())
             when (menuItem.itemId) {
                 //Replacing the main content with ContentFragment Which is our Inbox View;
                 R.id.nav_home -> {
@@ -215,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.action_global_onBoardingFragment)
                 }
 
-                R.id.member_ship ->{
+                R.id.member_ship -> {
                     hideToolbarAndBottomNavigation()
                     val navHostFragment =
                         supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
@@ -223,7 +224,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.action_global_memberShipFragment)
                 }
 
-                R.id.my_plan ->{
+                R.id.my_plan -> {
                     hideToolbarAndBottomNavigation()
                     val navHostFragment =
                         supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
@@ -231,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.action_global_myPlanFragment)
                 }
 
-                R.id.wallet ->{
+                R.id.wallet -> {
                     hideToolbarAndBottomNavigation()
                     val navHostFragment =
                         supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
@@ -250,18 +251,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun hideToolbarAndBottomNavigation(){
-        with(viewBinding){
+    fun hideToolbarAndBottomNavigation() {
+        with(viewBinding) {
             toolbar.visibility = View.GONE
             navigation.visibility = View.GONE
         }
     }
 
-    fun showToolbarAndBottomNavigation(){
-        with(viewBinding){
+    fun showToolbarAndBottomNavigation() {
+        with(viewBinding) {
             toolbar.visibility = View.VISIBLE
             navigation.visibility = View.VISIBLE
         }
+    }
+
+    fun setNavHeader() {
+        //set header
+        val headerTitle = viewBinding.navView.getHeaderView(0).findViewById<TextView>(R.id.name)
+        headerTitle.text = AppUtils(this).getUser()!!.email
     }
 
 
@@ -289,7 +296,7 @@ class MainActivity : AppCompatActivity() {
                             "Token",
                             "This is the token : " + task.result
                         )
-                    }catch(exception: Exception){
+                    } catch (exception: Exception) {
 
                     }
                 }
@@ -312,8 +319,6 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
                 val navController = navHostFragment.navController
                 navController.navigate(R.id.action_global_bookFragment)
-            }
-            R.id.chat -> {
             }
         }
         return true
@@ -341,6 +346,19 @@ class MainActivity : AppCompatActivity() {
         navItemIndex = 0
         invalidateOptionsMenu()
         selectNavMenu()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AppUtils(this).clearHomePage()
+        AppUtils(this).clearSettings()
+
+        Log.e(
+            "main",
+            "Home : ${
+                AppUtils(this).getHome().toString()
+            }\nSettings : ${AppUtils(this).clearSettings()}"
+        )
     }
 
 }

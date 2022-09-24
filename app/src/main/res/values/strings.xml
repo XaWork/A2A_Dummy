@@ -202,7 +202,9 @@
     <string name="alert">Alert</string>
     <string name="select_zipcode">Please select zipcode</string>
     <string name="no_plans">No Plans</string>
+    <string name="no_offers">No Offers</string>
     <string name="no_plan_description">No Membership plans are available for the current location</string>
+    <string name="no_offer_description">No Offers are available for now.</string>
     <string name="plans_title">Membership Plans</string>
     <string name="descriptions">Description</string>
     <string name="benefits">Benefits</string>

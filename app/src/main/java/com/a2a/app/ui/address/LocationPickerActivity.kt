@@ -131,7 +131,7 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback, Location
 
         binding.searchContainer.setOnClickListener {
             if (!Places.isInitialized()) {
-                Places.initialize(applicationContext, "AIzaSyC3GgiT8g5sokSH4ILnYKwO9jnim25oFtk")
+                Places.initialize(applicationContext, "AIzaSyAj0qAw3RL4AhbO3ly22EFMqThPbm7dBT4")
             }
             val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.NAME)
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields).setCountry("IN")

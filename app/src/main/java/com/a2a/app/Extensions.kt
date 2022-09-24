@@ -1,5 +1,6 @@
 package com.a2a.app
 
+import com.a2a.app.data.model.OrderUpdateModel
 import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.util.*
@@ -18,8 +19,7 @@ fun String.toDateObject(format: String = "dd-MM-yy HH:mm"): Date {
     return converter.parse(this)!!
 }
 
-/*
-fun Updates.toSummary() = buildString {
+fun OrderUpdateModel.Result.toSummary() = buildString {
     appendln(note)
     append(createdDate.toDate())
-}*/
+}

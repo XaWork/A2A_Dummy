@@ -19,6 +19,7 @@ import com.a2a.app.data.network.CustomApi
 import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCityBinding
+import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.category.CategoryFragmentDirections
 import com.a2a.app.ui.common.CommonAdapter
 import com.google.gson.Gson
@@ -74,23 +75,25 @@ class CityFragment : BaseFragment<
     private fun setData() {
         //cityList.add(CommonModel("1", "", "customer name", "", "", ""))
         for (city in allCities.result) {
-            city.run {
-                cityList.add(
-                    CommonModel(
-                        id, file, name, description, slug, subHeading
+            cityList.add(city.toCommonModel())
+            /*    city.run {
+                    cityList.add(
+                        CommonModel(
+                            id, file, name, description, slug, subHeading
+                        )
                     )
-                )
-            }
+                }*/
         }
-       // viewBinding.setVariable(BR.dataList, cityList.toList())
+        // viewBinding.setVariable(BR.dataList, cityList.toList())
         viewBinding.rvCity.run {
             layoutManager = LinearLayoutManager(context)
             adapter = CommonAdapter(cityList, context, object : ItemClick {
                 override fun clickRvItem(name: String, model: Any) {
-                    when(name){
+                    when (name) {
                         "details" -> {
                             mainActivity.hideToolbarAndBottomNavigation()
-                            val details = Gson().toJson(model as CommonModel, CommonModel::class.java)
+                            val details =
+                                Gson().toJson(model as CommonModel, CommonModel::class.java)
                             val action = CityFragmentDirections.actionGlobalViewDetailsFragment(
                                 details = details,
                                 name = "City Details"

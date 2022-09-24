@@ -3,33 +3,47 @@ package com.a2a.app.ui.onboarding.signin
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.asLiveData
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.Status
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
-import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentSignInBinding
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignInFragment : BaseFragment<
-        FragmentSignInBinding,
-        UserViewModel,
-        UserRepository
-        >(FragmentSignInBinding::inflate), ViewUtils {
+@AndroidEntryPoint
+class SignInFragment : Fragment(R.layout.fragment_sign_in) {
 
     private var detailId: String? = ""
+    private var deviceToken: String? = ""
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+    @Inject
+    lateinit var appUtils: AppUtils
+
+    lateinit var viewBinding: FragmentSignInBinding
+    val viewModel by viewModels<UserViewModel1>()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //viewBinding.userViewModel = viewModel
+        viewBinding = FragmentSignInBinding.bind(view)
+
+        lifecycleScope.launch {
+            appUtils.getToken1.collect { token ->
+                deviceToken = token
+            }
+        }
 
         with(viewBinding) {
             detailId = ""
@@ -40,49 +54,48 @@ class SignInFragment : BaseFragment<
                     with(viewBinding) {
                         val mobile = etPhoneNumber.text.toString()
                         if (mobile.isNotEmpty()) {
-                            val deviceToken = appUtils.getToken()
-                            viewModel.fetchOtp(mobile, deviceToken!!)
-                            login()
+                            fetchOtp()
                         }
                     }
                 } else {
-                    validateOtp(detailId)
+                    validateOtp()
                 }
             }
         }
     }
 
-    private fun login() {
+    private fun fetchOtp() {
         with(viewBinding) {
             val mobile = etPhoneNumber.text.toString()
             if (mobile.isNotEmpty()) {/*
                 val deviceToken = appUtils.getToken()
 
                 viewModel.fetchOtp(mobile, deviceToken!!)*/
-                viewModel.fetchOtpResponse.observe(viewLifecycleOwner) { response ->
+                viewModel.fetchOtp(mobile, deviceToken!!).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Loading -> {
-                            showLoading(
+                            viewUtils.showLoading(
+                                parentFragmentManager,
                                 "fetching Otp",
                                 "This will only take a short while"
                             )
                         }
 
                         is Status.Success -> {
-                            stopShowingLoading()
+                            viewUtils.stopShowingLoading()
                             val loginResponse = response.value
                             if (loginResponse.status == "success") {
                                 etOtp.isEnabled = true
                                 etPhoneNumber.isEnabled = false
                                 viewBinding.btnLogin.text = "LOGIN"
                                 detailId = loginResponse.message
-                                showError("Otp has been sent to registered mobile number")
+                                viewUtils.showError("Otp has been sent to registered mobile number")
                             } else {
-                                showError("Mobile number is not registered, Please check the number entered or Sign Up")
+                                viewUtils.showError("Mobile number is not registered, Please check the number entered or Sign Up")
                             }
                         }
                         is Status.Failure -> {
-                            stopShowingLoading()
+                            viewUtils.stopShowingLoading()
                         }
                     }
                 }
@@ -97,7 +110,7 @@ class SignInFragment : BaseFragment<
         }
     }
 
-    private fun validateOtp(details: String?) {
+    private fun validateOtp() {
         with(viewBinding) {
             if (validates()) {
                 val phoneNumber = etPhoneNumber.text.toString()
@@ -110,17 +123,18 @@ class SignInFragment : BaseFragment<
                     .observe(viewLifecycleOwner) { response ->
                         when (response) {
                             is Status.Loading -> {
-                                showLoading(
+                                viewUtils.showLoading(
+                                    parentFragmentManager,
                                     "Validating otp",
                                     "This will only take a short while"
                                 )
                             }
 
                             is Status.Success -> {
-                                stopShowingLoading()
+                                viewUtils.stopShowingLoading()
                                 val otpResponse = response.value
                                 if (otpResponse.status == "success") {
-                                    showError("Verified")
+                                    viewUtils.showError("Verified")
                                     AppUtils(context!!).saveUser(response.value.data)
 
                                     // check which data is saved
@@ -128,12 +142,12 @@ class SignInFragment : BaseFragment<
 
                                     moveToDashBoard()
                                 } else {
-                                    showError("Wrong otp, Please enter correct otp")
+                                    viewUtils.showError("Wrong otp, Please enter correct otp")
                                 }
                             }
 
                             is Status.Failure -> {
-                                stopShowingLoading()
+                                viewUtils.stopShowingLoading()
                                 Toast.makeText(
                                     activity,
                                     response.errorBody.toString(),
@@ -174,17 +188,19 @@ class SignInFragment : BaseFragment<
         findNavController().navigate(R.id.action_global_homeFragment)
     }
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentSignInBinding.inflate(inflater, container, false)
+    /* override fun getFragmentBinding(
+         inflater: LayoutInflater,
+         container: ViewGroup?
+     ) = FragmentSignInBinding.inflate(inflater, container, false)
 
-    override fun getViewModel() = UserViewModel::class.java
+     override fun getViewModel() = UserViewModel::class.java
 
-    override fun getFragmentRepository() =
-        UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
+     override fun getFragmentRepository() =
+         UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
 
-    override fun showEmptyTextFieldToast(message: String) {
-        toast(message)
-    }
+     override fun showEmptyTextFieldToast(message: String) {
+         toast(message)
+     }*/
+
+
 }

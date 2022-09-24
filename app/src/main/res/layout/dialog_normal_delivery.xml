@@ -55,55 +55,6 @@
         app:drawableTint="@color/grey"
         app:drawableStartCompat="@drawable/ic_timeslot" />
 
-    <EditText
-        android:id="@+id/edtDeliveryDate"
-        android:layout_width="0dp"
-        android:maxLines="1"
-        android:minLines="1"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/space_between_views"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/storke"
-        android:drawableStart="@drawable/ic_calendar"
-        android:drawablePadding="8dp"
-        android:drawableTint="@color/grey"
-        android:focusable="false"
-        android:hint="Date"
-        android:inputType="phone"
-        android:padding="16dp"
-        android:textColor="#5f6368"
-        android:textColorHint="#9e9e9e"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/tvDeliveryTimeSlot"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
-
-    <TextView
-        android:id="@+id/tvDeliveryTimeSlot"
-        android:layout_width="0dp"
-        android:layout_marginStart="5dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/space_between_views"
-        android:background="@drawable/storke"
-        android:drawablePadding="8dp"
-        android:drawableTint="@color/grey"
-        android:maxLines="1"
-        android:minLines="1"
-        android:focusable="false"
-        android:text="Time"
-        android:padding="16dp"
-        android:textColor="#5f6368"
-        android:textColorHint="#9e9e9e"
-        android:textSize="16sp"
-        app:drawableStartCompat="@drawable/ic_timeslot"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/edtDeliveryDate"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
-
 
     <TextView
         android:id="@+id/textView10"
@@ -116,23 +67,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDeliveryTimeSlot" />
-
-    <TextView
-        android:id="@+id/tvEstimateCost"
-        style="@style/poppins_regular_14_black_bold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_between_views"
-        android:background="@color/light_grey2"
-        android:gravity="center"
-        android:text=""
-        android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintTop_toBottomOf="@+id/lytDeliveryOption" />
 
     <TextView
         android:id="@+id/btnConfirm"
@@ -145,13 +80,13 @@
         android:letterSpacing="0.1"
         android:paddingHorizontal="@dimen/high_padding"
         android:paddingVertical="@dimen/medium_padding"
-        android:text="@string/calculate_price"
+        android:text="Check available timeslots"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvEstimateCost" />
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <TextView
         android:id="@+id/textView8"
@@ -178,16 +113,102 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
-    <TextView
-        android:id="@+id/textView15"
-        style="@style/poppins_regular_14_black_bold"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lytDeliveryOption"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_between_views"
-        android:text="Select Delivery Option"
-        android:textColor="@color/black"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtPickupDate" />
+        app:layout_constraintTop_toBottomOf="@+id/edtPickupDate">
+
+
+        <TextView
+            android:id="@+id/tvEstimateCost"
+            style="@style/poppins_regular_14_black_bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_between_views"
+            android:background="@color/light_grey2"
+            android:gravity="center"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edtDeliveryDate" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/horizontalLinewidht"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <TextView
+            android:id="@+id/tvDeliveryTimeSlot"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="@dimen/space_between_views"
+            android:background="@drawable/storke"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/grey"
+            android:focusable="false"
+            android:maxLines="1"
+            android:minLines="1"
+            android:padding="16dp"
+            android:text="Time"
+            android:textColor="#5f6368"
+            android:textColorHint="#9e9e9e"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/ic_timeslot"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/edtDeliveryDate"
+            app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+        <EditText
+            android:id="@+id/edtDeliveryDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/space_between_views"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/storke"
+            android:drawableStart="@drawable/ic_calendar"
+            android:drawablePadding="8dp"
+            android:drawableTint="@color/grey"
+            android:focusable="false"
+            android:hint="Date"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:minLines="1"
+            android:padding="16dp"
+            android:textColor="#5f6368"
+            android:textColorHint="#9e9e9e"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvDeliveryTimeSlot"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+        <TextView
+            android:id="@+id/textView15"
+            style="@style/poppins_regular_14_black_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Delivery Option"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/textView11"
@@ -210,16 +231,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
-
-    <View
-        android:id="@+id/view4"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/horizontalLinewidht"
-        android:background="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

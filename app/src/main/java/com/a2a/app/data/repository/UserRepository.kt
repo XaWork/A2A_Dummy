@@ -27,6 +27,17 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         userId: String
     ) = safeApiCall { userAPI.allAddress(userId) }
 
+    suspend fun assignPlan(
+        userId: String,
+        planId: String
+    ) = safeApiCall { userAPI.assignPlan(userId, planId) }
+
+    suspend fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ) = safeApiCall { userAPI.normalTimeslots(scheduleDate, destinationAddress, pickupAddress) }
+
     suspend fun deleteAddress(
         userId: String,
         addressId: String
@@ -130,6 +141,10 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         price: String,
         finalPrice: String,
         timeslot: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String,
     ) = safeApiCall {
         userAPI.confirmBooking(
             userId,
@@ -144,7 +159,15 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
             length,
             pickupType,
             deliveryType,
-            scheduleTime, scheduleDate, price, finalPrice, timeslot
+            scheduleTime,
+            scheduleDate,
+            price,
+            finalPrice,
+            timeslot,
+            videoRecording,
+            pictureRecording,
+            liveTemparature,
+            liveTracking
         )
     }
 
@@ -163,10 +186,9 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         deliveryType: String,
         scheduleTime: String,
         scheduleDate: String,
-        pickupVideoRecording: String,
-        pickupPicture: String,
         videoRecording: String,
-        picture: String,
+        pictureRecording: String,
+        liveTemparature: String,
         liveTracking: String,
     ) = safeApiCall {
         userAPI.estimateBooking(
@@ -184,10 +206,9 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
             deliveryType,
             scheduleTime,
             scheduleDate,
-            pickupVideoRecording,
-            pickupPicture,
             videoRecording,
-            picture,
+            pictureRecording,
+            liveTemparature,
             liveTracking
         )
     }

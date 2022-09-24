@@ -1,7 +1,10 @@
 package com.a2a.app.di
 
 import com.a2a.app.data.network.CustomApi
+import com.a2a.app.data.network.SettingApi
 import com.a2a.app.data.network.UserApi
+import com.a2a.app.data.repository.SettingRepository
+import com.a2a.app.data.repository.SettingRepositoryImpl
 import com.a2a.app.utils.Constant.BASE_URL
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -12,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -59,11 +63,21 @@ object AppModule {
     //interface
     @Singleton
     @Provides
-     fun getUserAPI(retrofit: Retrofit) = retrofit.create(UserApi::class.java)
+    fun getUserAPI(retrofit: Retrofit): UserApi = retrofit.create()
 
     @Singleton
     @Provides
-    fun getCustomApi(retrofit: Retrofit): CustomApi{
-        return retrofit.create(CustomApi::class.java)
+    fun getCustomApi(retrofit: Retrofit): CustomApi {
+        return retrofit.create()
     }
+
+    @Singleton
+    @Provides
+    fun provideSettingApi(retrofit: Retrofit): SettingApi = retrofit.create()
+
+  /*  @Singleton
+    @Provides
+    fun provideSettingRepository(settingApi: SettingApi): SettingRepository {
+        return SettingRepositoryImpl(settingApi)
+    }*/
 }

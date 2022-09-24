@@ -1,530 +1,572 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools">
-
-	<data>
-
-	</data>
-
-	<androidx.core.widget.NestedScrollView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="@color/bg"
-		android:orientation="vertical"
-		android:paddingBottom="20dp"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior"
-		tools:ignore="MissingPrefix">
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/bg"
-			android:orientation="vertical">
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_weight="1">
-
-				<androidx.recyclerview.widget.RecyclerView
-					android:id="@+id/rvCheckOutCart"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="16dp"
-					android:background="@drawable/rect_white"
-					android:elevation="2dp">
-
-				</androidx.recyclerview.widget.RecyclerView>
-
-			</LinearLayout>
-
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginLeft="16dp"
-				android:layout_marginTop="16dp"
-				android:layout_marginRight="16dp"
-				android:layout_marginBottom="16dp"
-				android:background="#d8d8d8" />
-
-			<TextView
-				android:id="@+id/deliveryDate"
-				android:layout_marginHorizontal="16dp"
-				android:layout_marginBottom="4dp"
-				android:layout_marginTop="4dp"
-				android:textColor="@color/black"
-				android:paddingHorizontal="8dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
-
-			<LinearLayout
-				android:id="@+id/weight_pickup_container"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:visibility="gone"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Weight at Pickup :"
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/weight_pickup"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-			</LinearLayout>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:id="@+id/weight_delivery_container"
-				android:orientation="horizontal"
-				android:paddingLeft="24dp"
-				android:visibility="gone"
-				android:paddingRight="24dp">
-
-				<TextView
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Weight at Delivery :"
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/weight_delivery"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-			</LinearLayout>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvTotalItemCostTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Total Item cost :"
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvTotalItemCostValue"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-			</LinearLayout>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvShippingTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Shipping charges : "
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvShippingCost"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvPackagingChargeTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Packaging charges : "
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvPackagingChargeCost"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-
-			<LinearLayout
-				android:id="@+id/llCGSTLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:visibility="gone"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvCGSTTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="CGST : "
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvCGSTCost"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-
-			<LinearLayout
-				android:id="@+id/llSGSTLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:visibility="gone"
-				android:orientation="horizontal"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvSGSTTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="SGST : "
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvSGSTCost"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-			<LinearLayout
-				android:id="@+id/llIGSTLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:visibility="gone"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvIGSTTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="IGST : "
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvIGSTCost"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_9"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-			<LinearLayout
-				android:id="@+id/llCoupon"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="8dp"
-				android:orientation="horizontal"
-				android:visibility="gone"
-				android:paddingLeft="24dp"
-				android:paddingRight="24dp">
-
-				<TextView
-					android:id="@+id/tvCouponTitle"
-					fontPath="@string/font_regular"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Applied Coupon"
-					android:textColor="@color/text_black_9"
-					android:textSize="14sp" />
-
-				<TextView
-					android:id="@+id/tvCouponCost"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center"
-					android:gravity="right"
-					android:textColor="@color/green"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginLeft="16dp"
-				android:layout_marginTop="16dp"
-				android:layout_marginRight="16dp"
-				android:background="#d8d8d8" />
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_vertical"
-				android:layout_marginTop="8dp"
-				android:gravity="center_vertical"
-				android:orientation="horizontal"
-				android:paddingLeft="24dp"
-				android:paddingTop="8dp"
-				android:paddingRight="24dp"
-				android:paddingBottom="8dp">
-
-				<TextView
-					fontPath="@string/font_medium"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:gravity="left"
-					android:text="Final Total : "
-					android:textColor="@color/text_black_2"
-					android:textSize="20sp" />
-
-				<TextView
-					android:id="@+id/tvTotal"
-					fontPath="@string/font_medium"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="right"
-					android:textColor="@color/text_black_2"
-					android:textSize="20sp" />
-
-			</LinearLayout>
-
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_marginLeft="16dp"
-				android:layout_marginRight="16dp"
-				android:background="#d8d8d8" />
-
-			<TextView
-				android:id="@+id/updateTitle"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="24dp"
-				android:layout_marginTop="24dp"
-				android:layout_marginRight="24dp"
-				android:gravity="left"
-				android:text="Updates"
-				android:textColor="@color/text_black_2"
-				android:textSize="20sp" />
-
-			<androidx.recyclerview.widget.RecyclerView
-				android:paddingVertical="16dp"
-				android:id="@+id/updates"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="16dp"
-				android:background="@drawable/rect_white"
-				android:elevation="2dp" />
-
-			<TextView
-				android:id="@+id/tvTrackOrder"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/track_order"
-				android:textSize="18dp"
-				android:padding="5dp"
-				android:layout_margin="16dp"
-				android:textColor="@color/colorPrimary"
-				android:layout_gravity="end" />
-
-			<TextView
-				fontPath="@string/font_medium"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="24dp"
-				android:layout_marginTop="24dp"
-				android:layout_marginRight="24dp"
-				android:gravity="left"
-				android:text="Shipping To"
-				android:textColor="@color/text_black_2"
-				android:textSize="20sp" />
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="16dp"
-				android:background="@drawable/rect_white"
-				android:elevation="2dp"
-				android:orientation="vertical"
-				android:padding="16dp">
-
-				<TextView
-					android:id="@+id/tvShippingAddress"
-					fontPath="@string/font_regular"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="left"
-					android:lineSpacingMultiplier="1.2"
-					android:maxLines="6"
-					android:textColor="@color/text_black_5"
-					android:textSize="16sp" />
-
-
-				<TextView
-					android:id="@+id/tvShippingAddressEdit"
-					fontPath="@string/font_regular"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="right"
-					android:gravity="right"
-					android:lineSpacingMultiplier="1.2"
-					android:paddingLeft="16dp"
-					android:paddingTop="16dp"
-					android:visibility="gone"
-					android:text="Add"
-					android:textColor="@color/colorPrimary"
-					android:textSize="16sp" />
-
-			</LinearLayout>
-
-
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:layout_margin="16dp"
-				android:background="#d8d8d8" />
-
-
-			<RadioGroup
-				android:id="@+id/rgPaymentType"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="16dp"
-				android:layout_marginRight="16dp"
-				android:orientation="horizontal"
-				android:theme="@style/CustomRadioTheme"
-				android:visibility="gone">
-
-
-				<RadioButton
-					android:id="@+id/rbEnableCOD"
-					fontPath="@string/font_medium"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_margin="5dp"
-					android:textSize="16sp"
-					android:layout_weight="1"
-					android:text="@string/cash_on_delivery" />
-
-				<RadioButton
-					android:id="@+id/rbEnablePayNow"
-					fontPath="@string/font_medium"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_margin="5dp"
-					android:textSize="16sp"
-					android:layout_weight="1"
-					android:text="@string/pay_now" />
-			</RadioGroup>
-
-
-			<Button
-				android:id="@+id/btnCancelOrder"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:background="@color/colorPrimary"
-				android:padding="12dp"
-				android:gravity="center"
-				android:layout_margin="16dp"
-				android:textAllCaps="false"
-				android:textColor="#ffffff"
-				android:textSize="16sp"
-				android:text="Cancel Order" />
-
-
-		</LinearLayout>
-	</androidx.core.widget.NestedScrollView>
-</layout>
+
+<androidx.core.widget.NestedScrollView xmlns:android ="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:ignore="MissingPrefix">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg"
+        android:orientation="vertical">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="10dp">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/imgLayout"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="Category: Ice-cream cakes, FROZEN"
+                        android:textColor="@color/text"
+                        android:textSize="20dp" />
+
+
+                    <TextView
+                        android:id="@+id/tvWeight"
+                        style="@style/poppins_bold_18_blue_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="left"
+                        android:lineSpacingMultiplier="1.2"
+                        android:maxLines="2"
+                        android:text="Weight: 1.20kg"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvTotalItemCost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rectangle_purple"
+                        android:gravity="center"
+                        android:padding="4dp"
+                        android:text="Rs 250.00"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/imgLayout"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_alignParentEnd="true">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_view1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="2dp"
+                        app:cardElevation="6dp"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:id="@+id/ivImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/image_border"
+                            android:src="@drawable/pickuplocation_icon"
+                            android:backgroundTint="@color/colorPrimaryDark"
+                            android:tag="image_tag"
+                            app:tint="@color/white" />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvPriceQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imgLayout"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="left"
+                    android:text="$20.00"
+                    android:textColor="#c10c08"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="#d8d8d8" />
+
+
+        <TextView
+            android:id="@+id/deliveryDate"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            android:paddingHorizontal="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/weight_pickup_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Weight at Pickup :"
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/weight_pickup"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:id="@+id/weight_delivery_container"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:visibility="gone"
+            android:paddingRight="24dp">
+
+            <TextView
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Weight at Delivery :"
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/weight_delivery"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/tvTotalItemCostTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Total Item cost :"
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTotalItemCostValue"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/tvShippingTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Shipping charges : "
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvShippingCost"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/tvPackagingChargeTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Packaging charges : "
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvPackagingChargeCost"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCGSTLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/tvCGSTTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="CGST : "
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvCGSTCost"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSGSTLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/tvSGSTTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="SGST : "
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvSGSTCost"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llIGSTLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/tvIGSTTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="IGST : "
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvIGSTCost"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_9"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCoupon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            >
+
+            <TextView
+                android:id="@+id/tvCouponTitle"
+                fontPath="@string/font_regular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Applied Coupon"
+                android:textColor="@color/text_black_9"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvCouponCost"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="right"
+                android:textColor="@color/green"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#d8d8d8" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp"
+            android:paddingTop="8dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                fontPath="@string/font_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="Final Total : "
+                android:textColor="@color/text_black_2"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvTotal"
+                fontPath="@string/font_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/text_black_2"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#d8d8d8" />
+
+        <TextView
+            android:id="@+id/updateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="24dp"
+            android:gravity="left"
+            android:text="Updates"
+            android:textColor="@color/text_black_2"
+            android:textSize="20sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingVertical="16dp"
+            android:id="@+id/rvUpdates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/rect_white"
+            android:elevation="2dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingHorizontal="@dimen/medium_padding"
+            android:paddingVertical="@dimen/high_padding"
+            tools:listitem="@layout/single_order_service"
+            android:id="@+id/rvServices"
+            android:layout_width="match_parent"
+            tools:itemCount="5"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/rect_white"
+            android:elevation="2dp"/>
+
+
+        <TextView
+            fontPath="@string/font_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="24dp"
+            android:gravity="left"
+            android:text="Shipping To"
+            android:textColor="@color/text_black_2"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/rect_white"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvShippingAddress"
+                fontPath="@string/font_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="6"
+                android:textColor="@color/text_black_5"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:id="@+id/tvShippingAddressEdit"
+                fontPath="@string/font_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:visibility="gone"
+                android:text="Add"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="16dp"
+            android:background="#d8d8d8" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

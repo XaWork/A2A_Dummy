@@ -6,6 +6,12 @@ import javax.inject.Inject
 
 class CustomRepository @Inject constructor(private val customApi: CustomApi): BaseRepository() {
 
+    suspend fun home()= safeApiCall { customApi.home() }
+
+    suspend fun allPlans()= safeApiCall { customApi.allPlans() }
+
+    suspend fun serviceTypes() = safeApiCall { customApi.serviceTypes() }
+
     suspend fun allCities() =
         safeApiCall { customApi.allCities() }
 
@@ -34,4 +40,6 @@ class CustomRepository @Inject constructor(private val customApi: CustomApi): Ba
         startCity: String,
         endCity: String,
     ) = safeApiCall { customApi.checkCutOffTime(startCity, endCity) }
+
+    suspend fun offerDeal() = safeApiCall { customApi.offerDeal() }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.a2a.app">
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <uses-sdk tools:overrideLibrary="com.maps.route" />
@@ -20,19 +19,28 @@
         android:name=".utils.A2AApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/logo_92_x_92"
+        android:icon="@drawable/logo_120x120"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo_92_x_92"
+        android:roundIcon="@drawable/logo_120x120"
         android:supportsRtl="true"
         android:theme="@style/Theme.A2A"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/logo_120x120" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC9Hr5n1hoGJjFRuoY293Ejcm-GBaaDswQ" />
+            android:value="AIzaSyAj0qAw3RL4AhbO3ly22EFMqThPbm7dBT4" />
 
         <activity
             android:name=".MainActivity"

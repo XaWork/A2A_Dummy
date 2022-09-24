@@ -16,7 +16,9 @@
             android:id="@+id/incToolbar"
             layout="@layout/toolbar" />
 
-        <include layout="@layout/content_bulk_order" />
+        <include
+            android:id="@+id/contentBulkOrder"
+            layout="@layout/content_bulk_order" />
 
 
         <Button

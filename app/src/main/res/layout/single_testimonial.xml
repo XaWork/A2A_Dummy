@@ -44,13 +44,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView4">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imgTestimonial"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/logo_92_x_92" />
+                    android:src="@drawable/logo_1024x1024" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
@@ -58,12 +58,13 @@
                     android:layout_marginStart="@dimen/space_between_views_and_subviews"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintStart_toEndOf="@+id/imgTestimonial"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/tvTestimonialTitle"
                         style="@style/poppins_bold_18_blue_bold"
+                        android:textSize="14sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="John done"
@@ -72,15 +73,17 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/tvTestimonialDescription"
                         style="@style/poppins_regular_14_black_bold"
                         android:layout_width="0dp"
+                        android:textSize="12sp"
                         android:maxLines="2"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_between_views_and_subviews"
+                        android:textStyle="normal"
                         android:text="@string/lorem"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                        app:layout_constraintTop_toBottomOf="@+id/tvTestimonialTitle" />
 
                     <RatingBar
                         android:id="@+id/ratingBar"
@@ -90,7 +93,7 @@
                         android:layout_marginTop="@dimen/space_between_views_and_subviews"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                        app:layout_constraintTop_toBottomOf="@+id/tvTestimonialDescription" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

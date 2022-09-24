@@ -33,6 +33,12 @@ class ViewDetailsFragment : Fragment(R.layout.fragment_view_details) {
         }
     }
 
+    private fun getDetails() {
+        val args: ViewDetailsFragmentArgs by navArgs()
+        details = Gson().fromJson(args.details, CommonModel::class.java)
+        toolbarTitle = args.name.toString()
+    }
+
     private fun setDetails() {
         with(viewBinding){
             Glide.with(context!!)
@@ -42,14 +48,8 @@ class ViewDetailsFragment : Fragment(R.layout.fragment_view_details) {
                 .into(image)
 
             tvTitle.text = details.name
-            tvDesc.text = Html.fromHtml(details.description).toString()
+            tvDesc.text = Html.fromHtml(details.description, 0).toString()
         }
-    }
-
-    private fun getDetails() {
-        val args: ViewDetailsFragmentArgs by navArgs()
-        details = Gson().fromJson(args.details, CommonModel::class.java)
-        toolbarTitle = args.name.toString()
     }
 
     private fun setToolbar() {

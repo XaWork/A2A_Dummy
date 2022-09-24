@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.common.BaseFragment
@@ -16,23 +18,35 @@ import com.a2a.app.data.model.VerifyOtpModel
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentSignUpBinding
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class SignUpFragment :
-    BaseFragment<FragmentSignUpBinding, UserViewModel, UserRepository>(FragmentSignUpBinding::inflate) {
+@AndroidEntryPoint
+class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
 
     private var detailId: String? = ""
     private val pattern = Pattern.compile(EMAIL_PATTERN)
     private var matcher: Matcher? = null
     private var phoneNumber: String? = ""
+    lateinit var viewBinding: FragmentSignUpBinding
+    private val viewModel by viewModels<UserViewModel1>()
     private var data: VerifyOtpModel? = null
+    @Inject
+    lateinit var viewUtils: ViewUtils
+    @Inject
+    lateinit var appUtils: AppUtils
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewBinding = FragmentSignUpBinding.bind(view)
 
         with(viewBinding) {
             detailId = ""
@@ -61,20 +75,20 @@ class SignUpFragment :
                 //startActivity(Intent(context, TermsActivity::class.java))
             }
             rgUserType.setOnCheckedChangeListener { _, checkedId ->
-                when(checkedId){
+                when (checkedId) {
                     R.id.rbCorporate -> {
                         showCorporateUserFields()
                     }
                     R.id.rbIndividual -> {
                         showIndividualUserFields()
                     }
-            }
+                }
             }
         }
     }
 
     private fun showCorporateUserFields() {
-        with(viewBinding){
+        with(viewBinding) {
             //set radio button background
             scrollView.stopNestedScroll()
             rbCorporate.setBackgroundResource(R.drawable.storke)
@@ -90,7 +104,7 @@ class SignUpFragment :
     }
 
     private fun showIndividualUserFields() {
-        with(viewBinding){
+        with(viewBinding) {
             //set radio button background
             rbIndividual.setBackgroundResource(R.drawable.storke)
             rbCorporate.setBackgroundResource(0)
@@ -119,11 +133,11 @@ class SignUpFragment :
                 ).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Loading -> {
-                            showLoading()
+                            viewUtils.showLoading(parentFragmentManager)
                         }
 
                         is Status.Success -> {
-                            stopShowingLoading()
+                            viewUtils.stopShowingLoading()
                             if (response.value.status == "success") {
                                 etOtp.isEnabled = true
                                 detailId = response.value.message
@@ -144,8 +158,8 @@ class SignUpFragment :
                         }
 
                         is Status.Failure -> {
-                            stopShowingLoading()
-                            tryAgain()
+                            viewUtils.stopShowingLoading()
+                            viewUtils.tryAgain()
                         }
                     }
                 }
@@ -171,27 +185,28 @@ class SignUpFragment :
                     .observe(viewLifecycleOwner) { response ->
                         when (response) {
                             is Status.Loading -> {
-                                showLoading(
+                                viewUtils.showLoading(
+                                    parentFragmentManager,
                                     "Validating otp",
                                     "This will only take a short while"
                                 )
                             }
 
                             is Status.Success -> {
-                                stopShowingLoading()
+                                viewUtils.stopShowingLoading()
                                 val otpResponse = response.value
                                 if (otpResponse.status == "success") {
                                     data = otpResponse
-                                    AppUtils(context!!).saveUser(otpResponse.data   )
+                                    AppUtils(context!!).saveUser(otpResponse.data)
 
                                     moveToDashBoard()
                                 } else {
-                                    toast(response.value.message)
+                                    viewUtils.showShortToast(response.value.message)
                                 }
                             }
                             is Status.Failure -> {
-                                stopShowingLoading()
-                                tryAgain()
+                                viewUtils.stopShowingLoading()
+                                viewUtils.tryAgain()
                             }
                         }
                     }
@@ -242,16 +257,5 @@ class SignUpFragment :
         private const val EMAIL_PATTERN =
             "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$"
     }
-
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentSignUpBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() =
-        UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
 
 }

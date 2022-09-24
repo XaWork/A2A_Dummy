@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.a2a.app.R
+import com.a2a.app.data.model.HomeModel
 import com.a2a.app.databinding.CarousalLayoutBinding
 import com.a2a.app.databinding.SingleCommonBinding
 import com.a2a.app.databinding.SingleCustomerBinding
@@ -15,7 +16,7 @@ import com.a2a.app.databinding.SingleTestimonialBinding
 import com.a2a.app.ui.customeviews.AutoScrollViewPager
 
 class CarousalAdapter(
-    private val data:List<Int>,
+    private val data:List<HomeModel.Result.Slider>,
     private val context: Context
 )
     : RecyclerView.Adapter<CarousalAdapter.MyViewHolder>() {
@@ -34,7 +35,6 @@ class CarousalAdapter(
                     homeVp.startAutoScroll()
                     indicator.setViewPager(homeVp)
                 }
-
             }
         }
 

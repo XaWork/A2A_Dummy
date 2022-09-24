@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.a2a.app.R
+import com.a2a.app.data.model.HomeModel
+import com.bumptech.glide.Glide
 
 
 class CarousalImagePagerAdapter(
     val context: Context,
-    private val images: List<Int>
+    private val slider: List<HomeModel.Result.Slider>
 ) :
     androidx.viewpager.widget.PagerAdapter() {
 
@@ -30,8 +32,15 @@ class CarousalImagePagerAdapter(
 
         //ivImage.setActualImageResource(mResources[position])
 
-        val image = images[position]
-        ivImage.setImageResource(image)
+        val image = slider[position].file
+
+        Glide.with(context)
+            .load(image)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_error)
+            .into(ivImage)
+
+       // ivImage.setImageResource(image)
 
        /* ivImage.setOnClickListener {
             val intent = Intent(context, ShopActivity::class.java)
@@ -60,7 +69,7 @@ class CarousalImagePagerAdapter(
     }
 
     override fun getCount(): Int {
-        return this.images.size
+        return this.slider.size
     }
 
     override fun isViewFromObject(view: View, obj: Any): Boolean {

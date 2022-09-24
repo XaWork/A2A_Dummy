@@ -18,7 +18,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/logo_256_x_256"
+            android:src="@drawable/logo_256x256"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"

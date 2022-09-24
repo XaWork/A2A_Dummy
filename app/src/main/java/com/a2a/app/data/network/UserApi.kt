@@ -20,7 +20,7 @@ interface UserApi {
         @Field("mobile") mobile: String,
         @Field("email") email: String,
         @Field("device_token") deviceToken: String,
-        @Field("device_type") deviceType: String = "Android",
+        @Field("device_type") deviceType: String ,
         @Field("reffer") reffer: String = "",
     ): RegistrationModel
 
@@ -44,6 +44,21 @@ interface UserApi {
     suspend fun allAddress(
         @Query("id") userId: String
     ): AddressListModel
+
+    @FormUrlEncoded
+    @POST("assign-plan")
+    suspend fun assignPlan(
+        @Field("id")userId: String,
+        @Field("plan")planId: String
+    ): AssignPlanModel
+
+    @FormUrlEncoded
+    @POST("normal-timeslots")
+    suspend fun normalTimeslots(
+        @Field("schedule_date")scheduleDate: String,
+        @Field("destination_address")destinationAddress: String,
+        @Field("pickup_address")pickupAddress: String
+    ): NormalTimeslotModel
 
     @GET("delete-address")
     suspend fun deleteAddress(
@@ -92,6 +107,11 @@ interface UserApi {
         @Query("per_page") perPage: String
     ): OrderModel
 
+    @GET("order-updates")
+    suspend fun orderUpdates(
+        @Query("id")orderId: String
+    ): OrderUpdateModel
+
     @GET("get-wallet-data")
     suspend fun getWalletData(
         @Query("id") userId: String
@@ -122,6 +142,10 @@ interface UserApi {
         @Field("price") price: String,
         @Field("finalprice") finalPrice: String,
         @Field("timeslot") timeslot: String,
+        @Field("video_recording") videoRecording: String,
+        @Field("picture_recording") pictureRecording: String,
+        @Field("live_temparature") liveTemparature: String,
+        @Field("live_tracking") liveTracking: String,
     ): ConfirmBookingModel
 
     @FormUrlEncoded
@@ -141,10 +165,9 @@ interface UserApi {
         @Field("delivery_type") deliveryType: String,
         @Field("schedule_time") scheduleTime: String,
         @Field("schedule_date") scheduleDate: String,
-        @Field("pickup_video_recording_price") pickupVideoRecording: String,
-        @Field("pickup_picture_price") pickupPicture: String,
-        @Field("video_recording_price") videoRecording: String,
-        @Field("picture_price") picture: String,
+        @Field("video_recording") videoRecording: String,
+        @Field("picture_recording") pictureRecording: String,
+        @Field("live_temparature") liveTemparature: String,
         @Field("live_tracking") liveTracking: String,
     ): EstimateBookingModel
 }

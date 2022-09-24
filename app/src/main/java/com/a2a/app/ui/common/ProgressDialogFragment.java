@@ -9,6 +9,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.a2a.app.R;
 
+import javax.inject.Inject;
+
 
 public class ProgressDialogFragment extends DialogFragment {
 
@@ -50,5 +52,6 @@ public class ProgressDialogFragment extends DialogFragment {
 
         return view;
     }
+
 
 }

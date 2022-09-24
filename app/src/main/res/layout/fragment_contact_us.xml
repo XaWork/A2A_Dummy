@@ -40,7 +40,7 @@
             android:layout_height="120dp"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:src="@drawable/logo_1024_x_1024" />
+            android:src="@drawable/logo_1024x1024" />
 
 
         <View
@@ -94,7 +94,7 @@
                 app:tint="@color/colorPrimary" />
 
             <TextView
-                android:id="@+id/whatsapp"
+                android:id="@+id/whatsappInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

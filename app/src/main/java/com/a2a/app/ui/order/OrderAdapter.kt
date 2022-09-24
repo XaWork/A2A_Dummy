@@ -20,36 +20,29 @@ class OrderAdapter(
     private val data: List<OrderModel.Result>,
     private val context: Context,
     private val itemClick: RvItemClick
-)
-    : RecyclerView.Adapter<OrderAdapter.MyViewHolder>() {
+) : RecyclerView.Adapter<OrderAdapter.MyViewHolder>() {
 
-    inner class MyViewHolder(private val viewBinding: SingleOrderItemBinding):
+    inner class MyViewHolder(private val viewBinding: SingleOrderItemBinding) :
         RecyclerView.ViewHolder(viewBinding.root) {
 
-            fun bind(position: Int, itemClick: RvItemClick){
-                with(viewBinding){
-                   // orderItem = data[position]
-                    data[position].run {
-                        orderId.text = orderid
-                        orderStatus.text = status.replace("_", " ")
-                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                        orderDate.text = createdDate.toDate()
-                    }
-                }
-
-                itemView.setOnClickListener{
-                    itemClick.clickWithPosition("Order item", position)
+        fun bind(position: Int, itemClick: RvItemClick) {
+            with(viewBinding) {
+                // orderItem = data[position]
+                data[position].run {
+                    orderId.text = orderid
+                    orderStatus.text = status.replace("_", " ")
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    orderDate.text = createdDate.toDate()
                 }
             }
+
+            itemView.setOnClickListener {
+                itemClick.clickWithPosition("Order item", position)
+            }
         }
+    }
 
-/*    fun updateDataList(dataList: List<CommonModel>){
-        data.clear()
-        data.addAll(dataList)
-        notifyDataSetChanged()
-    }*/
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)=
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         MyViewHolder(SingleOrderItemBinding.inflate(LayoutInflater.from(context), parent, false))
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -57,11 +50,4 @@ class OrderAdapter(
     }
 
     override fun getItemCount() = data.size
-
-    fun moveToOrderDetails(
-        orderId: Int
-    ){
-        val activity = context as Activity
-
-    }
 }

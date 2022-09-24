@@ -22,33 +22,36 @@
             android:background="@color/view_background">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/imgClient"
                 android:layout_width="@dimen/testimonial_image_size"
                 android:layout_height="@dimen/testimonial_image_size"
-                android:src="@drawable/logo_92_x_92"
-                app:layout_constraintEnd_toEndOf="@+id/textView5"
+                android:src="@drawable/logo_1024x1024"
+                app:layout_constraintEnd_toEndOf="@+id/tvClientType"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tvClientName"
                 style="@style/poppins_bold_18_blue_bold"
                 android:layout_width="wrap_content"
                 android:maxLines="1"
+                android:textSize="14sp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_between_views_and_subviews"
                 android:text="John done"
                 android:fontFamily="@font/poppings_regular"
                 android:textAllCaps="true"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
-                app:layout_constraintStart_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintEnd_toEndOf="@+id/imgClient"
+                app:layout_constraintStart_toStartOf="@+id/imgClient"
+                app:layout_constraintTop_toBottomOf="@+id/imgClient" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/tvClientType"
                 style="@style/poppins_bold_18_blue_bold"
                 android:layout_width="0dp"
+                android:textStyle="normal"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -58,7 +61,7 @@
                 android:fontFamily="@font/poppings_regular"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/tvClientName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

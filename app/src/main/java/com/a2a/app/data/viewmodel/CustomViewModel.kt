@@ -14,6 +14,33 @@ import javax.inject.Inject
 class CustomViewModel @Inject constructor(private val customRepository: CustomRepository) :
     ViewModel() {
 
+    fun getHome(): MutableLiveData<Status<HomeModel>> {
+        val result = MutableLiveData<Status<HomeModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = customRepository.home()
+        }
+        return result
+    }
+
+    fun allPlans(): MutableLiveData<Status<AllPlanModel>> {
+        val result = MutableLiveData<Status<AllPlanModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = customRepository.allPlans()
+        }
+        return result
+    }
+
+    fun serviceTypes(): MutableLiveData<Status<ServiceTypeModel>> {
+        val result = MutableLiveData<Status<ServiceTypeModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = customRepository.serviceTypes()
+        }
+        return result
+    }
+
     private val _allCities = MutableLiveData<Status<CityModel>>()
     val allCities = _allCities
     fun getAllCities() {
@@ -75,13 +102,12 @@ class CustomViewModel @Inject constructor(private val customRepository: CustomRe
             _zipByCity.value = Status.Loading
             _zipByCity.value = customRepository.zipByCity(city)
         }
-
     }
 
     fun checkCutOffTime(
         startCity: String,
         endCity: String,
-    ): MutableLiveData<Status<CheckCutOffTimeModel>>{
+    ): MutableLiveData<Status<CheckCutOffTimeModel>> {
         val result = MutableLiveData<Status<CheckCutOffTimeModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
@@ -90,4 +116,23 @@ class CustomViewModel @Inject constructor(private val customRepository: CustomRe
 
         return result
     }
+
+    private val _offerDeal = MutableLiveData<Status<ZipListModel>>()
+    val offerDeal = _offerDeal
+    fun offerDeal() {
+        viewModelScope.launch {
+            _offerDeal.value = Status.Loading
+            _offerDeal.value = customRepository.offerDeal()
+        }
+    }
+
+    /*fun createBulkOrder(bulkOrder: CustomBulkOrder): MutableLiveData<Status<>> {
+        val result = MutableLiveData<Status<>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = customRepository.offerDeal()
+        }
+        return result
+
+    }*/
 }

@@ -34,7 +34,7 @@
 				android:layout_gravity="center"
 				android:layout_margin="5dp"
 				android:adjustViewBounds="true"
-				android:src="@drawable/logo_92_x_92" />
+				android:src="@drawable/logo_120x120" />
 
 			<TextView
 				android:id="@+id/name"

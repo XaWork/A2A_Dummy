@@ -7,18 +7,41 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.a2a.app.MainActivity
 import com.a2a.app.R
+import com.a2a.app.common.BaseFragment1
+import com.a2a.app.common.Status
+import com.a2a.app.data.viewmodel.SettingViewModel
 import com.a2a.app.databinding.FragmentSplashBinding
+import com.a2a.app.ui.common.ProgressDialog
+import com.a2a.app.ui.common.ProgressDialogFragment
 import com.a2a.app.utils.AppUtils
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     private lateinit var viewBinding: ViewBinding
     private lateinit var mainActivity: MainActivity
+
+    @Inject
+    lateinit var appUtils: AppUtils
+    @Inject
+    lateinit var dialog: ProgressDialog
+
+    val viewModel by viewModels<SettingViewModel>()
+    private var token: String? = null
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,15 +53,52 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         viewBinding = FragmentSplashBinding.bind(view)
         mainActivity.hideToolbarAndBottomNavigation()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (AppUtils(context!!).getUser() != null) {
-                Log.d("splash", "go to home")
-                findNavController().navigate(R.id.action_global_homeFragment)
-            }
-            else {
-                Log.d("splash", "go to on boarding")
-                findNavController().navigate(R.id.action_global_onBoardingFragment)
-            }
-        }, 2000)
+            getSettings()
+
+        /*lifecycleScope.launch {
+            dialog.showLoading(parentFragmentManager)
+            delay(2000)
+            dialog.stopShowingLoading()
+        }*/
     }
+
+    private fun getSettings() {
+        viewModel.getSettings().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> {
+                }
+                is Status.Success -> {
+                   // stopShowingLoading()
+                    appUtils.saveSettings(result.value)
+                    moveToNext()
+                }
+                is Status.Failure -> {}
+            }
+        }
+    }
+
+    private fun moveToNext() {
+        if (appUtils.getUser() != null) {
+            Log.d("splash", "go to home")
+            findNavController().navigate(R.id.action_global_homeFragment)
+        } else {
+            Log.d("splash", "go to on boarding")
+            findNavController().navigate(R.id.action_global_onBoardingFragment)
+        }
+    }
+
+   /* fun showLoading() {
+        showLoading(getString(R.string.please_wait), getString(R.string.loading))
+    }
+
+    fun showLoading(title: String, message: String) {
+        val manager = parentFragmentManager
+        progressDialog = ProgressDialogFragment.newInstance(title, message)
+        progressDialog.isCancelable = false
+        progressDialog.show(manager, "progress")
+    }
+
+    fun stopShowingLoading() {
+        progressDialog.dismiss()
+    }*/
 }

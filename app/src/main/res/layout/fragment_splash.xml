@@ -12,13 +12,12 @@
         android:layout_height="match_parent"
         tools:context=".ui.splash.SplashFragment">
 
-
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/splash_background"
+            android:src="@drawable/splash_screen"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,17 +24,19 @@ import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.data.viewmodelfactory.CustomViewModelFactory
 import com.a2a.app.databinding.FragmentAddNewAddressBinding
 import com.a2a.app.hideSoftKeyboard
 import com.a2a.app.setupDropDown
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class AddNewAddressFragment :
-    BaseFragment<FragmentAddNewAddressBinding, UserViewModel, UserRepository>(
-        FragmentAddNewAddressBinding::inflate
-    ) {
+@AndroidEntryPoint
+class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address){
 
     private lateinit var stateResponse: StateListModel
     lateinit var cites: List<CityListModel.Result>
@@ -44,11 +48,19 @@ class AddNewAddressFragment :
     var address: AddressListModel.Result? = null;
     val pinList = mutableListOf<String>()
     var validPin = false;
-    private lateinit var customViewModel: CustomViewModel
+    private val customViewModel by viewModels<CustomViewModel>()
+    private val viewModel by viewModels<UserViewModel1>()
+    private lateinit var viewBinding: FragmentAddNewAddressBinding
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+    @Inject
+    lateinit var appUtils: AppUtils
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        customViewModel = getCutomViewModel()
+        viewBinding = FragmentAddNewAddressBinding.bind(view)
+
         val args: AddNewAddressFragmentArgs by navArgs()
         address = Gson().fromJson(args.address, AddressListModel.Result::class.java)
         setToolbar()
@@ -76,29 +88,29 @@ class AddNewAddressFragment :
                 run {
                     when {
                         name.text.toString().trim().isEmpty() -> {
-                            showError("Enter name!")
+                            viewUtils.showError("Enter name!")
                         }
                         etPhone.text.toString().trim().isEmpty() -> {
-                            showError("Enter phone number!")
+                            viewUtils.showError("Enter phone number!")
                         }
                         etAddress1.text.toString().trim().isEmpty() -> {
-                            showError("Enter address")
+                            viewUtils.showError("Enter address")
                         }
                         etState.text.toString().trim().isEmpty() -> {
-                            showError("Enter state")
+                            viewUtils.showError("Enter state")
                         }
                         etPin.text.toString().trim().isEmpty() || !validPin -> {
-                            showError("Enter valid pin code")
+                            viewUtils.showError("Enter valid pin code")
                         }
                         etCity.text.toString().trim().isEmpty() -> {
-                            showError("Select City")
+                            viewUtils.showError("Select City")
                         }/*
                         etpostOffice.text.toString().trim().isEmpty() -> {
                             showError("Enter landmark")
                         }*/
                         tilOtherText.visibility == View.VISIBLE && otherAddress.text.toString()
                             .trim().isEmpty() -> {
-                            showError("Enter address type, or select an option!")
+                            viewUtils.showError("Enter address type, or select an option!")
                         }
                         (lat == 0.toDouble() || long == 0.toDouble()) -> {
                             startActivityForResult(
@@ -170,16 +182,16 @@ class AddNewAddressFragment :
                 ).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Loading -> {
-                            showLoading()
+                            viewUtils.showLoading(parentFragmentManager)
                         }
                         is Status.Success -> {
-                            stopShowingLoading()
-                            showError("Address Saved!")
+                            viewUtils.stopShowingLoading()
+                            viewUtils.showError("Address Saved!")
                             findNavController().popBackStack()
                         }
                         else -> {
-                            stopShowingLoading()
-                            showError("Something went wrong! retry")
+                            viewUtils.stopShowingLoading()
+                            viewUtils.showError("Something went wrong! retry")
                         }
                     }
                 }
@@ -202,16 +214,16 @@ class AddNewAddressFragment :
                 ).observe(viewLifecycleOwner) { response ->
                     when (response) {
                         is Status.Success -> {
-                            stopShowingLoading()
-                            showError("Address Saved!")
+                            viewUtils.stopShowingLoading()
+                            viewUtils.showError("Address Saved!")
                             findNavController().popBackStack()
                         }
                         is Status.Loading -> {
-                            showLoading()
+                            viewUtils.showLoading(parentFragmentManager)
                         }
                         else -> {
-                            stopShowingLoading()
-                            showError("Something went wrong! retry")
+                            viewUtils.stopShowingLoading()
+                            viewUtils.showError("Something went wrong! retry")
                         }
                     }
                 }
@@ -256,12 +268,12 @@ class AddNewAddressFragment :
         customViewModel.allStates.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     if (response.value.result.isNullOrEmpty()) {
-                        showError("No Data!")
+                        viewUtils.showError("No Data!")
                         //finish()
                     } else {
                         //cityList.addAll(response.data().result)
@@ -270,8 +282,8 @@ class AddNewAddressFragment :
                     }
                 }
                 else -> {
-                    stopShowingLoading()
-                    showError("Something went wrong!")
+                    viewUtils.stopShowingLoading()
+                    viewUtils.showError("Something went wrong!")
                     // finish()
                 }
             }
@@ -284,9 +296,9 @@ class AddNewAddressFragment :
         customViewModel.zipByCity.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     if (response.value.result.isNullOrEmpty()) {
-                        showError("No available pin code, select another city/state")
+                        viewUtils.showError("No available pin code, select another city/state")
                     }
                     viewBinding.run {
                         pinList.addAll(response.value.result.map { it.name })
@@ -304,8 +316,8 @@ class AddNewAddressFragment :
                 is Status.Loading -> {
                 }
                 else -> {
-                    stopShowingLoading()
-                    showError("Something went wrong!")
+                    viewUtils.stopShowingLoading()
+                    viewUtils.showError("Something went wrong!")
                     //finish()
                     findNavController().popBackStack()
                 }
@@ -318,7 +330,7 @@ class AddNewAddressFragment :
         customViewModel.cityByState.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     cites = response.value.result
                     selectedCityId = null
                     viewBinding.etCity.setupDropDown(cites.toTypedArray(), { it.name }, { city ->
@@ -337,8 +349,8 @@ class AddNewAddressFragment :
                 is Status.Loading -> {
                 }
                 else -> {
-                    stopShowingLoading()
-                    showError("Something went wrong!")
+                    viewUtils.stopShowingLoading()
+                    viewUtils.showError("Something went wrong!")
                     //finish()
                     findNavController().popBackStack()
                 }
@@ -371,14 +383,4 @@ class AddNewAddressFragment :
         else
             getCityAndZip()
     }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentAddNewAddressBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() =
-        UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
 }

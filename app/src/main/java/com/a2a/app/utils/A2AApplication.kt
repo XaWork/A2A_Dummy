@@ -6,6 +6,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class A2AApplication: Application(){
+
     override fun onCreate() {
         super.onCreate()
         val appId = "f70c1467-1f66-4ce7-9f1c-7517d440fabb"
