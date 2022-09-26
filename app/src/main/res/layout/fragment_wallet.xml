@@ -70,6 +70,22 @@
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/btnRecharge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/rectangle_green_round"
+                        android:gravity="start"
+                        android:paddingHorizontal="@dimen/high_padding"
+                        android:paddingVertical="@dimen/low_padding"
+                        android:text="Recharge"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout

@@ -193,4 +193,30 @@ class UserViewModel1 @Inject constructor(
     }
 
 
+    fun getWalletData(
+        userId: String
+    ): MutableLiveData<Status<WalletDataModel>> {
+        val result = MutableLiveData<Status<WalletDataModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.getWalletData(userId)
+        }
+
+        return result
+    }
+
+
+    fun getWalletTransaction(
+        userId: String
+    ): MutableLiveData<Status<WalletTransactionModel>> {
+        val result = MutableLiveData<Status<WalletTransactionModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.getWalletTransaction(userId)
+        }
+
+        return result
+    }
 }

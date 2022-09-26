@@ -272,4 +272,52 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+
+
+    override suspend fun getWalletData(
+        userId: String,
+    ): Status<WalletDataModel> {
+        return try {
+            val response = userApi.getWalletData(userId)
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
+
+
+    override suspend fun getWalletTransaction(
+        userId: String,
+    ): Status<WalletTransactionModel> {
+        return try {
+            val response = userApi.getWalletTransactions(userId)
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
 }

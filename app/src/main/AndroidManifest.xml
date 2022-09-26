@@ -42,6 +42,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAj0qAw3RL4AhbO3ly22EFMqThPbm7dBT4" />
 
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_live_ZLgzjgdHBJDlP8" />
+
+        <receiver
+            android:name="com.razorpay.RzpTokenReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="rzp.device_token.share" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

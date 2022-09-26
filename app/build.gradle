@@ -105,6 +105,9 @@ dependencies {
     //one signal
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
+    //razorpay
+    implementation('com.razorpay:checkout:1.6.24')
+
     //toasty
     //implementation 'com.github.GrenderG:Toasty:1.5.2'
 

@@ -68,4 +68,8 @@ interface UserRepository1 {
         state: String,
         postOffice: String,
     ): Status<AddAddressModel>
+
+    suspend fun getWalletData(userId: String): Status<WalletDataModel>
+
+    suspend fun getWalletTransaction(userId: String): Status<WalletTransactionModel>
 }
