@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.common.BaseFragment
@@ -13,32 +14,30 @@ import com.a2a.app.data.model.WalletDataModel
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentBulkOrderBinding
 import com.a2a.app.databinding.FragmentMyPlanBinding
 import com.a2a.app.toDate
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
-class MyPlanFragment : BaseFragment<
-        FragmentMyPlanBinding,
-        UserViewModel,
-        UserRepository
-        >(FragmentMyPlanBinding::inflate) {
+@AndroidEntryPoint
+class MyPlanFragment : Fragment(R.layout.fragment_my_plan) {
 
     private lateinit var allPlans: WalletDataModel
+    private val viewModel by viewModels<UserViewModel1>()
+    private lateinit var viewBinding: FragmentMyPlanBinding
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentMyPlanBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() =
-        UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
+    @Inject
+    lateinit var appUtils: AppUtils
+    @Inject
+    lateinit var viewUtils: ViewUtils
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentMyPlanBinding.bind(view)
 
         setToolbar()
 
@@ -59,20 +58,20 @@ class MyPlanFragment : BaseFragment<
 
 
     private fun getAllPlans() {
-        val userId = AppUtils(context!!).getUser()!!.id
-        viewModel.getWalletData(userId)
-        viewModel.walletData.observe(viewLifecycleOwner) {
+        val userId = appUtils.getUser()!!.id
+
+        viewModel.getWalletData(userId).observe(viewLifecycleOwner) {
             when (it) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     allPlans = it.value
                     setData()
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }

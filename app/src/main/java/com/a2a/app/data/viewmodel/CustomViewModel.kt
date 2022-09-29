@@ -117,7 +117,7 @@ class CustomViewModel @Inject constructor(private val customRepository: CustomRe
         return result
     }
 
-    private val _offerDeal = MutableLiveData<Status<ZipListModel>>()
+    private val _offerDeal = MutableLiveData<Status<OfferDealModel>>()
     val offerDeal = _offerDeal
     fun offerDeal() {
         viewModelScope.launch {

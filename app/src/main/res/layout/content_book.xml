@@ -289,16 +289,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rgDeliveryType" />
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lorem"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@+id/tvMoreInfo"
-            app:layout_constraintStart_toStartOf="@+id/tvMoreInfo"
-            app:layout_constraintTop_toBottomOf="@+id/tvMoreInfo" />
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -308,7 +298,7 @@
             app:layout_constraintEnd_toEndOf="@+id/materialCardView2"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/materialCardView2"
-            app:layout_constraintTop_toBottomOf="@+id/textView12">
+            app:layout_constraintTop_toBottomOf="@+id/tvMoreInfo">
 
             <AutoCompleteTextView
                 android:id="@+id/acCategory"
@@ -472,7 +462,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_between_views"
-            android:text="@string/lorem"
+            style="@style/poppins_regular_14_black_bold"
+            android:textColor="@color/colorPrimary"
+            android:text="Paid Additional Services(Optional)"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

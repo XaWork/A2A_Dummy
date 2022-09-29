@@ -46,7 +46,7 @@ interface CustomApi {
     ): CheckCutOffTimeModel
 
     @GET("offer-deal")
-    suspend fun offerDeal(): ZipListModel
+    suspend fun offerDeal(): OfferDealModel
 
     @GET("service-type")
     suspend fun serviceTypes(): ServiceTypeModel

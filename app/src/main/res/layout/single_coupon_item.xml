@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginLeft="8dp"
+  android:layout_marginTop="8dp"
+  android:layout_marginRight="8dp"
+  android:layout_marginBottom="8dp"
+  android:background="@drawable/rectangle_grey"
+  android:elevation="2dp"
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
+
+
+  <TextView
+	android:id="@+id/tvTitle"
+	fontPath="@string/font_medium"
+	android:layout_width="wrap_content"
+	android:layout_height="36dp"
+	android:layout_marginLeft="16dp"
+	android:layout_marginTop="10dp"
+	android:layout_marginRight="16dp"
+	android:layout_alignParentStart="true"
+	android:background="@drawable/rectangle_black"
+	android:gravity="center"
+	android:padding="5dp"
+	android:text="T2P_300"
+	android:textColor="@color/text"
+	android:textSize="18sp" />
+
+  <TextView
+	android:id="@+id/tvDescription"
+	fontPath="@string/font_regular"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="16dp"
+	android:layout_marginTop="16dp"
+	android:layout_marginRight="16dp"
+	android:layout_alignParentStart="true"
+	android:layout_toStartOf="@+id/tvApplyCoupon"
+	android:layout_marginBottom="16dp"
+	android:layout_below="@+id/tvTitle"
+	android:gravity="left"
+	android:lineSpacingMultiplier="1.2"
+	android:maxLines="2"
+	android:text="You will get maximum of rupees 300  off with this coupon "
+	android:textColor="@color/text_black_5"
+	android:textSize="16sp" />
+
+
+  <Button
+	android:id="@+id/tvApplyCoupon"
+	fontPath="@string/font_medium"
+	android:layout_width="wrap_content"
+	android:layout_height="36dp"
+	android:layout_marginLeft="16dp"
+	android:layout_marginTop="10dp"
+	android:layout_marginRight="16dp"
+	android:layout_alignParentEnd="true"
+	android:background="@drawable/rectangle_green_round"
+	android:gravity="center"
+	android:visibility="gone"
+	android:textAllCaps="true"
+	android:text="APPLY"
+	android:textColor="@color/white"
+	android:textSize="18sp" />
+</RelativeLayout>
+
+

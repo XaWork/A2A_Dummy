@@ -219,4 +219,18 @@ class UserViewModel1 @Inject constructor(
 
         return result
     }
+
+    fun assignPlan(
+        userId: String,
+        planId: String
+    ): MutableLiveData<Status<AssignPlanModel>> {
+        val result = MutableLiveData<Status<AssignPlanModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.assignPlan(userId, planId)
+        }
+
+        return result
+    }
 }

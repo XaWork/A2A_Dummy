@@ -57,8 +57,6 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
     }
 
     private fun getOrders() {
-
-
         viewModel.getMyOrders(
             userId = AppUtils(context!!).getUser()!!.id,
             page = "0",
@@ -117,7 +115,7 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
             tvEmptyStateDescription.text = description
             llEmptyStateLayout.visibility = View.VISIBLE
             bEmptyStateAction.setOnClickListener {
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_global_serviceTypeFragment)
             }
         }
     }

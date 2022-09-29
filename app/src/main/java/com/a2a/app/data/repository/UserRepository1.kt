@@ -72,4 +72,6 @@ interface UserRepository1 {
     suspend fun getWalletData(userId: String): Status<WalletDataModel>
 
     suspend fun getWalletTransaction(userId: String): Status<WalletTransactionModel>
+
+    suspend fun assignPlan(userId: String, planId: String): Status<AssignPlanModel>
 }

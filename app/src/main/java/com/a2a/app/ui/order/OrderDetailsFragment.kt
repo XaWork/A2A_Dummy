@@ -106,8 +106,13 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
 
                 //set service
                 val serviceList = ArrayList<String>()
-                if (!order.status.contentEquals("cancel"))
-                    serviceList.add("Track Order")
+                //if (!order.status.contentEquals("cancel"))
+                serviceList.add("Track Order")
+                serviceList.add("Live Temperature: ")
+                serviceList.add("View Video Recording of Pickup")
+                serviceList.add("View Video Recording of Delivery")
+                serviceList.add("View Photo of Pickup")
+                serviceList.add("View Photo of Delivery")
 
                 if (serviceList.isEmpty())
                     rvServices.visibility = View.GONE
@@ -201,7 +206,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                             val items = result.value.updates.mapIndexed { index, item ->
                                 when (index) {
                                     0 -> {
-                                       Updates(item.toSummary(), UpdateType.ENTRY)
+                                        Updates(item.toSummary(), UpdateType.ENTRY)
                                     }
                                     result.value.updates.size - 1 -> {
                                         Updates(item.toSummary(), UpdateType.EXIT)

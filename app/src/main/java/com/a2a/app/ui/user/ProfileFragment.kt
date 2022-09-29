@@ -8,25 +8,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.common.BaseFragment
 import com.a2a.app.data.network.UserApi
 import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.ContentProfileBinding
+import com.a2a.app.databinding.FragmentMyPlanBinding
 import com.a2a.app.databinding.FragmentOnBoardingBinding
 import com.a2a.app.databinding.FragmentProfileBinding
 import com.a2a.app.utils.AppUtils
 
 
-class ProfileFragment: BaseFragment<FragmentProfileBinding, UserViewModel, UserRepository>(FragmentProfileBinding::inflate) {
+class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
     private lateinit var contentProfile: ContentProfileBinding
+    private lateinit var viewBinding : FragmentProfileBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         contentProfile = viewBinding.contentProfile
+        viewBinding = FragmentProfileBinding.bind(view)
 
         setToolbar()
         setData()
@@ -60,14 +65,4 @@ class ProfileFragment: BaseFragment<FragmentProfileBinding, UserViewModel, UserR
             findNavController().navigate(R.id.action_global_onBoardingFragment)
         }
     }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentProfileBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() = UserRepository(remoteDataSource.getBaseUrl().create(
-        UserApi::class.java))
 }

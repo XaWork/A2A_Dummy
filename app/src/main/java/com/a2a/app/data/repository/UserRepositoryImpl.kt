@@ -320,4 +320,28 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun assignPlan(
+        userId: String,
+        planId: String
+    ): Status<AssignPlanModel> {
+        return try {
+            val response = userApi.assignPlan(userId, planId)
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
 }
