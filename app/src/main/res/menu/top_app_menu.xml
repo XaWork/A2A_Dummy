@@ -9,10 +9,10 @@
         android:title="book"
         app:showAsAction="always" />
 
-   <!-- <item
-        android:id="@+id/chat"
-        android:icon="@drawable/home_app_bar_icon2"
-        android:title="chat"
-        app:showAsAction="always"/>-->
+    <item
+        android:id="@+id/wallet"
+        android:icon="@drawable/wallet"
+        android:title="Wallet"
+        app:showAsAction="always"/>
 
 </menu>

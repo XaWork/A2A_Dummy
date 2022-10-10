@@ -130,19 +130,19 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                 //update shipping info
                 //totalShippingCost = order.totalShippingPrice!!.toFloat()
                 //totalPackagingCost = order.totalPackingPrice!!.toFloat()
-                tvTotalItemCostValue.text = getString(R.string.Rs_double, order.price.toDouble())
+                //tvTotalItemCostValue.text = getString(R.string.Rs_double, order.price.toDouble())
 
-                tvShippingCost.text = getString(R.string.Rs_double, totalShippingCost)
-                tvPackagingChargeCost.text = "Rs  $totalPackagingCost"
+                dFee.text = getString(R.string.Rs_double, totalShippingCost)
+                packingPrice.text = "Rs  $totalPackagingCost"
 
                 if ((order.tIGST().toFloat() != 0f)) {
-                    llIGSTLayout.visibility = View.VISIBLE
-                    tvIGSTCost.text = "Rs ${order.tIGST().toFloat()}"
+                    //llIGSTLayout.visibility = View.VISIBLE
+                    //tvIGSTCost.text = "Rs ${order.tIGST().toFloat()}"
                 } else {
-                    llSGSTLayout.visibility = View.VISIBLE
-                    llCGSTLayout.visibility = View.VISIBLE
-                    tvSGSTCost.text = getString(R.string.Rs_double, order.tSGST().toFloat())
-                    tvCGSTCost.text = getString(R.string.Rs_double, order.tIGST().toFloat())
+                    //llSGSTLayout.visibility = View.VISIBLE
+                    //llCGSTLayout.visibility = View.VISIBLE
+                    //tvSGSTCost.text = getString(R.string.Rs_double, order.tSGST().toFloat())
+                    //tvCGSTCost.text = getString(R.string.Rs_double, order.tIGST().toFloat())
                 }
 
                 tvTotal.text = order.finalprice

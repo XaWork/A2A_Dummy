@@ -20,7 +20,7 @@ class OnBoardingFragment : Fragment(R.layout.fragment_on_boarding) {
 
     private fun setTabs() {
         with(viewBinding) {
-            val tabs = arrayOf("SignIn", "SignUp")
+            val tabs = arrayOf("Login", "SignUp")
 
             val adapter = OnBoardingTabAdapter(
                 fragmentManger = parentFragmentManager,

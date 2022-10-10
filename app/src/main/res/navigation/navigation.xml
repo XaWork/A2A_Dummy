@@ -222,9 +222,6 @@
         android:name="com.a2a.app.ui.book.BookFragment"
         android:label="fragment_book"
         tools:layout="@layout/fragment_book" >
-        <action
-            android:id="@+id/action_bookFragment_to_bookingConfrimFragment"
-            app:destination="@id/bookingConfrimFragment" />
         <argument
             android:name="PickupLocation"
             app:argType="string"
@@ -235,6 +232,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_bookFragment_to_orderConfirmationFragment"
+            app:destination="@id/orderConfirmationFragment" />
     </fragment>
     <action android:id="@+id/action_global_bookFragment" app:destination="@id/bookFragment"/>
 
@@ -264,6 +264,20 @@
         tools:layout="@layout/fragment_track_location" >
         <argument
             android:name="order"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderConfirmationFragment"
+        android:name="com.a2a.app.ui.order.OrderConfirmationFragment"
+        android:label="fragment_order_confirmation"
+        tools:layout="@layout/fragment_order_confirmation" >
+        <action
+            android:id="@+id/action_orderConfirmationFragment_to_bookingConfrimFragment"
+            app:destination="@id/bookingConfrimFragment" />
+        <argument
+            android:name="orderConfirmationData"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />

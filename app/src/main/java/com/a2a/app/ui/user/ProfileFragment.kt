@@ -30,8 +30,8 @@ class ProfileFragment: Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        contentProfile = viewBinding.contentProfile
         viewBinding = FragmentProfileBinding.bind(view)
+        contentProfile = viewBinding.contentProfile
 
         setToolbar()
         setData()

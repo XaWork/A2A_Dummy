@@ -344,4 +344,69 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun confirmBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        price: String,
+        finalPrice: String,
+        timeslot: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String
+    ): Status<ConfirmBookingModel> {
+        return try {
+            val response = userApi.confirmBooking(
+                userId,
+                pickupAddress,
+                destinationAddress,
+                category,
+                subCategory,
+                pickupRange,
+                weight,
+                width,
+                height,
+                length,
+                pickupType,
+                deliveryType,
+                scheduleTime,
+                scheduleDate,
+                price,
+                finalPrice,
+                timeslot,
+                videoRecording,
+                pictureRecording,
+                liveTemparature,
+                liveTracking
+            )
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
 }

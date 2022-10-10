@@ -1,7 +1,10 @@
 package com.a2a.app.data.repository
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
+import kotlinx.coroutines.launch
 
 interface UserRepository1 {
 
@@ -74,4 +77,29 @@ interface UserRepository1 {
     suspend fun getWalletTransaction(userId: String): Status<WalletTransactionModel>
 
     suspend fun assignPlan(userId: String, planId: String): Status<AssignPlanModel>
+
+    suspend fun confirmBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        price: String,
+        finalPrice: String,
+        timeslot: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String,
+    ): Status<ConfirmBookingModel>
+
 }

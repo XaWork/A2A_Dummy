@@ -31,7 +31,7 @@ class CityFragment : BaseFragment<
 
     private lateinit var mainActivity: MainActivity
     private lateinit var allCities: CityModel
-    val cityList = ArrayList<CommonModel>()
+    private val cityList = ArrayList<CommonModel>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -76,18 +76,11 @@ class CityFragment : BaseFragment<
         //cityList.add(CommonModel("1", "", "customer name", "", "", ""))
         for (city in allCities.result) {
             cityList.add(city.toCommonModel())
-            /*    city.run {
-                    cityList.add(
-                        CommonModel(
-                            id, file, name, description, slug, subHeading
-                        )
-                    )
-                }*/
         }
         // viewBinding.setVariable(BR.dataList, cityList.toList())
         viewBinding.rvCity.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = CommonAdapter(cityList, context, object : ItemClick {
+            adapter = CommonAdapter(cityList.sortedBy { it.name } as MutableList<CommonModel>, context, object : ItemClick {
                 override fun clickRvItem(name: String, model: Any) {
                     when (name) {
                         "details" -> {

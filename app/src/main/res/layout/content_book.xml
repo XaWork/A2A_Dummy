@@ -61,6 +61,7 @@
                             android:text="@string/pickup"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
+                            android:maxLines="1"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -69,11 +70,13 @@
 
                         <TextView
                             android:id="@+id/textView91"
+                            android:maxLines="1"
                             style="@style/poppins_regular_18_blue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/location"
                             android:textAllCaps="true"
+                            android:textSize="16sp"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -172,6 +175,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/destination"
                             android:textAllCaps="true"
+                            android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -185,7 +189,9 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@string/location"
+                            android:maxLines="1"
                             android:textAllCaps="true"
+                            android:textSize="16sp"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -329,7 +335,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout3"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_between_views"
@@ -338,13 +344,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtPickupRange"
+            <AutoCompleteTextView
+                android:id="@+id/acPickupRange"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Pickup Range in KM"
-                android:text="0"
-                android:inputType="number" />
+                android:focusable="false"
+                android:text="2"
+                android:hint="Pickup Range in KM" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -364,7 +370,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Weight"
-                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -384,7 +389,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Width"
-                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -405,7 +409,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Height"
-                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -425,7 +428,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Length"
-                android:text="0"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 

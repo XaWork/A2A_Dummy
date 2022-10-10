@@ -3,7 +3,6 @@ package com.a2a.app.ui.deals
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +17,7 @@ import com.a2a.app.data.model.OfferDealModel
 import com.a2a.app.data.network.CustomApi
 import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
-import com.a2a.app.databinding.FragmentCityBinding
 import com.a2a.app.databinding.FragmentDealsBinding
-import com.a2a.app.ui.common.CommonAdapter
-
 
 class DealsFragment :
     BaseFragment<FragmentDealsBinding, CustomViewModel, CustomRepository>(FragmentDealsBinding::inflate) {

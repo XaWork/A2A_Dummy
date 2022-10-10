@@ -38,7 +38,9 @@ object AppModule {
             .build()
     }
 
-    private fun buildOkHttpClient(): OkHttpClient {
+    @Provides
+    @Singleton
+    fun buildOkHttpClient(): OkHttpClient {
         val httpClientBuilder = OkHttpClient.Builder()
         //set timeout
         httpClientBuilder
@@ -75,9 +77,9 @@ object AppModule {
     @Provides
     fun provideSettingApi(retrofit: Retrofit): SettingApi = retrofit.create()
 
-  /*  @Singleton
-    @Provides
-    fun provideSettingRepository(settingApi: SettingApi): SettingRepository {
-        return SettingRepositoryImpl(settingApi)
-    }*/
+    /*  @Singleton
+      @Provides
+      fun provideSettingRepository(settingApi: SettingApi): SettingRepository {
+          return SettingRepositoryImpl(settingApi)
+      }*/
 }

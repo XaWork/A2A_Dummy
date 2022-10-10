@@ -1,6 +1,5 @@
 package com.a2a.app.utils
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
@@ -10,7 +9,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.a2a.app.data.model.AppDataModel
 import com.a2a.app.data.model.HomeModel
 import com.a2a.app.data.model.SettingsModel
 import com.a2a.app.data.model.VerifyOtpModel
@@ -18,7 +16,6 @@ import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.w3c.dom.Text
 import javax.inject.Inject
 
 class AppUtils @Inject constructor(@ApplicationContext private val context: Context) {

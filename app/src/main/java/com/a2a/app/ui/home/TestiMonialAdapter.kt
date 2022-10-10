@@ -4,16 +4,12 @@ import android.content.Context
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.a2a.app.R
 import com.a2a.app.data.model.HomeModel
-import com.a2a.app.databinding.SingleCommonBinding
 import com.a2a.app.databinding.SingleTestimonialBinding
 import com.bumptech.glide.Glide
-import com.onesignal.HTML
 
 class TestiMonialAdapter(
     private val data: List<HomeModel.Result.Testimonial>,

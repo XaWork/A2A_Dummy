@@ -320,6 +320,13 @@ class MainActivity : AppCompatActivity() {
                 val navController = navHostFragment.navController
                 navController.navigate(R.id.action_global_bookFragment)
             }
+            R.id.wallet -> {
+                hideToolbarAndBottomNavigation()
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_home) as NavHostFragment
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.action_global_walletFragment)
+            }
         }
         return true
     }

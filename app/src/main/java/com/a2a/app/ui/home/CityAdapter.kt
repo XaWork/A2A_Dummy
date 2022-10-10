@@ -1,39 +1,48 @@
 package com.a2a.app.ui.home
 
 import android.content.Context
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.a2a.app.R
+import com.a2a.app.common.RvItemClick
 import com.a2a.app.data.model.HomeModel
-import com.a2a.app.databinding.SingleCustomerBinding
+import com.a2a.app.databinding.SingleBlogBinding
+import com.a2a.app.databinding.SingleCityBinding
+import com.a2a.app.toDate
 import com.bumptech.glide.Glide
 
-class CustomerAdapter(
+class CityAdapter(
     private val context: Context,
-    private val data: List<HomeModel.Result.Client>
-) : RecyclerView.Adapter<CustomerAdapter.MyViewHolder>() {
+    private val data: List<HomeModel.Result.City>,
+    private val itemClick: RvItemClick
+) : RecyclerView.Adapter<CityAdapter.MyViewHolder>() {
 
-    inner class MyViewHolder(private val viewBinding: SingleCustomerBinding) :
+    inner class MyViewHolder(private val viewBinding: SingleCityBinding) :
         RecyclerView.ViewHolder(viewBinding.root) {
 
-        fun bind(position: Int, client: HomeModel.Result.Client) {
+        fun bind(position: Int, city: HomeModel.Result.City) {
             with(viewBinding) {
-                client.run {
+                city.run {
                     Glide.with(context)
                         .load(file)
                         .placeholder(R.drawable.image_placeholder)
                         .error(R.drawable.image_error)
-                        .into(imgClient)
+                        .into(imgCity)
 
-                    tvClientName.text = name
+                    tvTitle.text = name
+                }
+
+                itemView.setOnClickListener {
+                    itemClick.clickWithPosition("details", position)
                 }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        MyViewHolder(SingleCustomerBinding.inflate(LayoutInflater.from(context), parent, false))
+        MyViewHolder(SingleCityBinding.inflate(LayoutInflater.from(context), parent, false))
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind(position, data[position])

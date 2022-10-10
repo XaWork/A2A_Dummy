@@ -233,4 +233,58 @@ class UserViewModel1 @Inject constructor(
 
         return result
     }
+
+    fun confirmBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        price: String,
+        finalPrice: String,
+        timeslot: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String,
+    ): MutableLiveData<Status<ConfirmBookingModel>> {
+        val result = MutableLiveData<Status<ConfirmBookingModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.confirmBooking(
+                userId,
+                pickupAddress,
+                destinationAddress,
+                category,
+                subCategory,
+                pickupRange,
+                weight,
+                width,
+                height,
+                length,
+                pickupType,
+                deliveryType,
+                scheduleTime,
+                scheduleDate,
+                price,
+                finalPrice,
+                timeslot,
+                videoRecording,
+                pictureRecording,
+                liveTemparature,
+                liveTracking
+            )
+        }
+        return result
+    }
+
 }

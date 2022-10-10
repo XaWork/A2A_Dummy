@@ -88,7 +88,7 @@ class ServiceTypeFragment :
             layoutManager = LinearLayoutManager(context)
             adapter = CommonAdapter(
                 context = context,
-                data = data,
+                data = data.sortedBy { it.name } as MutableList<CommonModel>,
                 itemClick = object : ItemClick {
                     override fun clickRvItem(name: String, model: Any) {
                         val category = model as CommonModel

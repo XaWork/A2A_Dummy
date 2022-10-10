@@ -3,18 +3,12 @@ package com.a2a.app.ui.home
 import android.content.Context
 import android.text.Html
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.a2a.app.R
-import com.a2a.app.common.ItemClick
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.data.model.HomeModel
 import com.a2a.app.databinding.SingleBlogBinding
-import com.a2a.app.databinding.SingleCommonBinding
-import com.a2a.app.databinding.SingleCustomerBinding
-import com.a2a.app.databinding.SingleTestimonialBinding
 import com.a2a.app.toDate
 import com.bumptech.glide.Glide
 

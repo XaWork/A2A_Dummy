@@ -65,24 +65,12 @@ class CategoryFragment :
 
         for (category in allCategories.result) {
             allCategoryList.add(category.toCommonModel())
-            /*category.run {
-                allCategoryList.add(
-                    CommonModel(
-                        id,
-                        file,
-                        name,
-                        description,
-                        slug,
-                        subHeading = ""
-                    )
-                )
-            }*/
         }
 
         //viewBinding.setVariable(BR.dataList, allCategoryList)
         viewBinding.rvCategory.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = CommonAdapter(allCategoryList, context, object : ItemClick {
+            adapter = CommonAdapter(allCategoryList.sortedBy { it.name } as MutableList<CommonModel>, context, object : ItemClick {
                 override fun clickRvItem(name: String, model: Any) {
                     val category = model as CommonModel
                     when(name){

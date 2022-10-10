@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+  <RelativeLayout
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_margin="4dp"
+	android:orientation="horizontal">
+
+	  <de.hdodenhof.circleimageview.CircleImageView
+		  android:id="@+id/imgCity"
+		  android:layout_width="60dp"
+		  android:layout_height="60dp"
+		  android:layout_centerHorizontal="true"
+		  android:layout_marginHorizontal="2dp"
+		  android:layout_marginTop="8dp"
+		  android:src="@mipmap/ic_launcher"
+		  android:tag="image_tag" />
+
+	  <TextView
+		  android:id="@+id/tvTitle"
+		  android:layout_width="wrap_content"
+		  android:layout_height="wrap_content"
+		  android:layout_below="@+id/imgCity"
+		  android:layout_centerHorizontal="true"
+		  android:layout_gravity="center"
+		  android:textAlignment="center"
+		  android:paddingHorizontal="2dp"
+		  android:text="City Name"
+		  android:layout_marginTop="4dp"
+		  android:gravity="center"
+		  android:maxLines="1"
+		  android:singleLine="true"
+		  android:textColor="@color/black"
+		  android:textSize="10sp"
+		  android:textStyle="bold" />
+
+  </RelativeLayout>
+</layout>

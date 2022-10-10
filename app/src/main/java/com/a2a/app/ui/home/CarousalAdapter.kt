@@ -1,18 +1,11 @@
 package com.a2a.app.ui.home
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
-import com.a2a.app.R
 import com.a2a.app.data.model.HomeModel
 import com.a2a.app.databinding.CarousalLayoutBinding
-import com.a2a.app.databinding.SingleCommonBinding
-import com.a2a.app.databinding.SingleCustomerBinding
-import com.a2a.app.databinding.SingleTestimonialBinding
 import com.a2a.app.ui.customeviews.AutoScrollViewPager
 
 class CarousalAdapter(

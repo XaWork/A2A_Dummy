@@ -43,10 +43,11 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilname"
+                    android:id="@+id/tilName"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:textColorHint="#9e9e9e"
@@ -56,8 +57,9 @@
                         android:id="@+id/name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Full Name"
-                        android:inputType="textPersonName"
+                        android:hint="@string/full_name"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:textColor="#5f6368"
                         android:textColorHint="#9e9e9e"
                         android:textSize="16sp" />

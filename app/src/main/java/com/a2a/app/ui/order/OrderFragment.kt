@@ -102,6 +102,7 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
     }
 
     private fun setToolbar() {
+        viewBinding.incToolbar.toolbar.title = "My Orders"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }

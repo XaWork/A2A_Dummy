@@ -7,6 +7,7 @@ data class HomeModel(
 ) {
     data class Result(
         val blogs: List<Blog>,
+        val city: List<City>,
         val clients: List<Client>,
         val slider: List<Slider>,
         val testimonials: List<Testimonial>
@@ -27,6 +28,36 @@ data class HomeModel(
             val title: String,
             val updatedAt: String
         )
+
+        data class City(
+            val __v: Int,
+            val _id: String,
+            val active: Int,
+            val cod: Boolean,
+            val created_date: String,
+            val deleted: Int,
+            val description: String,
+            val description_after_content: String,
+            val `file`: String,
+            val file2: String,
+            val footer: Int,
+            val footer_content: String,
+            val heading: String,
+            val name: String,
+            val ps: String,
+            val slug: String,
+            val slug_history: List<String>,
+            val state: String,
+            val sub_heading: String,
+            val timeslots: List<Timeslot>,
+            val update_date: String
+        ) {
+            data class Timeslot(
+                val cost_multiplier: String,
+                val end_time: String,
+                val start_time: String
+            )
+        }
 
         data class Client(
             val __v: Int,

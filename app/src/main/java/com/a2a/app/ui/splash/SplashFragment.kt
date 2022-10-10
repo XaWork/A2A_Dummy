@@ -53,22 +53,15 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         viewBinding = FragmentSplashBinding.bind(view)
         mainActivity.hideToolbarAndBottomNavigation()
 
-            getSettings()
-
-        /*lifecycleScope.launch {
-            dialog.showLoading(parentFragmentManager)
-            delay(2000)
-            dialog.stopShowingLoading()
-        }*/
+        getSettings()
     }
 
     private fun getSettings() {
         viewModel.getSettings().observe(viewLifecycleOwner) { result ->
             when (result) {
-                is Status.Loading -> {
-                }
+                is Status.Loading -> {}
                 is Status.Success -> {
-                   // stopShowingLoading()
+                    appUtils.clearHomePage()
                     appUtils.saveSettings(result.value)
                     moveToNext()
                 }
@@ -86,19 +79,4 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             findNavController().navigate(R.id.action_global_onBoardingFragment)
         }
     }
-
-   /* fun showLoading() {
-        showLoading(getString(R.string.please_wait), getString(R.string.loading))
-    }
-
-    fun showLoading(title: String, message: String) {
-        val manager = parentFragmentManager
-        progressDialog = ProgressDialogFragment.newInstance(title, message)
-        progressDialog.isCancelable = false
-        progressDialog.show(manager, "progress")
-    }
-
-    fun stopShowingLoading() {
-        progressDialog.dismiss()
-    }*/
 }
