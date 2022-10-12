@@ -6,21 +6,40 @@ import androidx.lifecycle.viewModelScope
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
 import com.a2a.app.data.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    private val userRepository1: UserRepository
+) : ViewModel() {
 
-    //private val viewUtils: ViewUtils? = null
-    //var mobile: String? = null
-    //var email: String? = null
+    fun fetchOtp(mobile: String, token: String): MutableLiveData<Status<FetchOtpResponse>> {
+        val result = MutableLiveData<Status<FetchOtpResponse>>()
 
-    private var _fetchOtpResponse = MutableLiveData<Status<FetchOtpResponse>>()
-    val fetchOtpResponse = _fetchOtpResponse
-    fun fetchOtp(mobile: String, token: String) {
         viewModelScope.launch {
-            _fetchOtpResponse.value = Status.Loading
-            _fetchOtpResponse.value = userRepository.fetchOtp(mobile = mobile, token)
+            result.value = Status.Loading
+            result.value = userRepository1.fetchOtp(mobile, token)
         }
+
+        return result
+    }
+
+
+    fun verifyOtp(
+        mobile: String,
+        otp: String,
+        token: String
+    ): MutableLiveData<Status<VerifyOtpModel>> {
+        val result = MutableLiveData<Status<VerifyOtpModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.verifyOtp(mobile, otp, token)
+        }
+
+        return result
     }
 
 
@@ -30,122 +49,72 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         deviceToken: String,
         reffer: String
     ): MutableLiveData<Status<RegistrationModel>> {
-
         val result = MutableLiveData<Status<RegistrationModel>>()
+
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.registration(mobile, email, deviceToken, reffer)
+            result.value = userRepository1.registration(mobile, email, deviceToken, reffer)
         }
 
         return result
     }
 
-    fun verifyOtp(
-        mobile: String,
-        otp: String,
-        deviceToken: String
-    ): MutableLiveData<Status<VerifyOtpModel>> {
 
-        val result = MutableLiveData<Status<VerifyOtpModel>>()
-        viewModelScope.launch {
-            result.value = Status.Loading
-            result.value = userRepository.verifyOtp(mobile, otp, deviceToken)
-        }
-        return result
-    }
-
-
-    fun assignPlan(
+    fun getMyOrders(
         userId: String,
-        planId: String
-    ): MutableLiveData<Status<AssignPlanModel>> {
+        page: String,
+        perPage: String
+    ): MutableLiveData<Status<OrderModel>> {
+        val result = MutableLiveData<Status<OrderModel>>()
 
-        val result = MutableLiveData<Status<AssignPlanModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.assignPlan(userId, planId)
+            result.value = userRepository1.getMyOrders(userId, page, perPage)
+        }
+
+        return result
+    }
+
+    fun orderUpdate(
+        orderId: String
+    ): MutableLiveData<Status<OrderUpdateModel>> {
+        val result = MutableLiveData<Status<OrderUpdateModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.orderUpdate(orderId)
         }
 
         return result
     }
 
 
-    fun normalTimeSlots(
-        scheduleDate: String,
-        destinationAddress: String,
-        pickupAddress: String
-    ): MutableLiveData<Status<NormalTimeslotModel>> {
+    fun addressList(
+        userId: String
+    ): MutableLiveData<Status<AddressListModel>> {
+        val result = MutableLiveData<Status<AddressListModel>>()
 
-        val result = MutableLiveData<Status<NormalTimeslotModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value =
-                userRepository.normalTimeSlots(scheduleDate, destinationAddress, pickupAddress)
+            result.value = userRepository1.addressList(userId)
         }
 
         return result
-    }
-
-    fun editProfile(
-        id: String,
-        fullName: String,
-        mobile: String
-    ): MutableLiveData<Status<CommonResponseModel>> {
-
-        val result = MutableLiveData<Status<CommonResponseModel>>()
-        viewModelScope.launch {
-            result.value = Status.Loading
-            result.value = userRepository.editProfile(id, fullName, mobile)
-        }
-
-        return result
-    }
-
-    private val _addressList = MutableLiveData<Status<AddressListModel>>()
-    val addressList = _addressList
-    fun allAddress(
-        userId: String
-    ) {
-        viewModelScope.launch {
-            _addressList.value = Status.Loading
-            _addressList.value = userRepository.allAddress(userId)
-        }
-    }
-
-    private val _walletData = MutableLiveData<Status<WalletDataModel>>()
-    val walletData = _walletData
-    fun getWalletData(
-        userId: String
-    ) {
-        viewModelScope.launch {
-            _walletData.value = Status.Loading
-            _walletData.value = userRepository.getWalletData(userId)
-        }
-    }
-
-    private val _walletTransaction = MutableLiveData<Status<WalletTransactionModel>>()
-    val walletTransaction = _walletTransaction
-    fun getWalletTransactions(
-        userId: String
-    ) {
-        viewModelScope.launch {
-            _walletTransaction.value = Status.Loading
-            _walletTransaction.value = userRepository.getWalletTransactions(userId)
-        }
     }
 
     fun deleteAddress(
-        userId: String,
         addressId: String
     ): MutableLiveData<Status<CommonResponseModel>> {
-
         val result = MutableLiveData<Status<CommonResponseModel>>()
+
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.deleteAddress(userId, addressId)
+            result.value = userRepository1.deleteAddress( addressId)
         }
+
         return result
     }
+
 
     fun addAddress(
         userId: String,
@@ -161,11 +130,11 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         state: String,
         postOffice: String,
     ): MutableLiveData<Status<AddAddressModel>> {
-
         val result = MutableLiveData<Status<AddAddressModel>>()
+
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.addAddress(
+            result.value = userRepository1.addAddress(
                 userId,
                 title,
                 address,
@@ -180,6 +149,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 postOffice
             )
         }
+
         return result
     }
 
@@ -197,11 +167,11 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         state: String,
         postOffice: String,
     ): MutableLiveData<Status<CommonResponseModel>> {
-
         val result = MutableLiveData<Status<CommonResponseModel>>()
+
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.editAddress(
+            result.value = userRepository1.editAddress(
                 userId,
                 title,
                 address,
@@ -216,20 +186,95 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 postOffice
             )
         }
+
         return result
     }
 
-    private val _myOrders = MutableLiveData<Status<OrderModel>>()
-    val myOrders = _myOrders
-    fun getMyOrders(
-        userId: String,
-        page: String,
-        perPage: String
-    ) {
+    fun editProfile(
+        id: String,
+        fullName: String,
+        mobile: String
+    ): MutableLiveData<Status<CommonResponseModel>> {
+        val result = MutableLiveData<Status<CommonResponseModel>>()
+
         viewModelScope.launch {
-            _myOrders.value = Status.Loading
-            _myOrders.value = userRepository.getMyOrders(userId, page, perPage)
+            result.value = Status.Loading
+            result.value =
+                userRepository1.editProfile(id, fullName, mobile)
         }
+
+        return result
+    }
+
+
+    fun getWalletData(
+        userId: String
+    ): MutableLiveData<Status<WalletDataModel>> {
+        val result = MutableLiveData<Status<WalletDataModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.getWalletData(userId)
+        }
+
+        return result
+    }
+
+
+    fun getWalletTransaction(
+        userId: String
+    ): MutableLiveData<Status<WalletTransactionModel>> {
+        val result = MutableLiveData<Status<WalletTransactionModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.getWalletTransaction(userId)
+        }
+
+        return result
+    }
+
+    fun assignPlan(
+        userId: String,
+        planId: String
+    ): MutableLiveData<Status<AssignPlanModel>> {
+        val result = MutableLiveData<Status<AssignPlanModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.assignPlan(userId, planId)
+        }
+
+        return result
+    }
+
+    fun checkOrderStatus(
+        orderId: String
+    ): MutableLiveData<Status<CheckOrderStatusModel>> {
+        val result = MutableLiveData<Status<CheckOrderStatusModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.checkOrderStatus(orderId)
+        }
+
+        return result
+    }
+
+    fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ): MutableLiveData<Status<NormalTimeslotModel>> {
+        val result = MutableLiveData<Status<NormalTimeslotModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value =
+                userRepository1.normalTimeSlots(scheduleDate, destinationAddress, pickupAddress)
+        }
+
+        return result
     }
 
     fun confirmBooking(
@@ -258,7 +303,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         val result = MutableLiveData<Status<ConfirmBookingModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.confirmBooking(
+            result.value = userRepository1.confirmBooking(
                 userId,
                 pickupAddress,
                 destinationAddress,
@@ -302,13 +347,13 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         scheduleDate: String,
         videoRecording: String,
         pictureRecording: String,
-        liveTempreture: String,
-        liveTracking: String
+        liveTemperature: String,
+        liveTracking: String,
     ): MutableLiveData<Status<EstimateBookingModel>> {
         val result = MutableLiveData<Status<EstimateBookingModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository.estimateBooking(
+            result.value = userRepository1.estimateBooking(
                 userId,
                 pickupAddress,
                 destinationAddress,
@@ -325,10 +370,11 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
                 scheduleDate,
                 videoRecording,
                 pictureRecording,
-                liveTempreture,
+                liveTemperature,
                 liveTracking
             )
         }
         return result
     }
+
 }

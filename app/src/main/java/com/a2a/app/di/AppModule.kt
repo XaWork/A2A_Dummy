@@ -69,9 +69,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun getCustomApi(retrofit: Retrofit): CustomApi {
-        return retrofit.create()
-    }
+    fun getCustomApi(retrofit: Retrofit): CustomApi = retrofit.create()
 
     @Singleton
     @Provides

@@ -1,24 +1,11 @@
 package com.a2a.app.ui.user
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.app.ActivityCompat.finishAffinity
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
-import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.ContentProfileBinding
-import com.a2a.app.databinding.FragmentMyPlanBinding
-import com.a2a.app.databinding.FragmentOnBoardingBinding
 import com.a2a.app.databinding.FragmentProfileBinding
 import com.a2a.app.utils.AppUtils
 

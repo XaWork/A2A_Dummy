@@ -1,10 +1,8 @@
 package com.a2a.app.ui.location
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -25,7 +23,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.HashMap
 import javax.inject.Inject
 
 @AndroidEntryPoint

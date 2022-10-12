@@ -58,10 +58,10 @@
                             style="@style/poppins_bold_18_blue_bold"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:maxLines="1"
                             android:text="@string/pickup"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
-                            android:maxLines="1"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -70,14 +70,14 @@
 
                         <TextView
                             android:id="@+id/textView91"
-                            android:maxLines="1"
                             style="@style/poppins_regular_18_blue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:maxLines="1"
                             android:text="@string/location"
                             android:textAllCaps="true"
-                            android:textSize="16sp"
                             android:textColor="@color/white"
+                            android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -173,9 +173,9 @@
                             style="@style/poppins_bold_18_blue_bold"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:maxLines="1"
                             android:text="@string/destination"
                             android:textAllCaps="true"
-                            android:maxLines="1"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -188,11 +188,11 @@
                             style="@style/poppins_regular_18_blue"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/location"
                             android:maxLines="1"
+                            android:text="@string/location"
                             android:textAllCaps="true"
-                            android:textSize="16sp"
                             android:textColor="@color/white"
+                            android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
@@ -250,13 +250,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/materialCardView2" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvServiceType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:itemCount="1"
+            android:background="@drawable/rec_outline_sharp"
+            tools:listitem="@layout/single_booking_form_service"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvSelectServiceType"/>
 
         <RadioGroup
             android:id="@+id/rgDeliveryType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:visibility="gone"
             android:background="@drawable/rec_outline_sharp"
+            android:orientation="horizontal"
             android:paddingHorizontal="@dimen/high_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -293,7 +304,7 @@
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rgDeliveryType" />
+            app:layout_constraintTop_toBottomOf="@+id/rvServiceType" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
@@ -349,8 +360,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="false"
-                android:text="2"
-                android:hint="Pickup Range in KM" />
+                android:hint="Pickup Range(KM)"
+                android:text="2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -369,7 +380,7 @@
                 android:id="@+id/edtWight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Weight"
+                android:hint="Weight(KG)"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -388,7 +399,7 @@
                 android:id="@+id/edtWidth"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Width"
+                android:hint="Width(CM)"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -408,7 +419,7 @@
                 android:id="@+id/edtHeight"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Height"
+                android:hint="Height(CM)"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -427,7 +438,7 @@
                 android:id="@+id/edtLength"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Length"
+                android:hint="Length(CM)"
                 android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -461,12 +472,12 @@
 
         <TextView
             android:id="@+id/textView13"
+            style="@style/poppins_regular_14_black_bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_between_views"
-            style="@style/poppins_regular_14_black_bold"
-            android:textColor="@color/colorPrimary"
             android:text="Paid Additional Services(Optional)"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

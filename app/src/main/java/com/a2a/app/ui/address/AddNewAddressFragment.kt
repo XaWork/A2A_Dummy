@@ -3,29 +3,19 @@ package com.a2a.app.ui.address
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.AddressListModel
 import com.a2a.app.data.model.CityListModel
 import com.a2a.app.data.model.StateListModel
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.CustomRepository
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
-import com.a2a.app.data.viewmodelfactory.CustomViewModelFactory
 import com.a2a.app.databinding.FragmentAddNewAddressBinding
 import com.a2a.app.hideSoftKeyboard
 import com.a2a.app.setupDropDown
@@ -36,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address){
+class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
 
     private lateinit var stateResponse: StateListModel
     lateinit var cites: List<CityListModel.Result>
@@ -49,11 +39,12 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address){
     val pinList = mutableListOf<String>()
     var validPin = false;
     private val customViewModel by viewModels<CustomViewModel>()
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
     private lateinit var viewBinding: FragmentAddNewAddressBinding
 
     @Inject
     lateinit var viewUtils: ViewUtils
+
     @Inject
     lateinit var appUtils: AppUtils
 
@@ -264,8 +255,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address){
     }
 
     private fun getCityAndZip() {
-        customViewModel.getAllStates()
-        customViewModel.allStates.observe(viewLifecycleOwner) { response ->
+        customViewModel.getAllStates().observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Loading -> {
                     viewUtils.showLoading(parentFragmentManager)
@@ -292,70 +282,79 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address){
 
     private fun getZipList() {
         validPin = false
-        customViewModel.getZipByCity(selectedCityId!!)
-        customViewModel.zipByCity.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Status.Success -> {
-                    viewUtils.stopShowingLoading()
-                    if (response.value.result.isNullOrEmpty()) {
-                        viewUtils.showError("No available pin code, select another city/state")
-                    }
-                    viewBinding.run {
-                        pinList.addAll(response.value.result.map { it.name })
-                        val arrayAdapter = ArrayAdapter(
-                            context!!,
-                            android.R.layout.select_dialog_item,
-                            pinList
-                        )
-                        etPin.setAdapter(arrayAdapter)
-                        etPin.setOnItemClickListener { parent, view, position, id ->
-                            validPin = true
+        customViewModel
+            .getZipByCity(selectedCityId!!)
+            .observe(
+                viewLifecycleOwner
+            ) { response ->
+                when (response) {
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        if (response.value.result.isNullOrEmpty()) {
+                            viewUtils.showError("No available pin code, select another city/state")
+                        }
+                        viewBinding.run {
+                            pinList.clear()
+                            pinList.addAll(response.value.result.map { it.name })
+                            val arrayAdapter = ArrayAdapter(
+                                context!!,
+                                android.R.layout.select_dialog_item,
+                                pinList
+                            )
+                            etPin.setAdapter(arrayAdapter)
+                            etPin.setOnItemClickListener { parent, view, position, id ->
+                                validPin = true
+                            }
                         }
                     }
-                }
-                is Status.Loading -> {
-                }
-                else -> {
-                    viewUtils.stopShowingLoading()
-                    viewUtils.showError("Something went wrong!")
-                    //finish()
-                    findNavController().popBackStack()
+                    is Status.Loading -> {
+                    }
+                    else -> {
+                        viewUtils.stopShowingLoading()
+                        viewUtils.showError("Something went wrong!")
+                        //finish()
+                        findNavController().popBackStack()
+                    }
                 }
             }
-        }
     }
 
     private fun getCityByState() {
-        customViewModel.getAllCityByState(selectedStateId!!)
-        customViewModel.cityByState.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Status.Success -> {
-                    viewUtils.stopShowingLoading()
-                    cites = response.value.result
-                    selectedCityId = null
-                    viewBinding.etCity.setupDropDown(cites.toTypedArray(), { it.name }, { city ->
-                        viewBinding.etCity.setText(city.name)
-                        viewBinding.etPin.setText("")
-                        if (selectedCityId == null && selectedCityId != city.id) {
-                            selectedCityId = city.id
-                            getZipList()
-                        }
-                    }, {
-                        if (cites.isNotEmpty()) {
-                            it.show()
-                        }
-                    })
-                }
-                is Status.Loading -> {
-                }
-                else -> {
-                    viewUtils.stopShowingLoading()
-                    viewUtils.showError("Something went wrong!")
-                    //finish()
-                    findNavController().popBackStack()
+        customViewModel
+            .getAllCityByState(selectedStateId!!)
+            .observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        cites = response.value.result
+                        selectedCityId = null
+                        viewBinding.etCity.setupDropDown(
+                            cites.toTypedArray(),
+                            { it.name },
+                            { city ->
+                                viewBinding.etCity.setText(city.name)
+                                viewBinding.etPin.setText("")
+                                if (selectedCityId == null && selectedCityId != city.id) {
+                                    selectedCityId = city.id
+                                    getZipList()
+                                }
+                            },
+                            {
+                                if (cites.isNotEmpty()) {
+                                    it.show()
+                                }
+                            })
+                    }
+                    is Status.Loading -> {
+                    }
+                    else -> {
+                        viewUtils.stopShowingLoading()
+                        viewUtils.showError("Something went wrong!")
+                        //finish()
+                        findNavController().popBackStack()
+                    }
                 }
             }
-        }
     }
 
     private fun setupOptions() {

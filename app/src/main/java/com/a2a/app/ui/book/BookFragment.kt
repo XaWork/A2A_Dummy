@@ -8,32 +8,40 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.*
-import com.a2a.app.common.BaseFragment
+import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentBookBinding
 import com.a2a.app.ui.address.AddressSelectionFragment
 import com.a2a.app.ui.address.SaveAddressListener
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
+import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class BookFragment :
-    BaseFragment<FragmentBookBinding, UserViewModel, UserRepository>(FragmentBookBinding::inflate) {
+    Fragment(R.layout.fragment_book) {
 
-    private lateinit var customViewModel: CustomViewModel
+    private val customViewModel by viewModels<CustomViewModel>()
+    private val viewModel by viewModels<UserViewModel>()
+    private lateinit var viewBinding: FragmentBookBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var categories: List<AllCategoryModel.Result>
     private lateinit var selectedCategory: AllCategoryModel.Result
@@ -75,6 +83,12 @@ class BookFragment :
     private lateinit var normalDialogConfirmButton: TextView
     private lateinit var estimateBookingResponse: EstimateBookingModel
 
+    @Inject
+    lateinit var appUtils: AppUtils
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -82,10 +96,10 @@ class BookFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        customViewModel = getCutomViewModel()
+        viewBinding = FragmentBookBinding.bind(view)
         //getArgument()
         setToolbar()
-        getAllCategories()
+        //getAllCategories()
 
         with(viewBinding.contentBook) {
             val user = appUtils.getUser()
@@ -124,6 +138,7 @@ class BookFragment :
                 })
                 addressSelection.show(parentFragmentManager, addressSelection.tag)
             }
+        /*
             rgDeliveryType.setOnCheckedChangeListener { _, checkedId ->
                 Log.d("book", "Delivery type is : $deliveryType")
                 when (checkedId) {
@@ -140,7 +155,7 @@ class BookFragment :
                         viewBinding.contentBook.acPickupRange.isEnabled = true
                     }
                 }
-            }
+            }*/
         }
         viewBinding.btnBookNow.setOnClickListener {
             checkFieldData()
@@ -190,15 +205,15 @@ class BookFragment :
 
             //check any value is not null or empty
             if (pickUpLocation == null)
-                toast("Select Pickup Location")
+                viewUtils.showShortToast("Select Pickup Location")
             else if (destinationLocation == null)
-                toast("Select Destination Location")
+                viewUtils.showShortToast("Select Destination Location")
             else if (categoryId.isEmpty())
-                toast("Select Category")
+                viewUtils.showShortToast("Select Category")
             else if (subCategoryId.isEmpty())
-                toast("Select SubCategory")
+                viewUtils.showShortToast("Select SubCategory")
             else if (pickupRange.isEmpty())
-                toast("Select Pickup Range")
+                viewUtils.showShortToast("Select Pickup Range")
             else if (weight.isEmpty())
                 edtWight.error = "Enter Weight"
             /*else if (width.isEmpty())
@@ -209,12 +224,13 @@ class BookFragment :
                 edtLength.error = "Enter Length"*/
             else {
                 if (deliveryType.isEmpty())
-                    toast("Please specify delivery type(Normal/Express/Super Fast)")
+                    viewUtils.showShortToast("Please specify delivery type(Normal/Express/Super Fast)")
                 else {
                     if (deliveryType == "Normal")
                         showNormalDeliveryDialog("show")
                     else
-                        showExpressDeliveryDialog("show")
+                        estimateBooking()
+                    //showExpressDeliveryDialog("show")
                 }
             }
         }
@@ -244,7 +260,7 @@ class BookFragment :
             when (normalDialogConfirmButton.text) {
                 "Check available timeslots" -> {
                     if (pickupDate.isEmpty()) {
-                        toast("First select pickup date")
+                        viewUtils.showShortToast("First select pickup date")
                     } else {
                         dialog.dismiss()
                         checkAvailableTimeslots()
@@ -364,7 +380,7 @@ class BookFragment :
         findNavController().navigate(action)
     }
 
-    private fun showExpressDeliveryDialog(whatToDo: String) {
+    private fun showExpressDeliveryDialog() {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_express_delivery)
         val confirmButton = dialog.findViewById(R.id.btnScheduleConfirm) as TextView
@@ -381,40 +397,46 @@ class BookFragment :
             dialog.dismiss()
             when (confirmButton.text) {
                 "Calculate Price" -> estimateBooking()
-                else -> findNavController().navigate(R.id.action_bookFragment_to_orderConfirmationFragment)
+                else -> moveToOrderConfirmationScreen()
             }
         }
 
-        when (whatToDo) {
-            "show" -> dialog.show()
-            "edit" -> {
-                confirmButton.text = "Continue"
-                tvCutOffText.text = estimateBookingResponse.estimations[0].pickup.remarks
-                tvEstimateCost.text =
-                    "Estimate Cost: \nRs.${estimateBookingResponse.estimations[0].pickup.estimated_price}/."
-
-                deliveryDatePicker.setText(
-                    estimateBookingResponse.estimations[0].delivery.delivery_date.toDate(
-                        "dd/MM/yy",
-                        "yyyy-MM-dd"
-                    )
-                )
-                deliveryTimeslots.clear()
-                deliveryTimeslots =
-                    estimateBookingResponse.estimations[0].delivery.delivery_slot.split(",")
-                        .toMutableList()
-                deliveryTimeSlot = deliveryTimeslots[0]
-                timePicker.text = deliveryTimeSlot
-                timePicker.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
-                    deliveryTimeSlot = it
-                    timePicker.text = deliveryTimeSlot
-                }, {
-                    it.show()
-                    hideSoftKeyboard()
-                })
-                dialog.show()
-            }
+        estimateBookingResponse.estimations[0].run {
+            deliveryDate = delivery.delivery_date.toDate(
+                "dd/MM/yyyy",
+                "yyyy-MM-dd"
+            )
+            pickupDate = pickup.pickup_date.toDate(
+                "dd/MM/yyyy",
+                "yyyy-MM-dd"
+            )
+            choosedPickupTimeSlot = pickup.time
         }
+        confirmButton.text = "Continue"
+        tvCutOffText.text = estimateBookingResponse.estimations[0].pickup.remarks
+        tvEstimateCost.text =
+            "Estimate Cost: \nRs.${estimateBookingResponse.estimations[0].pickup.estimated_price}/."
+
+        deliveryDatePicker.setText(
+            estimateBookingResponse.estimations[0].delivery.delivery_date.toDate(
+                "dd/MM/yy",
+                "yyyy-MM-dd"
+            )
+        )
+        deliveryTimeslots.clear()
+        deliveryTimeslots =
+            estimateBookingResponse.estimations[0].delivery.delivery_slot.split(",")
+                .toMutableList()
+        deliveryTimeSlot = deliveryTimeslots[0]
+        timePicker.text = deliveryTimeSlot
+        timePicker.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
+            deliveryTimeSlot = it
+            timePicker.text = deliveryTimeSlot
+        }, {
+            it.show()
+            hideSoftKeyboard()
+        })
+        dialog.show()
     }
 
     private fun showDatePickerDialog(type: String, dateTimePicker: EditText) {
@@ -442,7 +464,7 @@ class BookFragment :
             }, year, month, dayOfMonth
         )
 
-        if (type == "delivery") {
+        if (type == "delivery" && deliveryType == "Normal") {
             val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
             val date = simpleDateFormat.parse(pickupDate)
             val deliveryCalendar = Calendar.getInstance()
@@ -484,7 +506,7 @@ class BookFragment :
             if (checkTiming())
                 timePicker.setText("$selectedHour:$selectedMinute")
             else {
-                toast("Please select 6 hours later of the current time")
+                viewUtils.showShortToast("Please select 6 hours later of the current time")
                 showTimePickerDialog(timePicker)
             }
         }, hour, minute, false)
@@ -518,21 +540,21 @@ class BookFragment :
         Log.e(
             "book", "check available timeslots -> \n" +
                     "schedule date : ${pickupDate.toDate("yyyy-MM-dd", "dd/MM/yyyy")}\n" +
-                    " destination location : ${destinationLocation!!.city.id}\n" +
-                    "pickup location : ${pickUpLocation!!.city.id}"
+                    "destination location : ${destinationLocation!!.id}\n" +
+                    "pickup location : ${pickUpLocation!!.id}"
         )
 
         viewModel.normalTimeSlots(
             pickupDate.toDate("yyyy-MM-dd", "dd/MM/yyyy"),
-            "61ae19f4630eda331431616d",
-            "61baeddf53355a0009697687"
+            destinationLocation!!.city.id,
+            pickUpLocation!!.city.id
         ).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     checkTimeSlotResponse = result.value
                     pickupTimeSlots.clear()
                     for (timeslot in result.value.timeslot)
@@ -540,7 +562,7 @@ class BookFragment :
                     showNormalDeliveryDialog("pickup timeslot")
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
@@ -550,8 +572,8 @@ class BookFragment :
         val userId = AppUtils(context!!).getUser()!!.id
         viewModel.estimateBooking(
             userId = userId,
-            pickupAddress = "61baeddf53355a0009697687",
-            destinationAddress = "61ae19f4630eda331431616d",
+            pickupAddress = pickUpLocation!!.city.id,
+            destinationAddress = destinationLocation!!.city.id,
             category = categoryId,
             subCategory = subCategoryId,
             pickupRange = pickupRange,
@@ -564,19 +586,19 @@ class BookFragment :
                 "dd/MM/yyyy"
             ) else "",
             scheduleTime = if (deliveryType == "Normal") choosedPickupTimeSlot else "",
-            pickupType = "Superfast",
+            pickupType = deliveryType,
             deliveryType = deliveryType,
             videoRecording = videoRecordingOfPickupAndDelivery,
             pictureRecording = pictureOfDeliveryAndPickup,
-            liveTempreture = liveTemperatureTracking,
+            liveTemperature = liveTemperatureTracking,
             liveTracking = liveGPS,
         ).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     if (result.value.status == "success") {
                         estimateBookingResponse = result.value
                         price =
@@ -587,125 +609,12 @@ class BookFragment :
                         Log.e("book", "Delivery type is : $deliveryType")
                         when (deliveryType) {
                             "Normal" -> showNormalDeliveryDialog("edit")
-                            else -> showExpressDeliveryDialog("edit")
+                            else -> showExpressDeliveryDialog()
                         }
                     }
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
-                }
-            }
-        }
-    }
-
-    private fun confirmBooking() {
-        val sdfDate = SimpleDateFormat("MM/dd/yyyy")
-        val sdfTime = SimpleDateFormat("HH:mm")
-        val calendar = Calendar.getInstance()
-        val currentDate = sdfDate.format(calendar.time)
-        val currentTime = sdfTime.format(calendar.time)
-
-        val userId = AppUtils(context!!).getUser()?.id
-        viewModel.confirmBooking(
-            userId = userId!!,
-            pickupAddress = pickUpLocation!!.id,
-            destinationAddress = destinationLocation!!.id,
-            category = categoryId,
-            subCategory = subCategoryId,
-            pickupRange = pickupRange,
-            weight = weight,
-            width = width,
-            height = height,
-            length = length,
-            pickupType = deliveryType,
-            deliveryType = deliveryType,
-            scheduleTime = when (deliveryType) {
-                "Normal" -> {
-                    choosedPickupTimeSlot
-                }
-                else -> {
-                    currentTime
-                }
-            },
-            scheduleDate = when (deliveryType) {
-                "Normal" -> {
-                    pickupDate.toDate("yyyy-MM-dd", "dd/MM/yyyy")
-                }
-                else -> {
-                    currentDate
-                }
-            },
-            price = price,
-            finalPrice = finalPrice,
-            timeslot = timeslot,
-            videoRecording = videoRecordingOfPickupAndDelivery,
-            pictureRecording = pictureOfDeliveryAndPickup,
-            liveTemparature = liveTemperatureTracking,
-            liveTracking = liveGPS
-        ).observe(viewLifecycleOwner) {
-            when (it) {
-                is Status.Loading -> {
-                    showLoading()
-                }
-                is Status.Success -> {
-                    stopShowingLoading()
-                    /*if (it.value.status == "success") {
-                        val stringResponse =
-                            Gson().toJson(it.value, ConfirmBookingModel::class.java)
-                        val action =
-                            BookFragmentDirections.actionBookFragmentToBookingConfrimFragment(
-                                stringResponse
-                            )
-                        findNavController().navigate(action)
-                    }*/
-                }
-                is Status.Failure -> {
-                    stopShowingLoading()
-                }
-            }
-        }
-    }
-
-    private fun checkCutOffTime() {
-        val customViewModel = getCutomViewModel()
-        val startCity = pickUpLocation!!.city.id
-        val endCity = destinationLocation!!.city.id
-
-        customViewModel.checkCutOffTime(startCity, endCity).observe(viewLifecycleOwner) {
-            when (it) {
-                is Status.Loading -> {
-                    showLoading()
-                }
-                is Status.Success -> {
-                    stopShowingLoading()
-                    checkAvailability = it.value
-
-                    /*if (checkAvailability?.result?.timeslot != null) {
-                        if (checkAvailability!!.result.timeslot.contentEquals("Both")) {
-                            slots.clear()
-                            slots.add("Night")
-                            slots.add("Afternoon")
-                            estimateBooking()
-                        } else {
-                            slots.clear()
-                            slots.add(checkAvailability!!.result.timeslot)
-                            estimateBooking()
-                        }
-                    }
-                    else {
-                        showError("No available slots!, retry later")
-                        stopShowingLoading()
-                        findNavController().popBackStack()
-                    }
-                    estimateBooking()*/
-
-                    deliveryTimeslots.clear()
-                    deliveryTimeslots.add("Night")
-                    deliveryTimeslots.add("Afternoon")
-                    estimateBooking()
-                }
-                is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
@@ -713,21 +622,21 @@ class BookFragment :
 
     private fun getAllCategories() {
         customViewModel.getAllCategories()
-        customViewModel.allCategories.observe(viewLifecycleOwner) {
-            when (it) {
-                is Status.Loading -> {
-                    showLoading()
-                }
-                is Status.Success -> {
-                    stopShowingLoading()
-                    categories = it.value.result
-                    setAllCategories()
-                }
-                is Status.Failure -> {
-                    stopShowingLoading()
+            .observe(viewLifecycleOwner) {
+                when (it) {
+                    is Status.Loading -> {
+                        viewUtils.showLoading(parentFragmentManager)
+                    }
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        categories = it.value.result
+                        setAllCategories()
+                    }
+                    is Status.Failure -> {
+                        viewUtils.stopShowingLoading()
+                    }
                 }
             }
-        }
     }
 
     private fun setAllCategories() {
@@ -764,22 +673,62 @@ class BookFragment :
         }
     }
 
-    private fun getSubCategories(categoryId: String) {
-        customViewModel.getAllSubCategories(categoryId)
-        customViewModel.allSubCategories.observe(viewLifecycleOwner) {
-            when (it) {
-                is Status.Loading -> {
-                }
+    private fun getServiceTypes() {
+        customViewModel.serviceTypes().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> {}
                 is Status.Success -> {
-                    stopShowingLoading()
-                    subCategories = it.value.result
-                    setSubCategories()
+                    val serviceTypes = ArrayList<String>()
+                    for (service in result.value.result)
+                        serviceTypes.add(service.name.lowercase())
+                    setServices(serviceTypes)
                 }
-                is Status.Failure -> {
-                    stopShowingLoading()
-                }
+                is Status.Failure -> {}
             }
         }
+    }
+
+    private fun setServices(serviceTypes: ArrayList<String>) {
+        viewBinding.contentBook.rvServiceType.run {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = BookingFormServiceTypeAdapter(
+                data = serviceTypes,
+                context = context,
+                itemClick = object : RvItemClick {
+                    override fun clickWithPosition(name: String, position: Int) {
+                        Log.e("book", "Select service is $name")
+                        deliveryType = name
+                        when (name) {
+                            "Normal" ->
+                                viewBinding.contentBook.acPickupRange.isEnabled = false
+                            "Express" ->
+                                viewBinding.contentBook.acPickupRange.isEnabled = true
+                            "Suprefast" ->
+                                viewBinding.contentBook.acPickupRange.isEnabled = true
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+
+    private fun getSubCategories(categoryId: String) {
+        customViewModel.getAllSubCategories(categoryId)
+            .observe(viewLifecycleOwner) {
+                when (it) {
+                    is Status.Loading -> {
+                    }
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        subCategories = it.value.result
+                        setSubCategories()
+                    }
+                    is Status.Failure -> {
+                        viewUtils.stopShowingLoading()
+                    }
+                }
+            }
     }
 
     private fun setSubCategories() {
@@ -820,19 +769,10 @@ class BookFragment :
         }
     }
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentBookBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = UserViewModel::class.java
-
-    override fun getFragmentRepository() =
-        UserRepository(remoteDataSource.getBaseUrl().create(UserApi::class.java))
-
     override fun onResume() {
         super.onResume()
-        //   mainActivity.hideToolbarAndBottomNavigation()
+        getAllCategories()
+        getServiceTypes()
     }
 
 }

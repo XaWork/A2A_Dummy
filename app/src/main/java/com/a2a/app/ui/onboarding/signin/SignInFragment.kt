@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.common.Status
-import com.a2a.app.data.viewmodel.UserViewModel1
+import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentSignInBinding
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
@@ -31,7 +31,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
     lateinit var appUtils: AppUtils
 
     lateinit var viewBinding: FragmentSignInBinding
-    val viewModel by viewModels<UserViewModel1>()
+    val viewModel by viewModels<UserViewModel>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

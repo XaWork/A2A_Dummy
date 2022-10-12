@@ -2,36 +2,37 @@ package com.a2a.app.ui.city
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.a2a.app.BR
 import com.a2a.app.MainActivity
-import com.a2a.app.common.BaseFragment
+import com.a2a.app.R
 import com.a2a.app.common.ItemClick
-import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.CityModel
 import com.a2a.app.data.model.CommonModel
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCityBinding
 import com.a2a.app.mappers.toCommonModel
-import com.a2a.app.ui.category.CategoryFragmentDirections
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class CityFragment : BaseFragment<
-        FragmentCityBinding,
-        CustomViewModel,
-        CustomRepository>(FragmentCityBinding::inflate) {
+@AndroidEntryPoint
+class CityFragment : Fragment(R.layout.fragment_city) {
 
     private lateinit var mainActivity: MainActivity
     private lateinit var allCities: CityModel
     private val cityList = ArrayList<CommonModel>()
+
+    private val viewModel by viewModels<CustomViewModel>()
+    private lateinit var viewBinding: FragmentCityBinding
+    @Inject
+    lateinit var viewUtils: ViewUtils
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -41,32 +42,32 @@ class CityFragment : BaseFragment<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainActivity.showToolbarAndBottomNavigation()
+        viewBinding = FragmentCityBinding.bind(view)
 
         //setData()
         //get all cities
         if (this::allCities.isInitialized)
             setData()
         else {
-            viewModel.getAllCities()
             getAllCities()
         }
     }
 
     private fun getAllCities() {
-        viewModel.allCities.observe(viewLifecycleOwner) {
+        viewModel.getAllCities().observe(viewLifecycleOwner) {
             when (it) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
 
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     allCities = it.value
                     setData()
                 }
 
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
@@ -99,14 +100,4 @@ class CityFragment : BaseFragment<
             })
         }
     }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentCityBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = CustomViewModel::class.java
-
-    override fun getFragmentRepository() =
-        CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
 }

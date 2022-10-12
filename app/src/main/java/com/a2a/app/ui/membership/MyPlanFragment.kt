@@ -1,21 +1,14 @@
 package com.a2a.app.ui.membership
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.WalletDataModel
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
-import com.a2a.app.databinding.FragmentBulkOrderBinding
 import com.a2a.app.databinding.FragmentMyPlanBinding
 import com.a2a.app.toDate
 import com.a2a.app.utils.AppUtils
@@ -27,7 +20,7 @@ import javax.inject.Inject
 class MyPlanFragment : Fragment(R.layout.fragment_my_plan) {
 
     private lateinit var allPlans: WalletDataModel
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
     private lateinit var viewBinding: FragmentMyPlanBinding
 
     @Inject

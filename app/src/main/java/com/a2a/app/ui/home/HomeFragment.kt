@@ -4,38 +4,47 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.Html
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.MainActivity
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.CommonModel
 import com.a2a.app.data.model.HomeModel
 import com.a2a.app.data.model.SettingsModel
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentHomeBinding
 import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.city.CityFragmentDirections
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class HomeFragment :
-    BaseFragment<FragmentHomeBinding, CustomViewModel, CustomRepository>(FragmentHomeBinding::inflate) {
+@AndroidEntryPoint
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var mainActivity: MainActivity
     private var pickupLocation: String? = null
     private var destinationLocation: String? = null
     private lateinit var home: HomeModel.Result
     private var settings: SettingsModel? = null
+
+    private val viewModel by viewModels<CustomViewModel>()
+    private lateinit var viewBinding: FragmentHomeBinding
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+
+    @Inject
+    lateinit var appUtils: AppUtils
 
     private val pickUpLocationResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -55,16 +64,6 @@ class HomeFragment :
             }
         }
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentHomeBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = CustomViewModel::class.java
-
-    override fun getFragmentRepository() =
-        CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -72,8 +71,10 @@ class HomeFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentHomeBinding.bind(view)
 
-        viewBinding.mainLayout.foreground = ContextCompat.getDrawable(context!!, R.drawable.rect_white)
+        viewBinding.mainLayout.foreground =
+            ContextCompat.getDrawable(context!!, R.drawable.rect_white)
 
         mainActivity.showToolbarAndBottomNavigation()
         mainActivity.selectHomeNavMenu()
@@ -129,17 +130,17 @@ class HomeFragment :
         viewModel.getHome().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     //home = result.value.result
                     val appUtils = AppUtils(context!!)
                     appUtils.saveHomePage(result.value.result)
                     setData()
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }

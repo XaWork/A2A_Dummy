@@ -1,17 +1,18 @@
 package com.a2a.app.ui.order
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.a2a.app.R
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.ConfirmBookingModel
-import com.a2a.app.data.viewmodel.UserViewModel1
+import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentOrderConfirmationBinding
 import com.a2a.app.toDate
 import com.a2a.app.ui.book.OrderConfirmationData
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation) {
 
@@ -32,10 +34,14 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
     @Inject
     lateinit var viewUtils: ViewUtils
 
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
     private var price: Float = 0.0f
+    private var callbackCount = 0
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var runnable: Runnable
     private lateinit var viewBinding: FragmentOrderConfirmationBinding
     private lateinit var orderConfirmationData: OrderConfirmationData
+    private lateinit var confirmBookingModel: ConfirmBookingModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -163,21 +169,59 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
             pictureRecording = orderConfirmationData.pictureRecording,
             liveTemparature = orderConfirmationData.liveTemperature,
             liveTracking = orderConfirmationData.liveTracking
-        ).observe(viewLifecycleOwner) {
+        ).observe(viewLifecycleOwner) { it ->
             when (it) {
                 is Status.Loading -> {
-                    viewUtils.showLoading(parentFragmentManager)
+                    //viewUtils.showLoading(parentFragmentManager)
+                    viewUtils.showLoading(
+                        parentFragmentManager,
+                        "Please wait",
+                        "Searching for pickup boy..."
+                    )
                 }
                 is Status.Success -> {
+                    //viewUtils.stopShowingLoading()
+                    confirmBookingModel = it.value
+
+                    /* runnable = Runnable {
+                         checkOrderStatus()
+                         handler.postDelayed(runnable, 10000)
+                     }*/
+
+                    checkOrderStatus()
+                    handler.postDelayed(Runnable {//do something
+                        callbackCount += 1
+                        checkOrderStatus()
+                        handler.postDelayed(runnable, 10000)
+                    }.also { call -> runnable = call }, 10000)
+                }
+                is Status.Failure -> {
                     viewUtils.stopShowingLoading()
-                    if (it.value.status == "success") {
-                        val stringResponse =
-                            Gson().toJson(it.value, ConfirmBookingModel::class.java)
-                        val action =
-                            OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToBookingConfrimFragment(
-                                stringResponse
-                            )
-                        findNavController().navigate(action)
+                }
+            }
+        }
+    }
+
+    private fun checkOrderStatus() {
+        val orderId = confirmBookingModel.orderId
+        viewModel.checkOrderStatus(orderId).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> {}
+                is Status.Success -> {
+                    if (callbackCount == 7) {
+                        viewUtils.stopShowingLoading()
+                        handler.removeCallbacks(runnable)
+                        viewUtils
+                            .showLongToast("Sorry, Pickup Boy is Not Available in selected range. Please increase the pickup Range & Try to Book Again.")
+                    } else {
+                        when (result.value.message) {
+                            "waiting" -> {}
+                            "pickup_boy_assigned" -> {
+                                handler.removeCallbacks(runnable)
+                                viewUtils.stopShowingLoading()
+                                moveToBookingConfirmedScreen()
+                            }
+                        }
                     }
                 }
                 is Status.Failure -> {
@@ -185,5 +229,21 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                 }
             }
         }
+    }
+
+    private fun moveToBookingConfirmedScreen() {
+        val stringResponse =
+            Gson().toJson(confirmBookingModel, ConfirmBookingModel::class.java)
+        val action =
+            OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToBookingConfrimFragment(
+                stringResponse
+            )
+        findNavController().navigate(action)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (this::runnable.isInitialized)
+            handler.removeCallbacks(runnable)
     }
 }

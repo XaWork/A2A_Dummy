@@ -11,14 +11,81 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CustomViewModel @Inject constructor(private val customRepository: CustomRepository) :
-    ViewModel() {
+class CustomViewModel @Inject constructor(
+    private val repository: CustomRepository
+) : ViewModel() {
+
+    fun getAllStates(): MutableLiveData<Status<StateListModel>> {
+        val result = MutableLiveData<Status<StateListModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.allStates()
+        }
+        return result
+    }
+
+    fun getZipByCity(cityId: String): MutableLiveData<Status<ZipListModel>> {
+        val result = MutableLiveData<Status<ZipListModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.zipByCity(cityId)
+        }
+        return result
+    }
+
+
+    fun getAllCityByState(stateId: String): MutableLiveData<Status<CityListModel>> {
+        val result = MutableLiveData<Status<CityListModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.cityByState(stateId)
+        }
+        return result
+    }
+
+
+    fun getAllCategories(): MutableLiveData<Status<AllCategoryModel>> {
+        val result = MutableLiveData<Status<AllCategoryModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.allCategories()
+        }
+        return result
+    }
+
+
+    fun getAllSubCategories(categoryId: String): MutableLiveData<Status<AllSubCategoryModel>> {
+        val result = MutableLiveData<Status<AllSubCategoryModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.allSubCategories(categoryId)
+        }
+        return result
+    }
+
+    fun getAllCities(): MutableLiveData<Status<CityModel>> {
+        val result = MutableLiveData<Status<CityModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.allCities()
+        }
+        return result
+    }
+
+    fun offerDeal(): MutableLiveData<Status<OfferDealModel>> {
+        val result = MutableLiveData<Status<OfferDealModel>>()
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = repository.offerDeal()
+        }
+        return result
+    }
 
     fun getHome(): MutableLiveData<Status<HomeModel>> {
         val result = MutableLiveData<Status<HomeModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = customRepository.home()
+            result.value = repository.home()
         }
         return result
     }
@@ -27,7 +94,7 @@ class CustomViewModel @Inject constructor(private val customRepository: CustomRe
         val result = MutableLiveData<Status<AllPlanModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = customRepository.allPlans()
+            result.value = repository.allPlans()
         }
         return result
     }
@@ -36,103 +103,8 @@ class CustomViewModel @Inject constructor(private val customRepository: CustomRe
         val result = MutableLiveData<Status<ServiceTypeModel>>()
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = customRepository.serviceTypes()
+            result.value = repository.serviceTypes()
         }
         return result
     }
-
-    private val _allCities = MutableLiveData<Status<CityModel>>()
-    val allCities = _allCities
-    fun getAllCities() {
-        viewModelScope.launch {
-            _allCities.value = Status.Loading
-            _allCities.value = customRepository.allCities()
-        }
-
-    }
-
-    private val _allCategories = MutableLiveData<Status<AllCategoryModel>>()
-    val allCategories = _allCategories
-    fun getAllCategories() {
-        viewModelScope.launch {
-            _allCategories.value = Status.Loading
-            _allCategories.value = customRepository.allCategories()
-        }
-    }
-
-    private val _allSubCategories = MutableLiveData<Status<AllSubCategoryModel>>()
-    val allSubCategories = _allSubCategories
-    fun getAllSubCategories(
-        categoryId: String
-    ) {
-        viewModelScope.launch {
-            _allSubCategories.value = Status.Loading
-            _allSubCategories.value = customRepository.allSubCategories(categoryId)
-        }
-    }
-
-    private val _allStates = MutableLiveData<Status<StateListModel>>()
-    val allStates = _allStates
-    fun getAllStates() {
-        viewModelScope.launch {
-            _allStates.value = Status.Loading
-            _allStates.value = customRepository.allStates()
-        }
-
-    }
-
-    private val _cityByState = MutableLiveData<Status<CityListModel>>()
-    val cityByState = _cityByState
-    fun getAllCityByState(
-        state: String
-    ) {
-        viewModelScope.launch {
-            _cityByState.value = Status.Loading
-            _cityByState.value = customRepository.cityByState(state)
-        }
-
-    }
-
-    private val _zipByCity = MutableLiveData<Status<ZipListModel>>()
-    val zipByCity = _zipByCity
-    fun getZipByCity(
-        city: String
-    ) {
-        viewModelScope.launch {
-            _zipByCity.value = Status.Loading
-            _zipByCity.value = customRepository.zipByCity(city)
-        }
-    }
-
-    fun checkCutOffTime(
-        startCity: String,
-        endCity: String,
-    ): MutableLiveData<Status<CheckCutOffTimeModel>> {
-        val result = MutableLiveData<Status<CheckCutOffTimeModel>>()
-        viewModelScope.launch {
-            result.value = Status.Loading
-            result.value = customRepository.checkCutOffTime(startCity, endCity)
-        }
-
-        return result
-    }
-
-    private val _offerDeal = MutableLiveData<Status<OfferDealModel>>()
-    val offerDeal = _offerDeal
-    fun offerDeal() {
-        viewModelScope.launch {
-            _offerDeal.value = Status.Loading
-            _offerDeal.value = customRepository.offerDeal()
-        }
-    }
-
-    /*fun createBulkOrder(bulkOrder: CustomBulkOrder): MutableLiveData<Status<>> {
-        val result = MutableLiveData<Status<>>()
-        viewModelScope.launch {
-            result.value = Status.Loading
-            result.value = customRepository.offerDeal()
-        }
-        return result
-
-    }*/
 }

@@ -1,77 +1,48 @@
 package com.a2a.app.data.repository
 
-import com.a2a.app.common.BaseRepository
-import com.a2a.app.data.network.UserApi
+import com.a2a.app.common.Status
+import com.a2a.app.data.model.*
 
-class UserRepository(private val userAPI: UserApi) : BaseRepository() {
+interface UserRepository {
 
-    suspend fun fetchOtp(
+    suspend fun fetchOtp(mobile: String, token: String): Status<FetchOtpResponse>
+
+    suspend fun verifyOtp(
         mobile: String,
-        token: String,
-    ) = safeApiCall { userAPI.fetchOtp(mobile, token, "Android") }
+        otp: String,
+        token: String
+    ): Status<VerifyOtpModel>
 
     suspend fun registration(
         mobile: String,
         email: String,
         deviceToken: String,
-        reffer: String
-    ) = safeApiCall { userAPI.registration(mobile, email, deviceToken, "Android", reffer) }
+        reffer: String,
+    ): Status<RegistrationModel>
 
-    suspend fun verifyOtp(
-        mobile: String,
-        otp: String,
-        deviceToken: String
-    ) = safeApiCall { userAPI.verifyOtp(mobile, otp, deviceToken) }
-
-    suspend fun allAddress(
-        userId: String
-    ) = safeApiCall { userAPI.allAddress(userId) }
-
-    suspend fun assignPlan(
+    suspend fun getMyOrders(
         userId: String,
-        planId: String
-    ) = safeApiCall { userAPI.assignPlan(userId, planId) }
+        page: String,
+        perPage: String
+    ): Status<OrderModel>
 
-    suspend fun normalTimeSlots(
-        scheduleDate: String,
-        destinationAddress: String,
-        pickupAddress: String
-    ) = safeApiCall { userAPI.normalTimeslots(scheduleDate, destinationAddress, pickupAddress) }
+    suspend fun orderUpdate(
+        orderId: String
+    ): Status<OrderUpdateModel>
+
+    suspend fun editProfile(
+        id: String,
+        fullName: String,
+        mobile: String
+    ): Status<CommonResponseModel>
+
+    suspend fun addressList(
+        userId: String
+    ):Status<AddressListModel>
 
     suspend fun deleteAddress(
-        userId: String,
         addressId: String
-    ) = safeApiCall { userAPI.deleteAddress(userId, addressId) }
-
-    suspend fun addAddress(
-        userId: String,
-        title: String,
-        address: String,
-        address2: String,
-        city: String,
-        pinCode: String,
-        contactName: String,
-        contactMobile: String,
-        lat: String,
-        lng: String,
-        state: String,
-        postOffice: String,
-    ) = safeApiCall {
-        userAPI.addAddress(
-            userId,
-            title,
-            address,
-            address2,
-            city,
-            pinCode,
-            contactName,
-            contactMobile,
-            lat,
-            lng,
-            state,
-            postOffice
-        )
-    }
+    ):Status<CommonResponseModel>
 
     suspend fun editAddress(
         userId: String,
@@ -86,42 +57,28 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         lng: String,
         state: String,
         postOffice: String,
-    ) = safeApiCall {
-        userAPI.editAddress(
-            userId,
-            title,
-            address,
-            address2,
-            city,
-            pinCode,
-            contactName,
-            contactMobile,
-            lat,
-            lng,
-            state,
-            postOffice
-        )
-    }
+    ): Status<CommonResponseModel>
 
-    suspend fun editProfile(
-        id: String,
-        fullName: String,
-        mobile: String
-    ) = safeApiCall { userAPI.editProfile(id, fullName, mobile) }
-
-    suspend fun getMyOrders(
+    suspend fun addAddress(
         userId: String,
-        page: String,
-        perPage: String
-    ) = safeApiCall { userAPI.getMyOrders(userId, page, perPage) }
+        title: String,
+        address: String,
+        address2: String,
+        city: String,
+        pinCode: String,
+        contactName: String,
+        contactMobile: String,
+        lat: String,
+        lng: String,
+        state: String,
+        postOffice: String,
+    ): Status<AddAddressModel>
 
-    suspend fun getWalletData(
-        userId: String
-    ) = safeApiCall { userAPI.getWalletData(userId) }
+    suspend fun getWalletData(userId: String): Status<WalletDataModel>
 
-    suspend fun getWalletTransactions(
-        userId: String
-    ) = safeApiCall { userAPI.getWalletTransactions(userId) }
+    suspend fun getWalletTransaction(userId: String): Status<WalletTransactionModel>
+
+    suspend fun assignPlan(userId: String, planId: String): Status<AssignPlanModel>
 
     suspend fun confirmBooking(
         userId: String,
@@ -145,31 +102,7 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         pictureRecording: String,
         liveTemparature: String,
         liveTracking: String,
-    ) = safeApiCall {
-        userAPI.confirmBooking(
-            userId,
-            pickupAddress,
-            destinationAddress,
-            category,
-            subCategory,
-            pickupRange,
-            weight,
-            width,
-            height,
-            length,
-            pickupType,
-            deliveryType,
-            scheduleTime,
-            scheduleDate,
-            price,
-            finalPrice,
-            timeslot,
-            videoRecording,
-            pictureRecording,
-            liveTemparature,
-            liveTracking
-        )
-    }
+    ): Status<ConfirmBookingModel>
 
     suspend fun estimateBooking(
         userId: String,
@@ -190,27 +123,13 @@ class UserRepository(private val userAPI: UserApi) : BaseRepository() {
         pictureRecording: String,
         liveTemparature: String,
         liveTracking: String,
-    ) = safeApiCall {
-        userAPI.estimateBooking(
-            userId,
-            pickupAddress,
-            destinationAddress,
-            category,
-            subCategory,
-            pickupRange,
-            weight,
-            width,
-            height,
-            length,
-            pickupType,
-            deliveryType,
-            scheduleTime,
-            scheduleDate,
-            videoRecording,
-            pictureRecording,
-            liveTemparature,
-            liveTracking
-        )
-    }
+    ): Status<EstimateBookingModel>
 
+    suspend fun checkOrderStatus(orderId: String): Status<CheckOrderStatusModel>
+
+    suspend fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ): Status<NormalTimeslotModel>
 }

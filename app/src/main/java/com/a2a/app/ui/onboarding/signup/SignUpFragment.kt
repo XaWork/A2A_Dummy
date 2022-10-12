@@ -3,22 +3,15 @@ package com.a2a.app.ui.onboarding.signup
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.VerifyOtpModel
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentSignUpBinding
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
@@ -36,7 +29,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     private var matcher: Matcher? = null
     private var phoneNumber: String? = ""
     lateinit var viewBinding: FragmentSignUpBinding
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
     private var data: VerifyOtpModel? = null
     @Inject
     lateinit var viewUtils: ViewUtils

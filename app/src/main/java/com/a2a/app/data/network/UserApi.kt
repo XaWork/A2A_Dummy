@@ -20,7 +20,7 @@ interface UserApi {
         @Field("mobile") mobile: String,
         @Field("email") email: String,
         @Field("device_token") deviceToken: String,
-        @Field("device_type") deviceType: String ,
+        @Field("device_type") deviceType: String,
         @Field("reffer") reffer: String = "",
     ): RegistrationModel
 
@@ -48,22 +48,21 @@ interface UserApi {
     @FormUrlEncoded
     @POST("assign-plan")
     suspend fun assignPlan(
-        @Field("id")userId: String,
-        @Field("plan")planId: String
+        @Field("id") userId: String,
+        @Field("plan") planId: String
     ): AssignPlanModel
 
     @FormUrlEncoded
     @POST("normal-timeslots")
     suspend fun normalTimeslots(
-        @Field("schedule_date")scheduleDate: String,
-        @Field("destination_address")destinationAddress: String,
-        @Field("pickup_address")pickupAddress: String
+        @Field("schedule_date") scheduleDate: String,
+        @Field("destination_address") destinationAddress: String,
+        @Field("pickup_address") pickupAddress: String
     ): NormalTimeslotModel
 
     @GET("delete-address")
     suspend fun deleteAddress(
-        @Query("id") userId: String,
-        @Query("addressId") addressId: String
+        @Query("id") addressId: String
     ): CommonResponseModel
 
     @FormUrlEncoded
@@ -109,7 +108,7 @@ interface UserApi {
 
     @GET("order-updates")
     suspend fun orderUpdates(
-        @Query("id")orderId: String
+        @Query("id") orderId: String
     ): OrderUpdateModel
 
     @GET("get-wallet-data")
@@ -170,4 +169,9 @@ interface UserApi {
         @Field("live_temparature") liveTemparature: String,
         @Field("live_tracking") liveTracking: String,
     ): EstimateBookingModel
+
+    @GET("check-order-status")
+    suspend fun checkOrderStatus(
+        @Query("req.query.order_id") orderId: String
+    ): CheckOrderStatusModel
 }

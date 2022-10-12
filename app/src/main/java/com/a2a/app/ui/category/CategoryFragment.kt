@@ -2,31 +2,36 @@ package com.a2a.app.ui.category
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.MainActivity
-import com.a2a.app.common.BaseFragment
+import com.a2a.app.R
 import com.a2a.app.common.ItemClick
-import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.AllCategoryModel
 import com.a2a.app.data.model.CommonModel
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCategoryBinding
 import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class CategoryFragment :
-    BaseFragment<FragmentCategoryBinding, CustomViewModel, CustomRepository>(FragmentCategoryBinding::inflate) {
+@AndroidEntryPoint
+class CategoryFragment : Fragment(R.layout.fragment_category) {
 
     private lateinit var mainActivity: MainActivity
+    private lateinit var viewBinding: FragmentCategoryBinding
     private lateinit var allCategories: AllCategoryModel
+    private val viewModel by viewModels<CustomViewModel>()
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -35,6 +40,7 @@ class CategoryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentCategoryBinding.bind(view)
 
         mainActivity.showToolbarAndBottomNavigation()
 
@@ -46,17 +52,17 @@ class CategoryFragment :
 
     private fun getAllCategories() {
         viewModel.getAllCategories()
-        viewModel.allCategories.observe(viewLifecycleOwner) {
-            when (it) {
-                is Status.Loading -> showLoading()
-                is Status.Success -> {
-                    stopShowingLoading()
-                    allCategories = it.value
-                    setData()
+            .observe(viewLifecycleOwner) {
+                when (it) {
+                    is Status.Loading -> viewUtils.showLoading(parentFragmentManager)
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        allCategories = it.value
+                        setData()
+                    }
+                    is Status.Failure -> viewUtils.stopShowingLoading()
                 }
-                is Status.Failure -> stopShowingLoading()
             }
-        }
 
     }
 
@@ -70,41 +76,36 @@ class CategoryFragment :
         //viewBinding.setVariable(BR.dataList, allCategoryList)
         viewBinding.rvCategory.run {
             layoutManager = LinearLayoutManager(context)
-            adapter = CommonAdapter(allCategoryList.sortedBy { it.name } as MutableList<CommonModel>, context, object : ItemClick {
-                override fun clickRvItem(name: String, model: Any) {
-                    val category = model as CommonModel
-                    when(name){
-                        "details"->{
-                            mainActivity.hideToolbarAndBottomNavigation()
-                            val details = Gson().toJson(category, CommonModel::class.java)
-                            val action = CategoryFragmentDirections.actionGlobalViewDetailsFragment(
-                                details = details,
-                                name = "Category Details")
-                            findNavController().navigate(action)
+            adapter =
+                CommonAdapter(allCategoryList.sortedBy { it.name } as MutableList<CommonModel>,
+                    context,
+                    object : ItemClick {
+                        override fun clickRvItem(name: String, model: Any) {
+                            val category = model as CommonModel
+                            when (name) {
+                                "details" -> {
+                                    mainActivity.hideToolbarAndBottomNavigation()
+                                    val details = Gson().toJson(category, CommonModel::class.java)
+                                    val action =
+                                        CategoryFragmentDirections.actionGlobalViewDetailsFragment(
+                                            details = details,
+                                            name = "Category Details"
+                                        )
+                                    findNavController().navigate(action)
+                                }
+                                "sub" -> {
+                                    mainActivity.hideToolbarAndBottomNavigation()
+                                    val categoryId = category.id
+                                    val action =
+                                        CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
+                                            categoryId = categoryId,
+                                            categoryName = category.name
+                                        )
+                                    findNavController().navigate(action)
+                                }
+                            }
                         }
-                        "sub"->{
-                            mainActivity.hideToolbarAndBottomNavigation()
-                            val categoryId = category.id
-                            val action =
-                                CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
-                                    categoryId = categoryId,
-                                    categoryName = category.name
-                                )
-                            findNavController().navigate(action)
-                        }
-                    }
-                }
-            })
+                    })
         }
     }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentCategoryBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = CustomViewModel::class.java
-
-    override fun getFragmentRepository() =
-        CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
 }

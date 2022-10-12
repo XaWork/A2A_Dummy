@@ -1,33 +1,23 @@
 package com.a2a.app.ui.wallet
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.MainActivity
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentWalletBinding
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
-import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session.Event.Application.Execution.Thread.Frame
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +28,7 @@ import javax.inject.Inject
 class WalletFragment : Fragment(R.layout.fragment_wallet), PaymentResultListener {
 
     private lateinit var viewBinding: FragmentWalletBinding
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
     private lateinit var mainActivity: MainActivity
 
     @Inject

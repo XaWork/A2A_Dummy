@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.SettingsModel
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.repository.SettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

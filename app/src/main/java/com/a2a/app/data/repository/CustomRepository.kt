@@ -1,45 +1,41 @@
 package com.a2a.app.data.repository
 
-import com.a2a.app.common.BaseRepository
-import com.a2a.app.data.network.CustomApi
-import javax.inject.Inject
+import com.a2a.app.common.Status
+import com.a2a.app.data.model.*
 
-class CustomRepository @Inject constructor(private val customApi: CustomApi): BaseRepository() {
+interface CustomRepository {
 
-    suspend fun home()= safeApiCall { customApi.home() }
+    suspend fun home(): Status<HomeModel>
 
-    suspend fun allPlans()= safeApiCall { customApi.allPlans() }
+    suspend fun allPlans(): Status<AllPlanModel>
 
-    suspend fun serviceTypes() = safeApiCall { customApi.serviceTypes() }
+    suspend fun serviceTypes(): Status<ServiceTypeModel>
 
-    suspend fun allCities() =
-        safeApiCall { customApi.allCities() }
+    suspend fun allCities(): Status<CityModel>
 
-    suspend fun allCategories() =
-        safeApiCall { customApi.allCategories() }
+
+    suspend fun allCategories(): Status<AllCategoryModel>
+
 
     suspend fun allSubCategories(
         categoryId: String
-    ) =
-        safeApiCall { customApi.allSubCategories(categoryId) }
+    ): Status<AllSubCategoryModel>
 
-    suspend fun allStates() =
-        safeApiCall { customApi.allStates() }
+    suspend fun allStates(): Status<StateListModel>
+
 
     suspend fun cityByState(
         state: String
-    ) =
-        safeApiCall { customApi.cityByState(state) }
+    ): Status<CityListModel>
 
     suspend fun zipByCity(
         city: String
-    ) =
-        safeApiCall { customApi.zipByCity(city) }
+    ): Status<ZipListModel>
 
     suspend fun checkCutOffTime(
         startCity: String,
         endCity: String,
-    ) = safeApiCall { customApi.checkCutOffTime(startCity, endCity) }
+    ): Status<CheckCutOffTimeModel>
 
-    suspend fun offerDeal() = safeApiCall { customApi.offerDeal() }
+    suspend fun offerDeal(): Status<OfferDealModel>
 }

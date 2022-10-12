@@ -2,37 +2,37 @@ package com.a2a.app.ui.servicetype
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.MainActivity
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.ItemClick
-import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.CommonModel
 import com.a2a.app.data.model.ServiceTypeModel
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
-import com.a2a.app.databinding.FragmentCityBinding
 import com.a2a.app.databinding.FragmentServiceTypeBinding
 import com.a2a.app.mappers.toCommonModel
-import com.a2a.app.ui.category.CategoryFragmentDirections
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
-class ServiceTypeFragment :
-    BaseFragment<FragmentServiceTypeBinding, CustomViewModel, CustomRepository>(
-        FragmentServiceTypeBinding::inflate
-    ) {
+@AndroidEntryPoint
+class ServiceTypeFragment : Fragment(R.layout.fragment_service_type) {
 
     private lateinit var mainActivity: MainActivity
+
+    private val viewModel by viewModels<CustomViewModel>()
+    private lateinit var viewBinding: FragmentServiceTypeBinding
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
     private lateinit var serviceTypes: List<ServiceTypeModel.Result>
 
     override fun onAttach(context: Context) {
@@ -40,18 +40,9 @@ class ServiceTypeFragment :
         mainActivity = context as MainActivity
     }
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentServiceTypeBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = CustomViewModel::class.java
-
-    override fun getFragmentRepository() =
-        CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentServiceTypeBinding.bind(view)
         mainActivity.showToolbarAndBottomNavigation()
 
         if (this::serviceTypes.isInitialized)
@@ -64,15 +55,15 @@ class ServiceTypeFragment :
         viewModel.serviceTypes().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     serviceTypes = result.value.result
                     setData()
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }

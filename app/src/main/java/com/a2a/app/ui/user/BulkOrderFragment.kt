@@ -3,36 +3,36 @@ package com.a2a.app.ui.user
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.CityModel
 import com.a2a.app.data.model.CustomBulkOrder
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
-import com.a2a.app.databinding.FragmentBookBinding
 import com.a2a.app.databinding.FragmentBulkOrderBinding
-import com.a2a.app.databinding.FragmentProfileBinding
 import com.a2a.app.hideSoftKeyboard
 import com.a2a.app.setupDropDown
+import com.a2a.app.utils.ViewUtils
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class BulkOrderFragment :
-    BaseFragment<FragmentBulkOrderBinding, CustomViewModel, CustomRepository>(
-        FragmentBulkOrderBinding::inflate
-    ) {
+@AndroidEntryPoint
+class BulkOrderFragment : Fragment(R.layout.fragment_bulk_order) {
 
     private var mCityBrandList: ArrayList<CityModel.Result> = ArrayList()
+    private val viewModel by viewModels<CustomViewModel>()
+    private lateinit var viewBinding: FragmentBulkOrderBinding
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentBulkOrderBinding.bind(view)
 
         setToolbar()
         getCities()
@@ -51,21 +51,21 @@ class BulkOrderFragment :
 
     private fun getCities() {
         viewModel.getAllCities()
-        viewModel.allCities.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Status.Loading -> {
-                    showLoading()
-                }
-                is Status.Success -> {
-                    stopShowingLoading()
-                    mCityBrandList.addAll(result.value.result)
-                    setData()
-                }
-                is Status.Failure -> {
-                    stopShowingLoading()
+            .observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Status.Loading -> {
+                        viewUtils.showLoading(parentFragmentManager)
+                    }
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        mCityBrandList.addAll(result.value.result)
+                        setData()
+                    }
+                    is Status.Failure -> {
+                        viewUtils.stopShowingLoading()
+                    }
                 }
             }
-        }
     }
 
     private fun setData() {
@@ -101,25 +101,25 @@ class BulkOrderFragment :
                 bulkOrder.city = city
                 bulkOrder.message = message
 
-               /* viewModel.createBulkOrder(bulkOrder).observe(this, Observer { response ->
-                    when (response!!.status()) {
-                        Status.LOADING -> {
-                            showLoading()
-                        }
-                        Status.SUCCESS -> {
-                            stopShowingLoading()
-                            alert(response.data().message)
-                        }
-                        Status.ERROR, Status.EMPTY -> {
-                            stopShowingLoading()
-                            Toast.makeText(
-                                baseContext,
-                                response.error().message.toString(),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-                })*/
+                /* viewModel.createBulkOrder(bulkOrder).observe(this, Observer { response ->
+                     when (response!!.status()) {
+                         Status.LOADING -> {
+                             showLoading()
+                         }
+                         Status.SUCCESS -> {
+                             stopShowingLoading()
+                             alert(response.data().message)
+                         }
+                         Status.ERROR, Status.EMPTY -> {
+                             stopShowingLoading()
+                             Toast.makeText(
+                                 baseContext,
+                                 response.error().message.toString(),
+                                 Toast.LENGTH_LONG
+                             ).show()
+                         }
+                     }
+                 })*/
             }
             /*else {
                 Toast.makeText(this, getString(R.string.error_incorrect_data), Toast.LENGTH_SHORT)
@@ -151,7 +151,7 @@ class BulkOrderFragment :
             }
 
             if (city.isEmpty()) {
-                showError("Please select the city")
+                viewUtils.showError("Please select the city")
                 validation = false
             }
             return validation
@@ -173,14 +173,4 @@ class BulkOrderFragment :
         buttonbackground.setTextColor(Color.BLACK)
 
     }
-
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentBulkOrderBinding.inflate(inflater, container, false)
-
-    override fun getViewModel() = CustomViewModel::class.java
-
-    override fun getFragmentRepository() =
-        CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
 }

@@ -1,38 +1,53 @@
 package com.a2a.app.ui.membership
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.a2a.app.MainActivity
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.AllPlanModel
-import com.a2a.app.data.network.CustomApi
-import com.a2a.app.data.repository.CustomRepository
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
-import com.a2a.app.databinding.FragmentBulkOrderBinding
 import com.a2a.app.databinding.FragmentMemberShipBinding
 import com.a2a.app.utils.AppUtils
+import com.a2a.app.utils.ViewUtils
+import com.razorpay.Checkout
+import com.razorpay.PaymentResultListener
+import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
+import javax.inject.Inject
 
-
-class MemberShipFragment :
-    BaseFragment<FragmentMemberShipBinding, CustomViewModel, CustomRepository>(
-        FragmentMemberShipBinding::inflate
-    ) {
+@AndroidEntryPoint
+class MemberShipFragment : Fragment(R.layout.fragment_member_ship), PaymentResultListener {
 
     private lateinit var allPlans: List<AllPlanModel.Result>
-    private val userViewModels by viewModels<UserViewModel1>()
+    private lateinit var assignedPlan: AllPlanModel.Result
+    private val userViewModels by viewModels<UserViewModel>()
+    private val viewModel by viewModels<CustomViewModel>()
+    private lateinit var viewBinding: FragmentMemberShipBinding
+    private lateinit var mainActivity: MainActivity
+
+    @Inject
+    lateinit var viewUtils: ViewUtils
+
+    @Inject
+    lateinit var appUtils: AppUtils
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding = FragmentMemberShipBinding.bind(view)
+        Checkout.preload(context)
 
         setToolbar()
         getPlans()
@@ -49,15 +64,15 @@ class MemberShipFragment :
         viewModel.allPlans().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                     allPlans = result.value.result
                     setData()
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
@@ -76,7 +91,8 @@ class MemberShipFragment :
                         data = allPlans,
                         itemClick = object : RvItemClick {
                             override fun clickWithPosition(name: String, position: Int) {
-                                assignPlan(allPlans[position]._id)
+                                assignedPlan = allPlans[position]
+                                buyPlan()
                             }
                         }
                     )
@@ -94,27 +110,53 @@ class MemberShipFragment :
         ).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
-                    showLoading()
+                    viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    stopShowingLoading()
-                    toast(result.value.message)
+                    viewUtils.stopShowingLoading()
+                    viewUtils.showShortToast(result.value.message)
                     findNavController().navigate(R.id.action_global_myPlanFragment)
                 }
                 is Status.Failure -> {
-                    stopShowingLoading()
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
     }
 
-    override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentMemberShipBinding.inflate(inflater, container, false)
+    private fun buyPlan() {
+        val co = Checkout()
+        val user = appUtils.getUser()
+        val amount = assignedPlan.price
+        try {
+            val options = JSONObject();
+            options.put("name", "A2A")
+            options.put("description", "A2A Buy Membership Plan")
+            options.put("currency", "INR")
+            options.put("amount", (amount * 100))
 
-    override fun getViewModel() = CustomViewModel::class.java
+            val preFill = JSONObject();
+            preFill.put("email", user?.email)
+            preFill.put("contact", user?.mobile)
+            options.put("prefill", preFill)
+            co.open(mainActivity, options)
+        } catch (e: Exception) {
+            viewUtils.showShortToast("Error in payment:  + ${e.message}")
+            e.printStackTrace()
+        }
+    }
 
-    override fun getFragmentRepository() =
-        CustomRepository(remoteDataSource.getBaseUrl().create(CustomApi::class.java))
+    override fun onPaymentSuccess(p0: String?) {
+        viewUtils.showShortToast("Recharge successfully")
+        assignPlan(assignedPlan._id)
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        viewUtils.showShortToast("Payment failed, try again!")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainActivity.hideToolbarAndBottomNavigation()
+    }
 }

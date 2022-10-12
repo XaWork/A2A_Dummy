@@ -1,23 +1,16 @@
 package com.a2a.app.ui.order
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
-import com.a2a.app.data.model.CityModel
 import com.a2a.app.data.model.OrderModel
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.FragmentOrderBinding
 import com.a2a.app.databinding.StateEmptyBinding
 import com.a2a.app.utils.AppUtils
@@ -32,7 +25,7 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
     private lateinit var orderList: List<OrderModel.Result>
     private lateinit var order: OrderModel
     private lateinit var viewBinding: FragmentOrderBinding
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
 
     @Inject
     lateinit var viewUtils: ViewUtils

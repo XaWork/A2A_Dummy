@@ -1,22 +1,16 @@
 package com.a2a.app.ui.address
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.AddressListModel
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
 import com.a2a.app.databinding.ContentAddressBinding
 import com.a2a.app.databinding.FragmentAddressListBinding
 import com.a2a.app.utils.AppUtils
@@ -37,7 +31,7 @@ class AddressListFragment : Fragment(R.layout.fragment_address_list) {
     @Inject
     lateinit var viewUtils: ViewUtils
 
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
     private var addressList: ArrayList<AddressListModel.Result> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,7 +113,7 @@ class AddressListFragment : Fragment(R.layout.fragment_address_list) {
         val userId = AppUtils(context!!).getUser()?.id
         val addressId = addressList[position].id
 
-        viewModel.deleteAddress(userId!!, addressId).observe(viewLifecycleOwner) { response ->
+        viewModel.deleteAddress(addressId).observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Status.Loading -> {
                     viewUtils.showLoading(parentFragmentManager)

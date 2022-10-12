@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userApi: UserApi
-) : UserRepository1 {
+) : UserRepository {
 
     override suspend fun fetchOtp(mobile: String, token: String): Status<FetchOtpResponse> {
         return try {
@@ -112,10 +112,35 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun orderUpdate(
-        orderid: String,
+        orderId: String,
     ): Status<OrderUpdateModel> {
         return try {
-            val response = userApi.orderUpdates(orderid)
+            val response = userApi.orderUpdates(orderId)
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun editProfile(
+        id: String,
+        fullName: String,
+        mobile: String
+    ): Status<CommonResponseModel> {
+        return try {
+            val response = userApi.editProfile(id, fullName, mobile)
             Status.Success(response)
         } catch (throwable: Throwable) {
             Log.e("exception", "safeapicall: $throwable")
@@ -156,11 +181,10 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAddress(
-        userId: String,
         addressId: String
     ): Status<CommonResponseModel> {
         return try {
-            val response = userApi.deleteAddress(userId, addressId)
+            val response = userApi.deleteAddress( addressId)
             Status.Success(response)
         } catch (throwable: Throwable) {
             Log.e("exception", "safeapicall: $throwable")
@@ -392,6 +416,111 @@ class UserRepositoryImpl @Inject constructor(
                 liveTemparature,
                 liveTracking
             )
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun estimateBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String
+    ): Status<EstimateBookingModel> {
+        return try {
+            val response = userApi.estimateBooking(
+                userId,
+                pickupAddress,
+                destinationAddress,
+                category,
+                subCategory,
+                pickupRange,
+                weight,
+                width,
+                height,
+                length,
+                pickupType,
+                deliveryType,
+                scheduleTime,
+                scheduleDate,
+                videoRecording,
+                pictureRecording,
+                liveTemparature,
+                liveTracking
+            )
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun checkOrderStatus(orderId: String): Status<CheckOrderStatusModel> {
+        return try {
+            val response = userApi.checkOrderStatus(orderId)
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ): Status<NormalTimeslotModel> {
+        return try {
+            val response = userApi.normalTimeslots(scheduleDate, destinationAddress, pickupAddress)
             Status.Success(response)
         } catch (throwable: Throwable) {
             Log.e("exception", "safeapicall: $throwable")

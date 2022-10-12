@@ -2,29 +2,20 @@ package com.a2a.app.ui.splash
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.a2a.app.MainActivity
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment1
 import com.a2a.app.common.Status
 import com.a2a.app.data.viewmodel.SettingViewModel
 import com.a2a.app.databinding.FragmentSplashBinding
 import com.a2a.app.ui.common.ProgressDialog
-import com.a2a.app.ui.common.ProgressDialogFragment
 import com.a2a.app.utils.AppUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 

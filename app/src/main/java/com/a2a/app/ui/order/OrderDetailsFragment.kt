@@ -1,35 +1,24 @@
 package com.a2a.app.ui.order
 
-import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.R
-import com.a2a.app.common.BaseFragment
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.OrderModel
 import com.a2a.app.data.model.tIGST
-import com.a2a.app.data.model.tSGST
-import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.UserRepository
 import com.a2a.app.data.viewmodel.UserViewModel
-import com.a2a.app.data.viewmodel.UserViewModel1
-import com.a2a.app.databinding.FragmentOrderBinding
 import com.a2a.app.databinding.FragmentOrderDetailsBinding
 import com.a2a.app.toDate
 import com.a2a.app.toDateObject
 import com.a2a.app.toSummary
 import com.a2a.app.utils.AppUtils
-import com.a2a.app.utils.Utils
 import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +32,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
     private var totalShippingCost: Float = 0f
     private var totalPackagingCost: Float = 0f
     private lateinit var viewBinding: FragmentOrderDetailsBinding
-    private val viewModel by viewModels<UserViewModel1>()
+    private val viewModel by viewModels<UserViewModel>()
 
     @Inject
     lateinit var appUtils: AppUtils
@@ -199,7 +188,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                 is Status.Success -> {
                     viewUtils.stopShowingLoading()
                     with(viewBinding.incContentOrderDetails) {
-                        if (!result.value.updates.isNullOrEmpty()) {
+                        if (result.value.updates.isNotEmpty()) {
 
                             updateTitle.visibility = View.VISIBLE
                             rvUpdates.visibility = View.VISIBLE
