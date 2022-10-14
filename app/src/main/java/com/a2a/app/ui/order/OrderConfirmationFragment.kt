@@ -74,6 +74,8 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                 tvWeight.text = "Weight: ${weight}kg"
 
 
+                tvPrice.text =
+                    "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price}"
                 tvItemCost.text =
                     "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price}"
                 tvCgst.text =

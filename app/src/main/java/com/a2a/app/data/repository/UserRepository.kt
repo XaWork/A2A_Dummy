@@ -2,6 +2,7 @@ package com.a2a.app.data.repository
 
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
+import retrofit2.http.Query
 
 interface UserRepository {
 
@@ -38,11 +39,11 @@ interface UserRepository {
 
     suspend fun addressList(
         userId: String
-    ):Status<AddressListModel>
+    ): Status<AddressListModel>
 
     suspend fun deleteAddress(
         addressId: String
-    ):Status<CommonResponseModel>
+    ): Status<CommonResponseModel>
 
     suspend fun editAddress(
         userId: String,
@@ -132,4 +133,9 @@ interface UserRepository {
         destinationAddress: String,
         pickupAddress: String
     ): Status<NormalTimeslotModel>
+
+    suspend fun checkCutOffTime(
+        startCity: String,
+        endCity: String,
+    ): Status<CheckCutOffTimeModel>
 }

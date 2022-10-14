@@ -109,7 +109,7 @@ class UserViewModel @Inject constructor(
 
         viewModelScope.launch {
             result.value = Status.Loading
-            result.value = userRepository1.deleteAddress( addressId)
+            result.value = userRepository1.deleteAddress(addressId)
         }
 
         return result
@@ -256,6 +256,20 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             result.value = Status.Loading
             result.value = userRepository1.checkOrderStatus(orderId)
+        }
+
+        return result
+    }
+
+    fun cutoffTimeCheck(
+        startCity: String,
+        endCity: String,
+    ): MutableLiveData<Status<CheckCutOffTimeModel>> {
+        val result = MutableLiveData<Status<CheckCutOffTimeModel>>()
+
+        viewModelScope.launch {
+            result.value = Status.Loading
+            result.value = userRepository1.checkCutOffTime(startCity, endCity)
         }
 
         return result

@@ -112,6 +112,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                 //tvTitle.text = order.category
                 tvWeight.text = "Weight: ${order.totalWeight}Kg"
                 tvTotalItemCost.text = "Rs ${order.finalprice}"
+                tvPrice.text = "Rs ${order.finalprice}"
 
                 deliveryDate.text =
                     "Delivery Date: ${order.deliveryDate.toDate("dd-MM-yyyy")} ${order.deliveryType}"

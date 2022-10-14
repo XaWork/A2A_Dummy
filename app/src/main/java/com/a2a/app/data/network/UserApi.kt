@@ -174,4 +174,10 @@ interface UserApi {
     suspend fun checkOrderStatus(
         @Query("req.query.order_id") orderId: String
     ): CheckOrderStatusModel
+
+    @GET("cutofftime-check")
+    suspend fun checkCutOffTime(
+        @Query("start_city") startCity: String,
+        @Query("end_city") endCity: String,
+    ): CheckCutOffTimeModel
 }

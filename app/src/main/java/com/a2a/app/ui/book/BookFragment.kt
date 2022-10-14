@@ -41,15 +41,17 @@ class BookFragment :
 
     private val customViewModel by viewModels<CustomViewModel>()
     private val viewModel by viewModels<UserViewModel>()
+    private val serviceTypes = ArrayList<String>()
+    private val cutOffTimeServices = ArrayList<String>()
     private lateinit var viewBinding: FragmentBookBinding
     private lateinit var mainActivity: MainActivity
-    private lateinit var categories: List<AllCategoryModel.Result>
+    private var categories = ArrayList<AllCategoryModel.Result>()
     private lateinit var selectedCategory: AllCategoryModel.Result
     private lateinit var selectedSubCategory: AllSubCategoryModel.Result
     private var categoryNames = ArrayList<String>()
     private var subCategoryNames = ArrayList<String>()
     private lateinit var checkTimeSlotResponse: NormalTimeslotModel
-    private lateinit var subCategories: List<AllSubCategoryModel.Result>
+    private var subCategories = ArrayList<AllSubCategoryModel.Result>()
     private var categoryName = ""
     var categoryId = ""
     var subCategoryId = ""
@@ -66,9 +68,9 @@ class BookFragment :
     private var destinationLocation: AddressListModel.Result? = null
     private var pickupRange = "0"
     private var weight = "0"
-    private var width = "0"
-    private var height = "0"
-    private var length = "0"
+    private var width = "1"
+    private var height = "1"
+    private var length = "1"
     private var remarks = ""
     private var timeslot = ""
     private var price = ""
@@ -129,33 +131,38 @@ class BookFragment :
                 addressSelection.show(parentFragmentManager, addressSelection.tag)
             }
             clDestinationLocation.setOnClickListener {
-                val addressSelection = AddressSelectionFragment()
-                addressSelection.saveSetSaveListener(object : SaveAddressListener {
-                    override fun onSaved(address: AddressListModel.Result) {
-                        tvDestinationAddress.text = address.address
-                        destinationLocation = address
-                    }
-                })
-                addressSelection.show(parentFragmentManager, addressSelection.tag)
-            }
-        /*
-            rgDeliveryType.setOnCheckedChangeListener { _, checkedId ->
-                Log.d("book", "Delivery type is : $deliveryType")
-                when (checkedId) {
-                    R.id.rbNormal -> {
-                        deliveryType = "Normal"
-                        viewBinding.contentBook.acPickupRange.isEnabled = false
-                    }
-                    R.id.rbExpress -> {
-                        deliveryType = "Express"
-                        viewBinding.contentBook.acPickupRange.isEnabled = true
-                    }
-                    R.id.rbSuperFast -> {
-                        deliveryType = "Superfast"
-                        viewBinding.contentBook.acPickupRange.isEnabled = true
-                    }
+                if (pickUpLocation == null)
+                    viewUtils.showShortToast("First select pickup location")
+                else {
+                    val addressSelection = AddressSelectionFragment()
+                    addressSelection.saveSetSaveListener(object : SaveAddressListener {
+                        override fun onSaved(address: AddressListModel.Result) {
+                            tvDestinationAddress.text = address.address
+                            destinationLocation = address
+                            cutoffTimeCheck()
+                        }
+                    })
+                    addressSelection.show(parentFragmentManager, addressSelection.tag)
                 }
-            }*/
+            }
+            /*
+                rgDeliveryType.setOnCheckedChangeListener { _, checkedId ->
+                    Log.d("book", "Delivery type is : $deliveryType")
+                    when (checkedId) {
+                        R.id.rbNormal -> {
+                            deliveryType = "Normal"
+                            viewBinding.contentBook.acPickupRange.isEnabled = false
+                        }
+                        R.id.rbExpress -> {
+                            deliveryType = "Express"
+                            viewBinding.contentBook.acPickupRange.isEnabled = true
+                        }
+                        R.id.rbSuperFast -> {
+                            deliveryType = "Superfast"
+                            viewBinding.contentBook.acPickupRange.isEnabled = true
+                        }
+                    }
+                }*/
         }
         viewBinding.btnBookNow.setOnClickListener {
             checkFieldData()
@@ -203,6 +210,14 @@ class BookFragment :
                         "Booking time - $bookingDateTime\n"
             )
 
+            //if user not enter any value then send by default 1
+            if(width.isEmpty())
+                width = "1"
+            if(length.isEmpty())
+                length = "1"
+            if(height.isEmpty())
+                height = "1"
+
             //check any value is not null or empty
             if (pickUpLocation == null)
                 viewUtils.showShortToast("Select Pickup Location")
@@ -216,12 +231,6 @@ class BookFragment :
                 viewUtils.showShortToast("Select Pickup Range")
             else if (weight.isEmpty())
                 edtWight.error = "Enter Weight"
-            /*else if (width.isEmpty())
-                edtWidth.error = "Enter Width"
-            else if (height.isEmpty())
-                edtHeight.error = "Enter Height"
-            else if (length.isEmpty())
-                edtLength.error = "Enter Length"*/
             else {
                 if (deliveryType.isEmpty())
                     viewUtils.showShortToast("Please specify delivery type(Normal/Express/Super Fast)")
@@ -256,6 +265,7 @@ class BookFragment :
         deliveryDatePicker.setOnClickListener {
             showDatePickerDialog("delivery", deliveryDatePicker)
         }
+
         normalDialogConfirmButton.setOnClickListener {
             when (normalDialogConfirmButton.text) {
                 "Check available timeslots" -> {
@@ -267,8 +277,12 @@ class BookFragment :
                     }
                 }
                 "Calculate Price" -> {
-                    dialog.dismiss()
-                    estimateBooking()
+                    if (choosedPickupTimeSlot.isEmpty())
+                        viewUtils.showShortToast("Select timeslot")
+                    else {
+                        dialog.dismiss()
+                        estimateBooking()
+                    }
                 }
                 "Continue" -> {
                     dialog.dismiss()
@@ -291,13 +305,16 @@ class BookFragment :
             }
             "pickup timeslot" -> {
                 normalDialogConfirmButton.text = "Calculate Price"
-                choosedPickupTimeSlot = pickupTimeSlots[0]
+                //choosedPickupTimeSlot = pickupTimeSlots[0]
                 //tvCutOffText.text = checkTimeSlotResponse.timeslot
                 pickupDatePicker.setText(pickupDate)
                 tvPickupTimeSlot.text = choosedPickupTimeSlot
                 tvPickupTimeSlot.setupDropDown(pickupTimeSlots.toTypedArray(), { it }, {
-                    choosedPickupTimeSlot = it
-                    tvPickupTimeSlot.text = choosedPickupTimeSlot
+                    if (checkTiming(it)) {
+                        choosedPickupTimeSlot = it
+                        tvPickupTimeSlot.text = choosedPickupTimeSlot
+                    } else
+                        viewUtils.showShortToast("Please select time 6 hours after of current time")
                 }, {
                     it.show()
                     hideSoftKeyboard()
@@ -316,8 +333,11 @@ class BookFragment :
                     tvPickupTimeSlot.text = choosedPickupTimeSlot
                     tvCutOffText.text = pickup.remarks
                     tvPickupTimeSlot.setupDropDown(pickupTimeSlots.toTypedArray(), { it }, {
-                        choosedPickupTimeSlot = it
-                        tvPickupTimeSlot.text = choosedPickupTimeSlot
+                        if (checkTiming(it)) {
+                            choosedPickupTimeSlot = it
+                            tvPickupTimeSlot.text = choosedPickupTimeSlot
+                        } else
+                            viewUtils.showShortToast("Please select time 6 hours after of current time")
                     }, {
                         it.show()
                         hideSoftKeyboard()
@@ -482,41 +502,17 @@ class BookFragment :
         } else {
             datePickerDialog.datePicker.minDate = System.currentTimeMillis()
         }
-
         datePickerDialog.show()
     }
 
-    private fun showTimePickerDialog(timePicker: EditText) {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
+    private fun checkTiming(timeSlot: String): Boolean {
+        //user can select only timeslot after normal time(this time comes from setting api),
+        // if user select time after normal time then return true otherwise false
+        val timeslotList = timeSlot.split("-").toList()
+        val dateTime1 = "$pickupDate ${timeslotList[0]}"
+        val dateTime2 = timeslotList[1]
 
-        val timePickerDialog = TimePickerDialog(context, { _, selectedHour, selectedMinute ->
-            bookingDateTime = "$pickupDate $selectedHour:$selectedMinute"
-            /*bookingDateTime = if (selectedHour > 12)
-                "$bookingDate ${selectedHour - 12}:$selectedMinute pm"
-            else if (selectedHour == 12)
-                "$bookingDate 12:$selectedMinute pm"
-            else {
-                if (selectedHour != 0)
-                    "$bookingDate $selectedHour:$selectedMinute am"
-                else
-                    "$bookingDate 12:$selectedMinute am"
-            }*/
-            if (checkTiming())
-                timePicker.setText("$selectedHour:$selectedMinute")
-            else {
-                viewUtils.showShortToast("Please select 6 hours later of the current time")
-                showTimePickerDialog(timePicker)
-            }
-        }, hour, minute, false)
-
-        timePickerDialog.setTitle("Select time")
-        timePickerDialog.show()
-    }
-
-    private fun checkTiming(): Boolean {
-        val sdf = SimpleDateFormat("MM/dd/yyyy HH:mm")
+        val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm")
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.HOUR_OF_DAY, 6)
         val currentDateTime = sdf.format(calendar.time)
@@ -524,7 +520,7 @@ class BookFragment :
         Log.e("time", "Booking Time : $bookingDateTime\nCurrent Time : $currentDateTime")
 
         try {
-            val time1 = sdf.parse(bookingDateTime)
+            val time1 = sdf.parse(dateTime1)
             val time2 = sdf.parse(currentDateTime.toString())
 
             Log.e("time", "Time difference is : ${time1!!.after(time2)}")
@@ -534,6 +530,38 @@ class BookFragment :
             e.printStackTrace()
         }
         return false
+    }
+
+    private fun cutoffTimeCheck() {
+        Log.e(
+            "book",
+            "Start City : ${pickUpLocation!!.city.id}\n End city : ${destinationLocation!!.city.id}"
+        )
+
+        val startDestination = pickUpLocation!!.city.id
+        val endDestination = destinationLocation!!.city.id
+        viewModel.cutoffTimeCheck(startDestination, endDestination)
+            .observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Status.Loading -> {
+                        viewUtils.showLoading(parentFragmentManager)
+                    }
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        cutOffTimeServices.clear()
+                        if (result.value.result.normal)
+                            cutOffTimeServices.add("normal")
+                        if (result.value.result.express)
+                            cutOffTimeServices.add("express")
+                        if (result.value.result.super_fast)
+                            cutOffTimeServices.add("super fast")
+                        setServices()
+                    }
+                    is Status.Failure -> {
+                        viewUtils.stopShowingLoading()
+                    }
+                }
+            }
     }
 
     private fun checkAvailableTimeslots() {
@@ -546,8 +574,8 @@ class BookFragment :
 
         viewModel.normalTimeSlots(
             pickupDate.toDate("yyyy-MM-dd", "dd/MM/yyyy"),
-            destinationLocation!!.city.id,
-            pickUpLocation!!.city.id
+            destinationLocation!!.id,
+            pickUpLocation!!.id
         ).observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Status.Loading -> {
@@ -572,8 +600,8 @@ class BookFragment :
         val userId = AppUtils(context!!).getUser()!!.id
         viewModel.estimateBooking(
             userId = userId,
-            pickupAddress = pickUpLocation!!.city.id,
-            destinationAddress = destinationLocation!!.city.id,
+            pickupAddress = pickUpLocation!!.id,
+            destinationAddress = destinationLocation!!.id,
             category = categoryId,
             subCategory = subCategoryId,
             pickupRange = pickupRange,
@@ -629,7 +657,8 @@ class BookFragment :
                     }
                     is Status.Success -> {
                         viewUtils.stopShowingLoading()
-                        categories = it.value.result
+                        categories.clear()
+                        categories = it.value.result as ArrayList<AllCategoryModel.Result>
                         setAllCategories()
                     }
                     is Status.Failure -> {
@@ -678,21 +707,31 @@ class BookFragment :
             when (result) {
                 is Status.Loading -> {}
                 is Status.Success -> {
-                    val serviceTypes = ArrayList<String>()
+                    serviceTypes.clear()
                     for (service in result.value.result)
                         serviceTypes.add(service.name.lowercase())
-                    setServices(serviceTypes)
+                    //setServices(serviceTypes)
                 }
                 is Status.Failure -> {}
             }
         }
     }
 
-    private fun setServices(serviceTypes: ArrayList<String>) {
+    private fun setServices() {
+        val finalServiceList = ArrayList<String>()
+        for (service in serviceTypes) {
+            for (cutOffService in cutOffTimeServices) {
+                Log.e("book", "Service type : $service\n Cut off time service : $cutOffService")
+                if (service == cutOffService)
+                    finalServiceList.add(service)
+            }
+        }
+
+        //finalServiceList.add("normal")
         viewBinding.contentBook.rvServiceType.run {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = BookingFormServiceTypeAdapter(
-                data = serviceTypes,
+                data = finalServiceList,
                 context = context,
                 itemClick = object : RvItemClick {
                     override fun clickWithPosition(name: String, position: Int) {
@@ -717,11 +756,11 @@ class BookFragment :
         customViewModel.getAllSubCategories(categoryId)
             .observe(viewLifecycleOwner) {
                 when (it) {
-                    is Status.Loading -> {
-                    }
+                    is Status.Loading -> {}
                     is Status.Success -> {
                         viewUtils.stopShowingLoading()
-                        subCategories = it.value.result
+                        subCategories.clear()
+                        subCategories = it.value.result as ArrayList<AllSubCategoryModel.Result>
                         setSubCategories()
                     }
                     is Status.Failure -> {
@@ -773,6 +812,15 @@ class BookFragment :
         super.onResume()
         getAllCategories()
         getServiceTypes()
+
+        if(destinationLocation != null && pickUpLocation != null){
+            with(viewBinding.contentBook){
+                tvDestinationAddress.text = destinationLocation!!.address
+                tvPickupAddress.text = pickUpLocation!!.address
+                acCategory.setText(categoryName)
+                acSubCategory.setText(subCategoryName)
+            }
+        }
     }
 
 }

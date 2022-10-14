@@ -184,7 +184,7 @@ class UserRepositoryImpl @Inject constructor(
         addressId: String
     ): Status<CommonResponseModel> {
         return try {
-            val response = userApi.deleteAddress( addressId)
+            val response = userApi.deleteAddress(addressId)
             Status.Success(response)
         } catch (throwable: Throwable) {
             Log.e("exception", "safeapicall: $throwable")
@@ -521,6 +521,30 @@ class UserRepositoryImpl @Inject constructor(
     ): Status<NormalTimeslotModel> {
         return try {
             val response = userApi.normalTimeslots(scheduleDate, destinationAddress, pickupAddress)
+            Status.Success(response)
+        } catch (throwable: Throwable) {
+            Log.e("exception", "safeapicall: $throwable")
+            when (throwable) {
+                is HttpException -> {
+                    Status.Failure(
+                        false,
+                        throwable.code(),
+                        throwable.response()?.errorBody().toString()
+                    )
+                }
+                else -> {
+                    Status.Failure(true, null, throwable.message.toString())
+                }
+            }
+        }
+    }
+
+    override suspend fun checkCutOffTime(
+        startCity: String,
+        endCity: String
+    ): Status<CheckCutOffTimeModel> {
+        return try {
+            val response = userApi.checkCutOffTime(startCity, endCity)
             Status.Success(response)
         } catch (throwable: Throwable) {
             Log.e("exception", "safeapicall: $throwable")

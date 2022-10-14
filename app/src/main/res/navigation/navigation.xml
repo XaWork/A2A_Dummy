@@ -90,6 +90,9 @@
         <action
             android:id="@+id/action_orderFragment_to_orderDetailsFragment"
             app:destination="@id/orderDetailsFragment" />
+        <action
+            android:id="@+id/action_orderFragment_to_trackLocationFragment"
+            app:destination="@id/trackLocationFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderDetailsFragment"
