@@ -137,9 +137,13 @@ class BookFragment :
                     val addressSelection = AddressSelectionFragment()
                     addressSelection.saveSetSaveListener(object : SaveAddressListener {
                         override fun onSaved(address: AddressListModel.Result) {
-                            tvDestinationAddress.text = address.address
-                            destinationLocation = address
-                            cutoffTimeCheck()
+                            if (pickUpLocation!!.id == address.id)
+                                viewUtils.showShortToast("Pickup and Destination location should not be same")
+                            else {
+                                tvDestinationAddress.text = address.address
+                                destinationLocation = address
+                                cutoffTimeCheck()
+                            }
                         }
                     })
                     addressSelection.show(parentFragmentManager, addressSelection.tag)
@@ -211,11 +215,11 @@ class BookFragment :
             )
 
             //if user not enter any value then send by default 1
-            if(width.isEmpty())
+            if (width.isEmpty())
                 width = "1"
-            if(length.isEmpty())
+            if (length.isEmpty())
                 length = "1"
-            if(height.isEmpty())
+            if (height.isEmpty())
                 height = "1"
 
             //check any value is not null or empty
@@ -614,8 +618,8 @@ class BookFragment :
                 "dd/MM/yyyy"
             ) else "",
             scheduleTime = if (deliveryType == "Normal") choosedPickupTimeSlot else "",
-            pickupType = deliveryType,
-            deliveryType = deliveryType,
+            pickupType = deliveryType.replace(" ", ""),
+            deliveryType = deliveryType.replace(" ", ""),
             videoRecording = videoRecordingOfPickupAndDelivery,
             pictureRecording = pictureOfDeliveryAndPickup,
             liveTemperature = liveTemperatureTracking,
@@ -735,7 +739,7 @@ class BookFragment :
                 context = context,
                 itemClick = object : RvItemClick {
                     override fun clickWithPosition(name: String, position: Int) {
-                        Log.e("book", "Select service is $name")
+                        Log.e("book", "Select service is ${name.replace(" ", "")}")
                         deliveryType = name
                         when (name) {
                             "Normal" ->
@@ -813,12 +817,34 @@ class BookFragment :
         getAllCategories()
         getServiceTypes()
 
-        if(destinationLocation != null && pickUpLocation != null){
-            with(viewBinding.contentBook){
+        if (destinationLocation != null && pickUpLocation != null) {
+            deliveryType = ""
+            with(viewBinding.contentBook) {
+                categories.clear()
+                Log.e("book", "Category size: ${categories.size}")
+
                 tvDestinationAddress.text = destinationLocation!!.address
                 tvPickupAddress.text = pickUpLocation!!.address
                 acCategory.setText(categoryName)
                 acSubCategory.setText(subCategoryName)
+                val pickupRanges = listOf(2, 5, 10, 15, 20, 25, 30, 40)
+                val arrayAdapter = ArrayAdapter(context!!, R.layout.single_text_view, pickupRanges)
+                viewBinding.contentBook.acPickupRange.run {
+                    setAdapter(arrayAdapter)
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                        override fun afterTextChanged(p0: Editable?) {}
+                    })
+                }
+                setServices()
             }
         }
     }

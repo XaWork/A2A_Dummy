@@ -1,6 +1,7 @@
 package com.a2a.app.utils
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,13 +47,13 @@ class ViewUtils @Inject constructor(@ApplicationContext private var ctx: Context
         return view
     }
 
-    fun showLoading(fragmentManager: FragmentManager, title: String = "", message: String = "") {
+    fun showLoading(fragmentManager: FragmentManager, title: String = "", message: String = "", isCancelable: Boolean = false) {
         val args = Bundle()
         args.putString(ARG_TITLE, title)
         args.putString(ARG_MESSAGE, message)
         this.arguments = args
 
-        this.isCancelable = false
+        this.isCancelable = isCancelable
         this.show(fragmentManager, "show")
 
     }
@@ -84,4 +85,7 @@ class ViewUtils @Inject constructor(@ApplicationContext private var ctx: Context
         Toast.makeText(ctx, error, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+    }
 }

@@ -5,6 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.window.OnBackInvokedCallback
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -44,9 +47,15 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
     private lateinit var confirmBookingModel: ConfirmBookingModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         viewBinding = FragmentOrderConfirmationBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+        // handle back pressed
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (this@OrderConfirmationFragment::runnable.isInitialized) {
+                handler.removeCallbacks(runnable)
+                findNavController().popBackStack()
+            }
+        }
 
         getArgument()
         setToolbar()
@@ -175,27 +184,31 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
             when (it) {
                 is Status.Loading -> {
                     //viewUtils.showLoading(parentFragmentManager)
-                    viewUtils.showLoading(
-                        parentFragmentManager,
-                        "Please wait",
-                        "Searching for pickup boy..."
-                    )
+                    if (orderConfirmationData.deliveryType == "Normal")
+                        viewUtils.showLoading(parentFragmentManager)
+                    else
+                        viewUtils.showLoading(
+                            parentFragmentManager,
+                            "Please wait",
+                            "Searching for pickup boy...",
+                            true
+                        )
                 }
                 is Status.Success -> {
                     //viewUtils.stopShowingLoading()
                     confirmBookingModel = it.value
 
-                    /* runnable = Runnable {
-                         checkOrderStatus()
-                         handler.postDelayed(runnable, 10000)
-                     }*/
-
-                    checkOrderStatus()
-                    handler.postDelayed(Runnable {//do something
-                        callbackCount += 1
+                    if (orderConfirmationData.deliveryType == "Normal") {
+                        viewUtils.stopShowingLoading()
+                        moveToBookingConfirmedScreen()
+                    } else {
                         checkOrderStatus()
-                        handler.postDelayed(runnable, 10000)
-                    }.also { call -> runnable = call }, 10000)
+                        handler.postDelayed(Runnable {//do something
+                            callbackCount += 1
+                            checkOrderStatus()
+                            handler.postDelayed(runnable, 10000)
+                        }.also { call -> runnable = call }, 10000)
+                    }
                 }
                 is Status.Failure -> {
                     viewUtils.stopShowingLoading()
@@ -210,7 +223,7 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
             when (result) {
                 is Status.Loading -> {}
                 is Status.Success -> {
-                    if (callbackCount == 7) {
+                    if (callbackCount == 6) {
                         viewUtils.stopShowingLoading()
                         handler.removeCallbacks(runnable)
                         viewUtils

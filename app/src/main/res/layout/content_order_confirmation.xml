@@ -372,7 +372,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="CGST"
+                    android:text="CGST(9%)"
                     android:textSize="16sp" />
 
                 <TextView
@@ -399,7 +399,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="SGST"
+                    android:text="SGST(9%)"
                     android:textSize="16sp" />
 
                 <TextView
@@ -426,7 +426,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="IGST"
+                    android:text="IGST(18%)"
                     android:textSize="16sp" />
 
                 <TextView
