@@ -591,6 +591,8 @@ class BookFragment :
                     pickupTimeSlots.clear()
                     for (timeslot in result.value.timeslot)
                         pickupTimeSlots.add(timeslot.pickup.time)
+
+                    pickupTimeSlots.sort()
                     showNormalDeliveryDialog("pickup timeslot")
                 }
                 is Status.Failure -> {
@@ -811,12 +813,11 @@ class BookFragment :
             findNavController().popBackStack()
         }
     }
-
     override fun onResume() {
         super.onResume()
         getAllCategories()
         getServiceTypes()
-
+/*
         if (destinationLocation != null && pickUpLocation != null) {
             deliveryType = ""
             with(viewBinding.contentBook) {
@@ -846,7 +847,7 @@ class BookFragment :
                 }
                 setServices()
             }
-        }
+        }*/
     }
 
 }

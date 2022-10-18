@@ -98,7 +98,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintStart_toEndOf="parent"
             android:paddingVertical="24dp"
-            android:text="Continue Shopping"
+            android:text="Continue"
             android:textSize="18sp"
             android:background="@color/colorPrimary"
             android:layout_width="match_parent"

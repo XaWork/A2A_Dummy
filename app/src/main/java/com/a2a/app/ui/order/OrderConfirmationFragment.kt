@@ -53,7 +53,7 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (this@OrderConfirmationFragment::runnable.isInitialized) {
                 handler.removeCallbacks(runnable)
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_global_bookFragment)
             }
         }
 
@@ -247,11 +247,12 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
     }
 
     private fun moveToBookingConfirmedScreen() {
-        val stringResponse =
+        val confirmBooking =
             Gson().toJson(confirmBookingModel, ConfirmBookingModel::class.java)
         val action =
             OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToBookingConfrimFragment(
-                stringResponse
+                confirmation = confirmBooking,
+                deliveryDateTime = "${orderConfirmationData.deliveryDate} (${orderConfirmationData.deliveryTime})"
             )
         findNavController().navigate(action)
     }

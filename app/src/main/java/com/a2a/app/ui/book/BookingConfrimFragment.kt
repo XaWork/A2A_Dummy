@@ -21,15 +21,17 @@ class BookingConfrimFragment : Fragment(R.layout.fragment_booking_confrim) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentBookingConfrimBinding.bind(view)
 
-        with(viewBinding){
+        with(viewBinding) {
             //get arguments
             val args: BookingConfrimFragmentArgs by navArgs()
-            val confirmationResponse = Gson().fromJson(args.confirmation, ConfirmBookingModel::class.java)
+            val confirmationResponse =
+                Gson().fromJson(args.confirmation, ConfirmBookingModel::class.java)
+            val deliveryDate = args.deliveryDateTime
 
-            deliveryDateTime.text = confirmationResponse.timeslot
+            deliveryDateTime.text = deliveryDate
             orderId.text = "Order Number #${confirmationResponse.orderId}"
 
-            continueShopping.setOnClickListener{
+            continueShopping.setOnClickListener {
                 findNavController().navigate(R.id.action_global_homeFragment)
             }
         }

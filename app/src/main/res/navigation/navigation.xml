@@ -237,9 +237,12 @@
             android:defaultValue="@null" />
         <action
             android:id="@+id/action_bookFragment_to_orderConfirmationFragment"
-            app:destination="@id/orderConfirmationFragment" />
+            app:destination="@id/orderConfirmationFragment"
+            app:popUpTo="@id/bookFragment"/>
     </fragment>
-    <action android:id="@+id/action_global_bookFragment" app:destination="@id/bookFragment"/>
+    <action android:id="@+id/action_global_bookFragment"
+        app:destination="@id/bookFragment"
+        app:popUpTo="@id/homeFragment"/>
 
 
     <fragment
@@ -259,6 +262,10 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="deliveryDateTime"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/trackLocationFragment"
@@ -278,7 +285,8 @@
         tools:layout="@layout/fragment_order_confirmation" >
         <action
             android:id="@+id/action_orderConfirmationFragment_to_bookingConfrimFragment"
-            app:destination="@id/bookingConfrimFragment" />
+            app:destination="@id/bookingConfrimFragment"
+            app:popUpTo="@id/homeFragment"/>
         <argument
             android:name="orderConfirmationData"
             app:argType="string"

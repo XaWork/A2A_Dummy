@@ -22,7 +22,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
-    private lateinit var viewBinding: ViewBinding
+    private lateinit var viewBinding: FragmentSplashBinding
     private lateinit var mainActivity: MainActivity
 
     @Inject
