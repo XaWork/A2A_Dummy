@@ -53,8 +53,8 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (this@OrderConfirmationFragment::runnable.isInitialized) {
                 handler.removeCallbacks(runnable)
-                findNavController().navigate(R.id.action_global_bookFragment)
             }
+            findNavController().navigate(R.id.action_global_bookFragment)
         }
 
         getArgument()
@@ -131,7 +131,7 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
         with(viewBinding.incToolbar) {
             toolbar.title = "Order Confirmation"
             toolbar.setNavigationOnClickListener {
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_orderConfirmationFragment_to_bookingConfrimFragment)
             }
         }
     }
@@ -223,6 +223,7 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
             when (result) {
                 is Status.Loading -> {}
                 is Status.Success -> {
+                    Log.e("order confirmation", "Call back count : $callbackCount")
                     if (callbackCount == 6) {
                         viewUtils.stopShowingLoading()
                         handler.removeCallbacks(runnable)

@@ -60,7 +60,7 @@ class BookFragment :
     private var checkAvailability: CheckCutOffTimeModel? = null
     private var bookingDate = ""
     private var pickupDate = ""
-    private var choosedPickupTimeSlot = ""
+    private var choosedPickupTimeSlot = "Time"
     private var deliveryDate = ""
     private var deliveryTimeSlot = ""
     private var bookingDateTime = ""
@@ -99,9 +99,10 @@ class BookFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentBookBinding.bind(view)
-        //getArgument()
         setToolbar()
-        //getAllCategories()
+
+        getAllCategories()
+        getServiceTypes()
 
         with(viewBinding.contentBook) {
             val user = appUtils.getUser()
@@ -300,7 +301,7 @@ class BookFragment :
                 //empty data before showing dialog
                 pickupDate = ""
                 pickupTimeSlots.clear()
-                choosedPickupTimeSlot = ""
+                choosedPickupTimeSlot = "Time"
                 deliveryDate = ""
                 deliveryTimeslots.clear()
                 deliveryTimeSlot = ""
@@ -635,15 +636,22 @@ class BookFragment :
                     viewUtils.stopShowingLoading()
                     if (result.value.status == "success") {
                         estimateBookingResponse = result.value
-                        price =
-                            estimateBookingResponse.estimations[0].pickup.estimated_price.toString()
-                        finalPrice =
-                            estimateBookingResponse.estimations[0].pickup.estimated_price.toString()
-                        timeslot = estimateBookingResponse.estimations[0].pickup.time
-                        Log.e("book", "Delivery type is : $deliveryType")
-                        when (deliveryType) {
-                            "Normal" -> showNormalDeliveryDialog("edit")
-                            else -> showExpressDeliveryDialog()
+
+                        if (estimateBookingResponse.estimations.isEmpty()) {
+                            viewUtils.showShortToast("Please change the timeslot")
+                            showNormalDeliveryDialog("pickup timeslot")
+                        }
+                        else {
+                            price =
+                                estimateBookingResponse.estimations[0].pickup.estimated_price.toString()
+                            finalPrice =
+                                estimateBookingResponse.estimations[0].pickup.estimated_price.toString()
+                            timeslot = estimateBookingResponse.estimations[0].pickup.time
+                            Log.e("book", "Delivery type is : $deliveryType")
+                            when (deliveryType) {
+                                "Normal" -> showNormalDeliveryDialog("edit")
+                                else -> showExpressDeliveryDialog()
+                            }
                         }
                     }
                 }
@@ -813,10 +821,9 @@ class BookFragment :
             findNavController().popBackStack()
         }
     }
+
     override fun onResume() {
         super.onResume()
-        getAllCategories()
-        getServiceTypes()
 /*
         if (destinationLocation != null && pickUpLocation != null) {
             deliveryType = ""
