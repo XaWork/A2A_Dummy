@@ -31,6 +31,8 @@ import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -42,6 +44,7 @@ class BookFragment :
     private val customViewModel by viewModels<CustomViewModel>()
     private val viewModel by viewModels<UserViewModel>()
     private val serviceTypes = ArrayList<String>()
+    private var pickupTime: String = ""
     private val cutOffTimeServices = ArrayList<String>()
     private lateinit var viewBinding: FragmentBookBinding
     private lateinit var mainActivity: MainActivity
@@ -80,7 +83,7 @@ class BookFragment :
     private var liveGPS = ""
     private var liveTemperatureTracking = ""
     private var pictureOfDeliveryAndPickup = ""
-    private var deliveryTimeslots = mutableListOf<String>()
+    private lateinit var deliveryTimeslots: List<String>
     private val pickupTimeSlots = mutableListOf<String>()
     private lateinit var normalDialogConfirmButton: TextView
     private lateinit var estimateBookingResponse: EstimateBookingModel
@@ -290,8 +293,12 @@ class BookFragment :
                     }
                 }
                 "Continue" -> {
-                    dialog.dismiss()
-                    moveToOrderConfirmationScreen()
+                    if (deliveryTimeSlot.isEmpty())
+                        viewUtils.showShortToast("Select timeslot for delivery")
+                    else {
+                        dialog.dismiss()
+                        moveToOrderConfirmationScreen()
+                    }
                 }
             }
         }
@@ -303,7 +310,6 @@ class BookFragment :
                 pickupTimeSlots.clear()
                 choosedPickupTimeSlot = "Time"
                 deliveryDate = ""
-                deliveryTimeslots.clear()
                 deliveryTimeSlot = ""
 
                 dialog.show()
@@ -329,14 +335,14 @@ class BookFragment :
             }
             "edit" -> {
                 lytDeliveryOption.visibility = View.VISIBLE
-                estimateBookingResponse.estimations[0].run {
+                estimateBookingResponse.run {
                     tvEstimateCost.text =
-                        "Estimate Cost: \nRs.${pickup.estimated_price}/."
+                        "Estimate Cost: \nRs.${estimations.estimated_price}/."
                     normalDialogConfirmButton.text = "Continue"
 
                     pickupDatePicker.setText(pickupDate)
                     tvPickupTimeSlot.text = choosedPickupTimeSlot
-                    tvCutOffText.text = pickup.remarks
+                    tvCutOffText.text = remarks
                     tvPickupTimeSlot.setupDropDown(pickupTimeSlots.toTypedArray(), { it }, {
                         if (checkTiming(it)) {
                             choosedPickupTimeSlot = it
@@ -349,18 +355,34 @@ class BookFragment :
                     })
 
                     //delivery
-                    deliveryDate = delivery.delivery_date.toDate(
+                    deliveryDate = delivery_date.toDate(
                         "dd/MM/yyyy",
                         "yyyy-MM-dd"
                     )
                     deliveryDatePicker.setText(
                         deliveryDate
                     )
-                    deliveryTimeslots.clear()
-                    deliveryTimeslots = delivery.delivery_slot.split(",").toMutableList()
-                    deliveryTimeSlot = deliveryTimeslots[0]
-                    tvDeliveryTimeSlot.text = deliveryTimeSlot
+                    deliveryTimeslots = delivery_slots
+
+                    /*deliveryTimeSlot = deliveryTimeslots[0]
+                    tvDeliveryTimeSlot.text = deliveryTimeSlot*/
+
                     tvDeliveryTimeSlot.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
+
+                        /*Default Delivery date = 28/10/2022 and Timeslot = Night
+                            Now Suppose, customer changes the timeslot to Morning or afternoon then Delivery date need to change to 29/10/2022.
+                            Example 2
+                            Default Delivery date = 29/10/2022 and Timeslot = Morning
+                            Now Suppose, customer changes the timeslot to afternoon or night then Delivery date = 29/10/2022 same as it is*/
+
+                        checkDeliveryDate(
+                            deliveryDatePicker = deliveryDatePicker,
+                            deliveryDate = estimateBookingResponse.delivery_date.toDate(
+                                "dd/MM/yyyy",
+                                "yyyy-MM-dd"
+                            ),
+                            deliveryTimeSlot = it
+                        )
                         deliveryTimeSlot = it
                         tvDeliveryTimeSlot.text = deliveryTimeSlot
                     }, {
@@ -414,47 +436,66 @@ class BookFragment :
         val tvEstimateCost = dialog.findViewById<TextView>(R.id.tvEstimateCost)
         val tvCutOffText = dialog.findViewById<TextView>(R.id.tvCutOffText)
 
-        deliveryDatePicker.setOnClickListener {
+        /*deliveryDatePicker.setOnClickListener {
             showDatePickerDialog("delivery", deliveryDatePicker)
-        }
+        }*/
 
         confirmButton.setOnClickListener {
             dialog.dismiss()
             when (confirmButton.text) {
                 "Calculate Price" -> estimateBooking()
-                else -> moveToOrderConfirmationScreen()
+                else -> {
+                    if (deliveryTimeSlot.isEmpty()) {
+                        showExpressDeliveryDialog()
+                        viewUtils.showShortToast("Select timeslot for delivery")
+                    }
+                    else {
+                        moveToOrderConfirmationScreen()
+                    }
+                }
             }
         }
 
-        estimateBookingResponse.estimations[0].run {
-            deliveryDate = delivery.delivery_date.toDate(
+        estimateBookingResponse.run {
+            deliveryDate = delivery_date.toDate(
                 "dd/MM/yyyy",
                 "yyyy-MM-dd"
             )
-            pickupDate = pickup.pickup_date.toDate(
-                "dd/MM/yyyy",
-                "yyyy-MM-dd"
-            )
-            choosedPickupTimeSlot = pickup.time
         }
         confirmButton.text = "Continue"
-        tvCutOffText.text = estimateBookingResponse.estimations[0].pickup.remarks
+        tvCutOffText.text = estimateBookingResponse.remarks
         tvEstimateCost.text =
-            "Estimate Cost: \nRs.${estimateBookingResponse.estimations[0].pickup.estimated_price}/."
+            "Estimate Cost: \nRs.${estimateBookingResponse.estimations.estimated_price}/."
 
         deliveryDatePicker.setText(
-            estimateBookingResponse.estimations[0].delivery.delivery_date.toDate(
-                "dd/MM/yy",
+            estimateBookingResponse.delivery_date.toDate(
+                "dd/MM/yyyy",
                 "yyyy-MM-dd"
             )
         )
-        deliveryTimeslots.clear()
+
         deliveryTimeslots =
-            estimateBookingResponse.estimations[0].delivery.delivery_slot.split(",")
-                .toMutableList()
-        deliveryTimeSlot = deliveryTimeslots[0]
-        timePicker.text = deliveryTimeSlot
+            estimateBookingResponse.delivery_slots
+
+        /* deliveryTimeSlot = deliveryTimeslots[0]
+         timePicker.text = deliveryTimeSlot*/
+
         timePicker.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
+
+            /*Default Delivery date = 28/10/2022 and Timeslot = Night
+            Now Suppose, customer changes the timeslot to Morning or afternoon then Delivery date need to change to 29/10/2022.
+
+            Example 2
+            Default Delivery date = 29/10/2022 and Timeslot = Morning
+            Now Suppose, customer changes the timeslot to afternoon or night then Delivery date = 29/10/2022 same as it is*/
+
+            checkDeliveryDate(
+                deliveryDatePicker, estimateBookingResponse.delivery_date.toDate(
+                    "dd/MM/yyyy",
+                    "yyyy-MM-dd"
+                ), it
+            )
+
             deliveryTimeSlot = it
             timePicker.text = deliveryTimeSlot
         }, {
@@ -462,6 +503,45 @@ class BookFragment :
             hideSoftKeyboard()
         })
         dialog.show()
+    }
+
+    private fun checkDeliveryDate(
+        deliveryDatePicker: EditText,
+        deliveryDate: String,
+        deliveryTimeSlot: String
+    ) {
+        val sdf = SimpleDateFormat("HH:mm")
+        val calendar = Calendar.getInstance()
+        val currentTime = sdf.format(calendar.time).split(":").toList()[0].toInt()
+
+        /*4AM to 11AM -> Morning
+        11AM to 16PM -> Afternoon
+        16PM to 20PM -> Evening
+        20PM to 4AM -> Night*/
+
+        val availableTimeslots =
+            when (currentTime) {
+                in 4..10 -> listOf("Morning", "Afternoon", "Evening", "Night")
+                in 11..16 -> listOf("Afternoon", "Evening", "Night")
+                in 16..20 -> listOf("Evening", "Night")
+                else -> listOf("Night")
+            }
+
+        if (!availableTimeslots.contains(deliveryTimeSlot)) {
+            val sd = SimpleDateFormat("dd/MM/yyyy")
+            val cal = Calendar.getInstance()
+            cal.time = sd.parse(deliveryDate) as Date
+            cal.add(Calendar.DATE, 1)
+            val newDate = sd.format(cal.time)
+            deliveryDatePicker.setText(newDate.toString())
+        }
+
+        Log.e(
+            "book",
+            "Check Delivery Data -> \n " +
+                    "Current time : $currentTime\n" +
+                    "Current timeslot : $availableTimeslots\n"
+        )
     }
 
     private fun showDatePickerDialog(type: String, dateTimePicker: EditText) {
@@ -514,7 +594,8 @@ class BookFragment :
         //user can select only timeslot after normal time(this time comes from setting api),
         // if user select time after normal time then return true otherwise false
         val timeslotList = timeSlot.split("-").toList()
-        val dateTime1 = "$pickupDate ${timeslotList[0]}"
+        pickupTime = timeslotList[0]
+        val datetime1 = "$pickupDate ${timeslotList[0]}"
         val dateTime2 = timeslotList[1]
 
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm")
@@ -525,7 +606,7 @@ class BookFragment :
         Log.e("time", "Booking Time : $bookingDateTime\nCurrent Time : $currentDateTime")
 
         try {
-            val time1 = sdf.parse(dateTime1)
+            val time1 = sdf.parse(datetime1)
             val time2 = sdf.parse(currentDateTime.toString())
 
             Log.e("time", "Time difference is : ${time1!!.after(time2)}")
@@ -590,7 +671,7 @@ class BookFragment :
                     viewUtils.stopShowingLoading()
                     checkTimeSlotResponse = result.value
                     pickupTimeSlots.clear()
-                    for (timeslot in result.value.timeslot)
+                    for (timeslot in result.value.normal_slots.slots)
                         pickupTimeSlots.add(timeslot.pickup.time)
 
                     pickupTimeSlots.sort()
@@ -604,6 +685,8 @@ class BookFragment :
     }
 
     private fun estimateBooking() {
+        Log.e("book", "Pickup time : $pickupTime")
+
         val userId = AppUtils(context!!).getUser()!!.id
         viewModel.estimateBooking(
             userId = userId,
@@ -636,22 +719,10 @@ class BookFragment :
                     viewUtils.stopShowingLoading()
                     if (result.value.status == "success") {
                         estimateBookingResponse = result.value
-
-                        if (estimateBookingResponse.estimations.isEmpty()) {
-                            viewUtils.showShortToast("Please change the timeslot")
-                            showNormalDeliveryDialog("pickup timeslot")
-                        }
-                        else {
-                            price =
-                                estimateBookingResponse.estimations[0].pickup.estimated_price.toString()
-                            finalPrice =
-                                estimateBookingResponse.estimations[0].pickup.estimated_price.toString()
-                            timeslot = estimateBookingResponse.estimations[0].pickup.time
-                            Log.e("book", "Delivery type is : $deliveryType")
-                            when (deliveryType) {
-                                "Normal" -> showNormalDeliveryDialog("edit")
-                                else -> showExpressDeliveryDialog()
-                            }
+                        Log.e("book", "Delivery type is : $deliveryType")
+                        when (deliveryType) {
+                            "Normal" -> showNormalDeliveryDialog("edit")
+                            else -> showExpressDeliveryDialog()
                         }
                     }
                 }

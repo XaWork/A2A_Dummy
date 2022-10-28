@@ -70,17 +70,18 @@ class ServiceTypeFragment : Fragment(R.layout.fragment_service_type) {
     }
 
     private fun setData() {
-        val data = ArrayList<CommonModel>()
+        val data = mutableListOf<CommonModel>()
         for (serviceType in serviceTypes) {
-            data.add(serviceType.toCommonModel())
+            if (serviceType.status == 0)
+                data.add(serviceType.toCommonModel())
         }
 
         viewBinding.rvServiceType.run {
             layoutManager = LinearLayoutManager(context)
             adapter = CommonAdapter(
                 context = context,
-                data = data.sortedBy { it.name } as MutableList<CommonModel>,
-                itemClick = object : ItemClick {
+                data = data.let { data.sortedBy { it.name } as MutableList<CommonModel> },
+                        itemClick = object : ItemClick {
                     override fun clickRvItem(name: String, model: Any) {
                         val category = model as CommonModel
                         when (name) {

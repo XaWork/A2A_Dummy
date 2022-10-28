@@ -103,6 +103,9 @@ interface UserRepository {
         pictureRecording: String,
         liveTemparature: String,
         liveTracking: String,
+        sgst: String,
+        cgst: String,
+        igst: String
     ): Status<ConfirmBookingModel>
 
     suspend fun estimateBooking(

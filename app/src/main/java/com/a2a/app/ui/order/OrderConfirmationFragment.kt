@@ -82,17 +82,30 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                     "Category: ${category.name}, ${subCategory.name.uppercase()}"
                 tvWeight.text = "Weight: ${weight}kg"
 
-
                 tvPrice.text =
-                    "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price}"
+                    "Rs. ${estimateBookingResponse.estimations.estimated_price}"
+                tvBookingPrice.text =
+                    "Rs. ${estimateBookingResponse.estimations.booking_price}"
+                tvPickupCost.text =
+                    "Rs. ${estimateBookingResponse.estimations.pickup_price}"
+                tvPriceVideo.text =
+                    "Rs. ${estimateBookingResponse.estimations.video_recording}"
+                tvPricePicture.text =
+                    "Rs. ${estimateBookingResponse.estimations.picture_recording}"
+                tvPriceLiveGPSTracking.text =
+                    "Rs. ${estimateBookingResponse.estimations.live_tracking}"
+                tvPriceLiveTemperatureTracking.text =
+                    "Rs. ${estimateBookingResponse.estimations.live_temparature}"
                 tvItemCost.text =
-                    "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price}"
+                    "Rs. ${estimateBookingResponse.estimations.estimated_price}"
                 tvCgst.text =
-                    "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price_with_gst.cgst}"
+                    "Rs. ${estimateBookingResponse.estimations.estimated_price_with_gst.cgst}"
                 tvIgst.text =
-                    "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price_with_gst.igst}"
+                    "Rs. ${estimateBookingResponse.estimations.estimated_price_with_gst.igst}"
                 tvSgst.text =
-                    "Rs. ${estimateBookingResponse.estimations[0].pickup.estimated_price_with_gst.cgst}"
+                    "Rs. ${estimateBookingResponse.estimations.estimated_price_with_gst.cgst}"
+                tvEstimatePriceWithGst.text =
+                    "Rs. ${estimateBookingResponse.estimations.estimated_price_with_gst.estimated_price}"
 
                 tvDeliveryType.text = "$deliveryType Delivery"
 
@@ -101,8 +114,9 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                     "yyyy-MM-dd"
                 )
                 val pickupTime = estimateBookingResponse.estimations[0].pickup.time*/
-                tvPickupDateTime.text =
-                    "$pickupDate ($pickupTime)"
+                if (deliveryType == "Normal")
+                    tvPickupDateTime.text =
+                        "$pickupDate ($pickupTime)"
 
                 /*val deliveryDate = estimateBookingResponse.estimations[0].delivery.delivery_date.toDate(
                     "dd/MM/yyyy",
@@ -119,9 +133,14 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                     "$deliveryDate ($deliveryTime)"
 
                 price =
-                    estimateBookingResponse.estimations[0].pickup.estimated_price_with_gst.estimated_price
+                    estimateBookingResponse.estimations.estimated_price_with_gst.estimated_price.toFloat() +
+                            estimateBookingResponse.estimations.live_tracking +
+                            estimateBookingResponse.estimations.live_temparature +
+                            estimateBookingResponse.estimations.picture_recording + 8907
+                estimateBookingResponse.estimations.video_recording
 
-                finalFee.text = price.toString()
+                finalFee.text =
+                    estimateBookingResponse.estimations.estimated_price_with_gst.estimated_price
 
             }
         }
@@ -131,7 +150,7 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
         with(viewBinding.incToolbar) {
             toolbar.title = "Order Confirmation"
             toolbar.setNavigationOnClickListener {
-                findNavController().navigate(R.id.action_orderConfirmationFragment_to_bookingConfrimFragment)
+                findNavController().navigate(R.id.action_global_bookFragment)
             }
         }
     }
@@ -173,14 +192,17 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                     currentDate
                 }
             },
-            price = orderConfirmationData.estimateBookingResponse.estimations[0].pickup.estimated_price.toString(),
-            finalPrice = orderConfirmationData.estimateBookingResponse.estimations[0].pickup.estimated_price.toString(),
-            timeslot = orderConfirmationData.estimateBookingResponse.estimations[0].pickup.time,
+            price = orderConfirmationData.estimateBookingResponse.estimations.estimated_price,
+            finalPrice = orderConfirmationData.estimateBookingResponse.estimations.estimated_price,
+            timeslot = "",
             videoRecording = orderConfirmationData.videoRecording,
             pictureRecording = orderConfirmationData.pictureRecording,
             liveTemparature = orderConfirmationData.liveTemperature,
-            liveTracking = orderConfirmationData.liveTracking
-        ).observe(viewLifecycleOwner) { it ->
+            liveTracking = orderConfirmationData.liveTracking,
+            sgst = orderConfirmationData.estimateBookingResponse.estimations.estimated_price_with_gst.sgst,
+            cgst = orderConfirmationData.estimateBookingResponse.estimations.estimated_price_with_gst.cgst,
+            igst = orderConfirmationData.estimateBookingResponse.estimations.estimated_price_with_gst.igst,
+        ).observe(viewLifecycleOwner) {
             when (it) {
                 is Status.Loading -> {
                     //viewUtils.showLoading(parentFragmentManager)

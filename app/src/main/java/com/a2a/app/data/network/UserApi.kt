@@ -145,6 +145,9 @@ interface UserApi {
         @Field("picture_recording") pictureRecording: String,
         @Field("live_temparature") liveTemparature: String,
         @Field("live_tracking") liveTracking: String,
+        @Field("sgst") sgst: String,
+        @Field("cgst") cgst: String,
+        @Field("igst") igst: String,
     ): ConfirmBookingModel
 
     @FormUrlEncoded

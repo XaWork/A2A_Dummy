@@ -4,10 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.viewbinding.ViewBinding
 import com.a2a.app.MainActivity
 import com.a2a.app.R
 import com.a2a.app.common.Status
@@ -27,12 +35,11 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     @Inject
     lateinit var appUtils: AppUtils
+
     @Inject
     lateinit var dialog: ProgressDialog
 
     val viewModel by viewModels<SettingViewModel>()
-    private var token: String? = null
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,6 +50,13 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentSplashBinding.bind(view)
         mainActivity.hideToolbarAndBottomNavigation()
+
+        viewBinding.splashComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                SplashScreen()
+            }
+        }
 
         getSettings()
     }

@@ -321,5 +321,6 @@
     <string name="super_fast">Super Fast</string>
     <string name="profile">Profile</string>
     <string name="calculate_price">Calculate Price</string>
+    <string name="view_details">View Details</string>
 
 </resources>

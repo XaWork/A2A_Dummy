@@ -390,7 +390,10 @@ class UserRepositoryImpl @Inject constructor(
         videoRecording: String,
         pictureRecording: String,
         liveTemparature: String,
-        liveTracking: String
+        liveTracking: String,
+        sgst: String,
+        cgst: String,
+        igst: String
     ): Status<ConfirmBookingModel> {
         return try {
             val response = userApi.confirmBooking(
@@ -414,7 +417,8 @@ class UserRepositoryImpl @Inject constructor(
                 videoRecording,
                 pictureRecording,
                 liveTemparature,
-                liveTracking
+                liveTracking,
+                sgst, cgst, igst
             )
             Status.Success(response)
         } catch (throwable: Throwable) {

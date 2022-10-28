@@ -186,7 +186,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Price"
+                    android:text="Shipping Price"
                     android:textSize="16sp" />
 
                 <TextView
@@ -213,7 +213,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Video Recording of Pickup and Delivery"
+                    android:text="Booking Price"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvBookingPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="Price"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="16dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Video Recording of Pickup and Delivery(Extra)"
                     android:textSize="16sp" />
 
                 <TextView
@@ -240,7 +267,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Picture of Pickup and Delivery"
+                    android:text="Picture of Pickup and Delivery(Extra)"
                     android:textSize="16sp" />
 
                 <TextView
@@ -267,7 +294,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Live GPS Tracking"
+                    android:text="Live GPS Tracking(Extra)"
                     android:textSize="16sp" />
 
                 <TextView
@@ -294,7 +321,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Live Temperature Tracking"
+                    android:text="Live Temperature Tracking(Extra)"
                     android:textSize="16sp" />
 
                 <TextView
@@ -321,11 +348,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Delivery Charges"
+                    android:text="Pickup Cost"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/dFee"
+                    android:id="@+id/tvPickupCost"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -340,6 +367,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:visibility="gone"
                 android:layout_marginHorizontal="16dp"
                 android:weightSum="2">
 
@@ -431,6 +459,33 @@
 
                 <TextView
                     android:id="@+id/tvIgst"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="Price"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="16dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Estimated Price With GST"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvEstimatePriceWithGst"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

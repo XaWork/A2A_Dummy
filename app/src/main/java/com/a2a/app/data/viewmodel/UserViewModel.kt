@@ -313,6 +313,9 @@ class UserViewModel @Inject constructor(
         pictureRecording: String,
         liveTemparature: String,
         liveTracking: String,
+        sgst: String,
+        cgst: String,
+        igst: String
     ): MutableLiveData<Status<ConfirmBookingModel>> {
         val result = MutableLiveData<Status<ConfirmBookingModel>>()
         viewModelScope.launch {
@@ -338,7 +341,8 @@ class UserViewModel @Inject constructor(
                 videoRecording,
                 pictureRecording,
                 liveTemparature,
-                liveTracking
+                liveTracking,
+                sgst, cgst, igst
             )
         }
         return result

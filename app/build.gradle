@@ -32,16 +32,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    /*composeOptions {
-        kotlinCompilerExtensionVersion '1.1.1'
-    }*/
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
     kotlinOptions {
         jvmTarget = '1.8'
     }
     buildFeatures{
         dataBinding true
         viewBinding true
-        //compose true
+        compose true
     }
     namespace 'com.a2a.app'
 }
@@ -58,12 +58,20 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    //compose
+    //-----------------compose ----------------------------------------
+    implementation "androidx.compose.compiler:compiler:$compose_ui_version"
+    implementation "androidx.compose.material:material:1.4.0-alpha01"
+    //implementation "androidx.compose.complier:complier:1.4.0-alpha01"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.4.0-alpha01"
+    implementation "androidx.activity:activity-compose:1.6.1"
+    debugImplementation "androidx.compose.ui:ui-tooling:1.4.0-alpha01"
+
+    //coil
+    implementation("io.coil-kt:coil-compose:2.2.2")
+    //------------------------------------------------------------------
+
     /*implementation "androidx.compose.ui:ui:$compose_ui_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation "androidx.compose.material:material:$compose_ui_version"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"*/
 
     // Import the BoM for the Firebase platform
