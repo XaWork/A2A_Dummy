@@ -117,6 +117,10 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                 if (deliveryType == "Normal")
                     tvPickupDateTime.text =
                         "$pickupDate ($pickupTime)"
+                else{
+                    pickupDatetitle.visibility = View.GONE
+                    tvPickupDateTime.visibility = View.GONE
+                }
 
                 /*val deliveryDate = estimateBookingResponse.estimations[0].delivery.delivery_date.toDate(
                     "dd/MM/yyyy",

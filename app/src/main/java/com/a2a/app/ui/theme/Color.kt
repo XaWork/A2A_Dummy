@@ -1,5 +1,6 @@
 package com.a2a.app.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -14,7 +15,13 @@ val Blue500 = Color(0xFF1333E1)
 val Blue700 = Color(0xFF0c3c8c)
 
 val MainLightBg = Color(0XFFe9ebf0)
-val MainDarkBg = Color(0XFFe9ebf0)
+val MainDarkBg = Color(0xFF28292D)
+
+val DividerLightBg = Color(0XFF000000)
+val DividerDarkBg = Color(0xFFA4A4A7)
+
+val CardLightBg = Color(0XFFFFFFFF)
+val CardDarkBg = Color(0xFF1B1B1B)
 
 val Green500 = Color(0xFF1DBF73)
 val Green700 = Color(0xFF13804D)
@@ -29,14 +36,18 @@ get() = if(isLight) Green700 else Color.Black
 
 val Colors.MainBgColor: Color
 @Composable
-get() = if(isLight) MainLightBg else MainDarkBg
+get() = if(!isSystemInDarkTheme()) MainLightBg else MainDarkBg
 
 val Colors.CardBg: Color
 @Composable
-get() = if(isLight) Color.White else Gray700
+get() = if(!isSystemInDarkTheme()) CardLightBg else CardDarkBg
 
 val Colors.ButtonBg: Color
 @Composable
 get() = if(isLight)  Blue700 else Blue700
+
+val Colors.DividerBg: Color
+@Composable
+get() = if(!isSystemInDarkTheme())  DividerLightBg else DividerDarkBg
 
 

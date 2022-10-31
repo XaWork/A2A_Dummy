@@ -3,6 +3,19 @@ package com.a2a.app.ui.category
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +30,10 @@ import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCategoryBinding
 import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.ui.components.SingleCommon
+import com.a2a.app.ui.theme.CardCornerRadius
+import com.a2a.app.ui.theme.MainBgColor
+import com.a2a.app.ui.theme.ScreenPadding
 import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,45 +84,89 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     }
 
     private fun setData() {
+        //map to common model
         val allCategoryList = ArrayList<CommonModel>()
-
         for (category in allCategories.result) {
             allCategoryList.add(category.toCommonModel())
         }
 
+        //sort data by name
+        allCategoryList.sortedBy { it.name }
+
+        //show in recycle view
+        viewBinding.categoryComposeview.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                CategoryScreen(categories = allCategoryList)
+            }
+        }
+
         //viewBinding.setVariable(BR.dataList, allCategoryList)
-        viewBinding.rvCategory.run {
-            layoutManager = LinearLayoutManager(context)
-            adapter =
-                CommonAdapter(allCategoryList.sortedBy { it.name } as MutableList<CommonModel>,
-                    context,
-                    object : ItemClick {
-                        override fun clickRvItem(name: String, model: Any) {
-                            val category = model as CommonModel
-                            when (name) {
-                                "details" -> {
-                                    mainActivity.hideToolbarAndBottomNavigation()
-                                    val details = Gson().toJson(category, CommonModel::class.java)
-                                    val action =
-                                        CategoryFragmentDirections.actionGlobalViewDetailsFragment(
-                                            details = details,
-                                            name = "Category Details"
-                                        )
-                                    findNavController().navigate(action)
-                                }
-                                "sub" -> {
-                                    mainActivity.hideToolbarAndBottomNavigation()
-                                    val categoryId = category.id
-                                    val action =
-                                        CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
-                                            categoryId = categoryId,
-                                            categoryName = category.name
-                                        )
-                                    findNavController().navigate(action)
-                                }
-                            }
+        /*      viewBinding.rvCategory.run {
+                  layoutManager = LinearLayoutManager(context)
+                  adapter =
+                      CommonAdapter(allCategoryList.sortedBy { it.name } as MutableList<CommonModel>,
+                          context,
+                          object : ItemClick {
+                              override fun clickRvItem(name: String, model: Any) {
+                                  val category = model as CommonModel
+                                  when (name) {
+                                      "details" -> {
+      
+                                      }
+                                      "sub" -> {
+      
+                                      }
+                                  }
+                              }
+                          })
+              }*/
+    }
+
+    private fun moveToViewDetailsScreen(category: CommonModel) {
+        mainActivity.hideToolbarAndBottomNavigation()
+        val details = Gson().toJson(category, CommonModel::class.java)
+        val action =
+            CategoryFragmentDirections.actionGlobalViewDetailsFragment(
+                details = details,
+                name = "Category Details"
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun moveToSubCategoryScreen(category: CommonModel) {
+        mainActivity.hideToolbarAndBottomNavigation()
+        val categoryId = category.id
+        val action =
+            CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
+                categoryId = categoryId,
+                categoryName = category.name
+            )
+        findNavController().navigate(action)
+    }
+
+    @Composable
+    fun CategoryScreen(categories: List<CommonModel>) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.MainBgColor)
+                .padding(ScreenPadding)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(CardCornerRadius))
+            ) {
+                items(categories) { service ->
+                    SingleCommon(item = service) { task, item ->
+                        when (task) {
+                            "details" -> moveToViewDetailsScreen(category = item)
+                            "subcategory" -> moveToSubCategoryScreen(category = item)
                         }
-                    })
+                    }
+                }
+            }
         }
     }
 }

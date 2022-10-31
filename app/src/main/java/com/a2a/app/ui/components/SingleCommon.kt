@@ -1,6 +1,7 @@
 package com.a2a.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -22,6 +23,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
 import com.a2a.app.R
+import com.a2a.app.data.model.CommonModel
 import com.a2a.app.ui.theme.*
 
 //this view is common for all city, service type and category
@@ -29,11 +31,15 @@ import com.a2a.app.ui.theme.*
 // view -> SingleCommon, model -> CommonModel
 
 @Composable
-fun SingleCommon() {
+fun SingleCommon(
+    item: CommonModel,
+    onClick: (task: String, item: CommonModel) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.CardBg)
+            .clickable { onClick("subcategory", item) }
     ) {
 
         Row(
@@ -44,7 +50,7 @@ fun SingleCommon() {
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("")
+                    .data(item.file)
                     .size(Size.ORIGINAL)
                     .crossfade(true)
                     .placeholder(R.drawable.image_placeholder)
@@ -65,7 +71,7 @@ fun SingleCommon() {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Name",
+                    text = item.name,
                     maxLines = 1,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
@@ -80,7 +86,10 @@ fun SingleCommon() {
                             MaterialTheme.colors.ButtonBg,
                             shape = RoundedCornerShape(100)
                         )
-                        .padding(vertical = MediumPadding, horizontal = HighPadding),
+                        .padding(vertical = MediumPadding, horizontal = HighPadding)
+                        .clickable {
+                            onClick("details", item)
+                        },
                     text = stringResource(id = R.string.view_details),
                     color = Color.White,
                     fontWeight = FontWeight.Light,
@@ -93,7 +102,7 @@ fun SingleCommon() {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
-            color = Color.Black,
+            color = MaterialTheme.colors.DividerBg,
             thickness = DividerThickness
         )
     }
@@ -102,5 +111,4 @@ fun SingleCommon() {
 @Preview
 @Composable
 fun SingleCommonPreview() {
-    SingleCommon()
 }

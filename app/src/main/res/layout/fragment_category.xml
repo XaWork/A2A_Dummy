@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <import type="java.util.List"/>
-        <import type="com.a2a.app.data.model.CommonModel"/>
-
-        <variable
-            name="dataList"
-            type="List&lt;CommonModel>" />
-    </data>
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/categoryComposeview">
+<!--
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,5 +24,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/single_common" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
+</androidx.compose.ui.platform.ComposeView>
