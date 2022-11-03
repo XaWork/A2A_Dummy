@@ -15,6 +15,7 @@ val MediumSpacing = 10.dp
 val HighSpacing = 15.dp
 
 val CardCornerRadius = 4.dp
+val CardElevation = 5.dp
 val LowCornerRadius = 4.dp
 val MediumCornerRadius = 8.dp
 val HighCornerRadius = 12.dp

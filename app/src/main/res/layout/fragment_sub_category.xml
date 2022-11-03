@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.category.SubCategoryFragment">
+    android:id="@+id/subCategoryComposeView"
+    />
 
-    <include android:id="@+id/incToolbar"
+    <!--<include android:id="@+id/incToolbar"
         layout="@layout/toolbar" />
 
     <include
         android:id="@+id/includeSubCategory"
-        layout="@layout/content_subcategory" />
+        layout="@layout/content_subcategory" />-->
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -30,6 +30,7 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:background="#ffffff"
+                    android:src="@drawable/logo"
                     android:padding="4dp" />
 <!--
 
@@ -57,6 +58,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:gravity="center"
+            android:text="Sub category name"
             android:maxLines="1"
             android:paddingVertical="4dp"
             android:textAllCaps="true"
@@ -70,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
+            android:text="@string/lorem_short"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"

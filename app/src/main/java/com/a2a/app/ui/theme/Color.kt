@@ -50,4 +50,8 @@ val Colors.DividerBg: Color
 @Composable
 get() = if(!isSystemInDarkTheme())  DividerLightBg else DividerDarkBg
 
+val Colors.TopAppBarBg: Color
+@Composable
+get() = if(!isSystemInDarkTheme())  Blue200 else Blue700
+
 
