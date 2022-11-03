@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,10 +65,11 @@ fun SingleSubCategory(subCategory: AllSubCategoryModel.Result) {
             }
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
-            Text(text = subCategory.name, color = Color.Red)
+            Text(text = subCategory.name, color = Color.Red, textAlign = TextAlign.Center)
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
+            //val lineHeight = MaterialTheme.typography.h2.fontSize * 4 / 2
             Text(
                 text = subCategory.description,
                 fontSize = 14.sp,
@@ -75,7 +77,11 @@ fun SingleSubCategory(subCategory: AllSubCategoryModel.Result) {
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 letterSpacing = TextUnit(1.2F, TextUnitType(1.2.toLong())),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                /*modifier = Modifier.sizeIn(minHeight = with(LocalDensity.current) {
+                    (lineHeight * 2).toDp()
+                }),
+                lineHeight = lineHeight*/
             )
         }
     }
