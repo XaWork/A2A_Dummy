@@ -46,7 +46,7 @@ interface UserRepository {
     ): Status<CommonResponseModel>
 
     suspend fun editAddress(
-        userId: String,
+        addressId: String,
         title: String,
         address: String,
         address2: String,

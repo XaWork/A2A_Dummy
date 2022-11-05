@@ -21,7 +21,8 @@ import com.a2a.app.ui.theme.Blue500
 fun A2AButton(
     modifier: Modifier = Modifier,
     title: String = "A2A",
-    onClick: () -> Unit
+    allCaps: Boolean = true,
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -30,12 +31,12 @@ fun A2AButton(
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = title.uppercase(), color = Color.White)
+        Text(text = if (allCaps) title.uppercase() else title, color = Color.White)
     }
 }
 
 @Preview
 @Composable
 fun A2AButtonPreview() {
-    A2AButton(modifier = Modifier.fillMaxWidth()){}
+    A2AButton(modifier = Modifier.fillMaxWidth()) {}
 }

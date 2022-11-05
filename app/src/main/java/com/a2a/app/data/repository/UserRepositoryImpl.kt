@@ -204,7 +204,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun editAddress(
-        userId: String,
+        addressId: String,
         title: String,
         address: String,
         address2: String,
@@ -219,7 +219,7 @@ class UserRepositoryImpl @Inject constructor(
     ): Status<CommonResponseModel> {
         return try {
             val response = userApi.editAddress(
-                userId,
+                addressId,
                 title,
                 address,
                 address2,

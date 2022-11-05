@@ -156,71 +156,80 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
 
     private fun saveAddress() {
         if (address != null) {
-            viewBinding.run {
-                viewModel.editAddress(
-                    userId = AppUtils(context!!).getUser()?.id!!,
-                    title = name.text.toString(),
-                    contactMobile = etPhone.text.toString(),
-                    city = selectedCityId!!,
-                    state = selectedStateId!!,
-                    pinCode = etPin.text.toString(),
-                    postOffice = etpostOffice.text.toString(),
-                    address = etAddress1.text.toString(),
-                    address2 = etAddress2.text.toString(),
-                    lat = lat.toString(),
-                    lng = long.toString(),
-                    contactName = name.text.toString()
-                ).observe(viewLifecycleOwner) { response ->
-                    when (response) {
-                        is Status.Loading -> {
-                            viewUtils.showLoading(parentFragmentManager)
-                        }
-                        is Status.Success -> {
-                            viewUtils.stopShowingLoading()
-                            viewUtils.showError("Address Saved!")
-                            findNavController().popBackStack()
-                        }
-                        else -> {
-                            viewUtils.stopShowingLoading()
-                            viewUtils.showError("Something went wrong! retry")
-                        }
+            editAddress()
+        }
+        else {
+            addAddress()
+        }
+
+    }
+
+    private fun editAddress() {
+        viewBinding.run {
+            viewModel.editAddress(
+                addressId = address!!.id,
+                title = name.text.toString(),
+                contactMobile = etPhone.text.toString(),
+                city = selectedCityId!!,
+                state = selectedStateId!!,
+                pinCode = etPin.text.toString(),
+                postOffice = etpostOffice.text.toString(),
+                address = etAddress1.text.toString(),
+                address2 = etAddress2.text.toString(),
+                lat = lat.toString(),
+                lng = long.toString(),
+                contactName = name.text.toString()
+            ).observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is Status.Loading -> {
+                        viewUtils.showLoading(parentFragmentManager)
                     }
-                }
-            }
-        } else {
-            viewBinding.run {
-                viewModel.addAddress(
-                    userId = AppUtils(context!!).getUser()?.id!!,
-                    title = name.text.toString(),
-                    contactMobile = etPhone.text.toString(),
-                    city = selectedCityId!!,
-                    state = selectedStateId!!,
-                    pinCode = etPin.text.toString(),
-                    postOffice = etpostOffice.text.toString(),
-                    address = etAddress1.text.toString(),
-                    address2 = etAddress2.text.toString(),
-                    lat = lat.toString(),
-                    lng = long.toString(),
-                    contactName = name.text.toString()
-                ).observe(viewLifecycleOwner) { response ->
-                    when (response) {
-                        is Status.Success -> {
-                            viewUtils.stopShowingLoading()
-                            viewUtils.showError("Address Saved!")
-                            findNavController().popBackStack()
-                        }
-                        is Status.Loading -> {
-                            viewUtils.showLoading(parentFragmentManager)
-                        }
-                        else -> {
-                            viewUtils.stopShowingLoading()
-                            viewUtils.showError("Something went wrong! retry")
-                        }
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        viewUtils.showError("Address Saved!")
+                        findNavController().popBackStack()
+                    }
+                    else -> {
+                        viewUtils.stopShowingLoading()
+                        viewUtils.showError("Something went wrong! retry")
                     }
                 }
             }
         }
+    }
 
+    private fun addAddress() {
+        viewBinding.run {
+            viewModel.addAddress(
+                userId = appUtils.getUser()!!.id,
+                title = name.text.toString(),
+                contactMobile = etPhone.text.toString(),
+                city = selectedCityId!!,
+                state = selectedStateId!!,
+                pinCode = etPin.text.toString(),
+                postOffice = etpostOffice.text.toString(),
+                address = etAddress1.text.toString(),
+                address2 = etAddress2.text.toString(),
+                lat = lat.toString(),
+                lng = long.toString(),
+                contactName = name.text.toString()
+            ).observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is Status.Success -> {
+                        viewUtils.stopShowingLoading()
+                        viewUtils.showError("Address Saved!")
+                        findNavController().popBackStack()
+                    }
+                    is Status.Loading -> {
+                        viewUtils.showLoading(parentFragmentManager)
+                    }
+                    else -> {
+                        viewUtils.stopShowingLoading()
+                        viewUtils.showError("Something went wrong! retry")
+                    }
+                }
+            }
+        }
     }
 
     private fun setData() {

@@ -30,7 +30,7 @@ fun A2ATopAppBar(
                     modifier = Modifier.size(30.dp)
                 )
                 Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
-                Text(text = title, color = Color.White, fontSize = 14.sp)
+                Text(text = title, color = Color.White, fontSize = 16.sp)
             }
         },
         navigationIcon = {

@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/editProfileComposeView">
 
-    <data>
 
-    </data>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.user.BasicCustomerDetailFragment">
-
-        <include
-            android:id="@+id/contentCustomerBasicDetails"
-            layout="@layout/customer_basic_details" />
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+</androidx.compose.ui.platform.ComposeView>

@@ -154,7 +154,7 @@ class UserViewModel @Inject constructor(
     }
 
     fun editAddress(
-        userId: String,
+        addressId: String,
         title: String,
         address: String,
         address2: String,
@@ -172,7 +172,7 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch {
             result.value = Status.Loading
             result.value = userRepository1.editAddress(
-                userId,
+                addressId,
                 title,
                 address,
                 address2,

@@ -2,17 +2,31 @@ package com.a2a.app.ui.order
 
 import android.os.Bundle
 import android.view.View
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.R
-import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.OrderModel
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentOrderBinding
-import com.a2a.app.databinding.StateEmptyBinding
+import com.a2a.app.ui.components.A2AButton
+import com.a2a.app.ui.components.A2ATopAppBar
+import com.a2a.app.ui.theme.MainBgColor
+import com.a2a.app.ui.theme.ScreenPadding
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
@@ -37,16 +51,11 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentOrderBinding.bind(view)
 
-        setToolbar()
-
         if (this::orderList.isInitialized)
             setData()
         else
             getOrders()
 
-        viewBinding.bNext.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun getOrders() {
@@ -69,47 +78,74 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
     }
 
     private fun setData() {
-        if (orderList.isEmpty())
-            showEmpty(getString(R.string.no_orders), getString(R.string.no_order_desc))
-        else
-            viewBinding.contentMyOrders.rvOrders.run {
-                layoutManager = LinearLayoutManager(context)
-                adapter = OrderAdapter(
-                    data = orderList,
-                    context = context,
-                    object : RvItemClick {
-                        override fun clickWithPosition(name: String, position: Int) {
-                            val orderDetails =
-                                Gson().toJson(orderList[position], OrderModel.Result::class.java)
-                            val serverTime = order.serverTime
-                            val action =
-                                OrderFragmentDirections.actionOrderFragmentToOrderDetailsFragment(
-                                    orderDetails = orderDetails,
-                                    serverTime = serverTime
-                                )
-                            findNavController().navigate(action)
-                        }
-                    }
-                )
+        viewBinding.orderComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                OrderScreen()
             }
-    }
-
-    private fun setToolbar() {
-        viewBinding.incToolbar.toolbar.title = "My Orders"
-        viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
         }
     }
 
+    private fun moveToOrderDetailsScreen(ord: OrderModel.Result) {
+        val orderDetails =
+            Gson().toJson(ord, OrderModel.Result::class.java)
+        val serverTime = order.serverTime
+        val action =
+            OrderFragmentDirections.actionOrderFragmentToOrderDetailsFragment(
+                orderDetails = orderDetails,
+                serverTime = serverTime
+            )
+        findNavController().navigate(action)
+    }
 
-    private fun showEmpty(title: String, description: String) {
-        val emptyStateBinding: StateEmptyBinding = viewBinding.emptyState
-        with(emptyStateBinding) {
-            tvEmptyStateTitle.text = title
-            tvEmptyStateDescription.text = description
-            llEmptyStateLayout.visibility = View.VISIBLE
-            bEmptyStateAction.setOnClickListener {
-                findNavController().navigate(R.id.action_global_serviceTypeFragment)
+    private fun moveToServiceTypeScreen() {
+        findNavController().navigate(R.id.action_global_serviceTypeFragment)
+    }
+
+    @Composable
+    fun OrderScreen() {
+        Scaffold(topBar = {
+            A2ATopAppBar(title = "My Orders") {
+                findNavController().popBackStack()
+            }
+        }, content = {
+            ContentOrder()
+        })
+    }
+
+    @Composable
+    fun ContentOrder() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colors.MainBgColor)
+                .padding(ScreenPadding),
+            contentAlignment = Alignment.Center
+        ) {
+            if (orderList.isEmpty())
+                NoOrderFound {
+                    moveToServiceTypeScreen()
+                }
+            else {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(orderList) { order ->
+                        SingleOrder(order = order, onClick = {
+                            moveToOrderDetailsScreen(order)
+                        })
+                    }
+                }
+            }
+
+            A2AButton(
+                title = "Done",
+                allCaps = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(
+                        Alignment.BottomCenter
+                    )
+            ) {
+                findNavController().navigate(R.id.action_global_homeFragment)
             }
         }
     }
