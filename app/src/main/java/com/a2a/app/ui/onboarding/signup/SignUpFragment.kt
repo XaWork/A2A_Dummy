@@ -23,7 +23,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
-
     private var detailId: String? = ""
     private val pattern = Pattern.compile(EMAIL_PATTERN)
     private var matcher: Matcher? = null
@@ -60,9 +59,10 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                     ).show()
                 }
             }
+
             val text =
                 "By signing up, you agree to our <span style=\"color:#de2228\">Terms</span> and <span style=\"color:#de2228\">Conditions</span>"
-            terms.text = Html.fromHtml(text.trim())
+            terms.text = Html.fromHtml(text.trim(), 0)
 
             terms.setOnClickListener {
                 //startActivity(Intent(context, TermsActivity::class.java))
@@ -75,6 +75,9 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                     R.id.rbIndividual -> {
                         showIndividualUserFields()
                     }
+                    R.id.rbPartner -> {
+                        showPartnerUserFields()
+                    }
                 }
             }
         }
@@ -86,6 +89,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             scrollView.stopNestedScroll()
             rbCorporate.setBackgroundResource(R.drawable.storke)
             rbIndividual.setBackgroundResource(0)
+            rbPartner.setBackgroundResource(0)
 
             etFullName.visibility = View.VISIBLE
             etCompanyAddress.visibility = View.VISIBLE
@@ -101,6 +105,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             //set radio button background
             rbIndividual.setBackgroundResource(R.drawable.storke)
             rbCorporate.setBackgroundResource(0)
+            rbPartner.setBackgroundResource(0)
 
             etFullName.visibility = View.GONE
             etCompanyAddress.visibility = View.GONE
@@ -108,6 +113,22 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             etGST.visibility = View.GONE
             etPan.visibility = View.GONE
             etCompanyRegistrationCertificate.visibility = View.GONE
+        }
+    }
+
+    private fun showPartnerUserFields() {
+        with(viewBinding) {
+            //set radio button background
+            rbPartner.setBackgroundResource(R.drawable.storke)
+            rbCorporate.setBackgroundResource(0)
+            rbIndividual.setBackgroundResource(0)
+
+            etFullName.visibility = View.VISIBLE
+            etCompanyAddress.visibility = View.VISIBLE
+            etCompanyName.visibility = View.VISIBLE
+            etGST.visibility = View.VISIBLE
+            etPan.visibility = View.VISIBLE
+            etCompanyRegistrationCertificate.visibility = View.VISIBLE
         }
     }
 

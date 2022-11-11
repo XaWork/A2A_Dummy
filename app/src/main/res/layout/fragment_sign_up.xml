@@ -248,7 +248,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_alignParentBottom="true"
-            android:weightSum="2"
+            android:weightSum="3"
             android:orientation="horizontal">
 
             <RadioButton
@@ -266,6 +266,13 @@
                 android:background="@drawable/storke"
                 android:text="Corporate"
                 android:id="@+id/rbCorporate"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Partner"
+                android:id="@+id/rbPartner"/>
         </RadioGroup>
 
     </RelativeLayout>

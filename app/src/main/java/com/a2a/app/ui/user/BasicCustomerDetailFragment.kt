@@ -1,6 +1,7 @@
 package com.a2a.app.ui.user
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -62,7 +63,7 @@ class BasicCustomerDetailFragment : Fragment(R.layout.fragment_basic_customer_de
         }
     }
 
-    private fun saveData(fullname: String, email: String, mobile: String) {
+    private fun saveData(fullname: String, mobile: String) {
         val userid = appUtils.getUser()!!.id
         viewModel.editProfile(userid, fullname, mobile)
             .observe(viewLifecycleOwner) { response ->
@@ -75,8 +76,10 @@ class BasicCustomerDetailFragment : Fragment(R.layout.fragment_basic_customer_de
                         viewUtils.stopShowingLoading()
                         if (response.value.status.equals("success", ignoreCase = true)) {
                             val customer = appUtils.getUser()?.copy(
-                                fullName = fullname
+                                fullName = fullname,
+                                mobile = mobile,
                             )
+
                             appUtils.saveUser(customer!!)
                             viewUtils.showShortToast(response.value.message)
                             findNavController().popBackStack()
@@ -112,7 +115,7 @@ class BasicCustomerDetailFragment : Fragment(R.layout.fragment_basic_customer_de
     fun ContentEditProfile() {
         val user = appUtils.getUser()!!
         var fullName by remember { mutableStateOf(user.fullName) }
-        var email by remember { mutableStateOf("") }
+        //var email by remember { mutableStateOf(user.email) }
         var mobile by remember { mutableStateOf(user.mobile) }
 
         Box(
@@ -152,7 +155,7 @@ class BasicCustomerDetailFragment : Fragment(R.layout.fragment_basic_customer_de
                 ) {
                     Column(modifier = Modifier.padding(ScreenPadding)) {
                         OutlinedTextField(
-                            value = user.fullName,
+                            value = fullName,
                             onValueChange = { fullName = it },
                             placeholder = { Text(text = "Full name", color = Color.Gray) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -164,21 +167,21 @@ class BasicCustomerDetailFragment : Fragment(R.layout.fragment_basic_customer_de
 
                         Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
-                        OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
-                            placeholder = { Text(text = "Email", color = Color.Gray) },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                            singleLine = true,
-                            maxLines = 1,
-                            modifier = Modifier.fillMaxWidth(),
-                            textStyle = TextStyle(color = Color.Black)
-                        )
+                        /*   OutlinedTextField(
+                               value = email,
+                               onValueChange = { email = it },
+                               placeholder = { Text(text = "Email", color = Color.Gray) },
+                               keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                               singleLine = true,
+                               maxLines = 1,
+                               modifier = Modifier.fillMaxWidth(),
+                               textStyle = TextStyle(color = Color.Black)
+                           )*/
 
                         Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
                         OutlinedTextField(
-                            value = user.mobile,
+                            value = mobile,
                             onValueChange = { mobile = it },
                             placeholder = { Text(text = "Mobile", color = Color.Gray) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -198,10 +201,12 @@ class BasicCustomerDetailFragment : Fragment(R.layout.fragment_basic_customer_de
                 title = "Save Details",
                 allCaps = false
             ) {
-                if (fullName.isEmpty() || email.isEmpty() || mobile.isEmpty())
-                    viewUtils.showShortToast("Fill all data")
+                if (fullName.isEmpty() || mobile.isEmpty())
+                    viewUtils.showShortToast("Fill all data..")
+                else if (mobile.length < 10)
+                    viewUtils.showShortToast("Enter valid mobile..")
                 else
-                    saveData(fullName, email, mobile)
+                    saveData(fullName, mobile)
             }
         }
     }

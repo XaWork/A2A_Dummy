@@ -105,7 +105,7 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
     @Composable
     fun OrderScreen() {
         Scaffold(topBar = {
-            A2ATopAppBar(title = "My Orders") {
+            A2ATopAppBar(title = "My Booking") {
                 findNavController().popBackStack()
             }
         }, content = {
