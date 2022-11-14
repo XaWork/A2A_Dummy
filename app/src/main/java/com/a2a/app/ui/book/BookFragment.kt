@@ -60,7 +60,6 @@ class BookFragment :
     var subCategoryId = ""
     var deliveryType = ""
     private var subCategoryName = ""
-    private var checkAvailability: CheckCutOffTimeModel? = null
     private var bookingDate = ""
     private var pickupDate = ""
     private var choosedPickupTimeSlot = "Time"
@@ -74,11 +73,6 @@ class BookFragment :
     private var width = "1"
     private var height = "1"
     private var length = "1"
-    private var remarks = ""
-    private var timeslot = ""
-    private var price = ""
-    private var pickupTimeslotPosition = 0
-    private var finalPrice = ""
     private var videoRecordingOfPickupAndDelivery = ""
     private var liveGPS = ""
     private var liveTemperatureTracking = ""
@@ -153,24 +147,6 @@ class BookFragment :
                     addressSelection.show(parentFragmentManager, addressSelection.tag)
                 }
             }
-            /*
-                rgDeliveryType.setOnCheckedChangeListener { _, checkedId ->
-                    Log.d("book", "Delivery type is : $deliveryType")
-                    when (checkedId) {
-                        R.id.rbNormal -> {
-                            deliveryType = "Normal"
-                            viewBinding.contentBook.acPickupRange.isEnabled = false
-                        }
-                        R.id.rbExpress -> {
-                            deliveryType = "Express"
-                            viewBinding.contentBook.acPickupRange.isEnabled = true
-                        }
-                        R.id.rbSuperFast -> {
-                            deliveryType = "Superfast"
-                            viewBinding.contentBook.acPickupRange.isEnabled = true
-                        }
-                    }
-                }*/
         }
         viewBinding.btnBookNow.setOnClickListener {
             checkFieldData()
@@ -252,6 +228,12 @@ class BookFragment :
             }
         }
     }
+
+
+
+    //----------------------------------- Date Time Handler ----------------------------------------
+
+
 
     private fun showNormalDeliveryDialog(whatToDo: String) {
         val dialog = Dialog(context!!)
@@ -377,7 +359,7 @@ class BookFragment :
 
                         checkDeliveryDate(
                             deliveryDatePicker = deliveryDatePicker,
-                            deliveryDate = estimateBookingResponse.delivery_date.toDate(
+                            dlDate = estimateBookingResponse.delivery_date.toDate(
                                 "dd/MM/yyyy",
                                 "yyyy-MM-dd"
                             ),
@@ -507,33 +489,36 @@ class BookFragment :
 
     private fun checkDeliveryDate(
         deliveryDatePicker: EditText,
-        deliveryDate: String,
+        dlDate: String,
         deliveryTimeSlot: String
     ) {
         val sdf = SimpleDateFormat("HH:mm")
         val calendar = Calendar.getInstance()
         val currentTime = sdf.format(calendar.time).split(":").toList()[0].toInt()
 
-        /*4AM to 11AM -> Morning
-        11AM to 16PM -> Afternoon
-        16PM to 20PM -> Evening
-        20PM to 4AM -> Night*/
+        /*8AM to 12 -> Morning
+        12AM to 16PM -> Afternoon
+        16PM to 19:30PM -> Evening
+        19:30PM to 22:30AM -> Night*/
+
 
         val availableTimeslots =
             when (currentTime) {
-                in 4..10 -> listOf("Morning", "Afternoon", "Evening", "Night")
-                in 11..16 -> listOf("Afternoon", "Evening", "Night")
+                in 8..12 -> listOf("Morning", "Afternoon", "Evening", "Night")
+                in 12..16 -> listOf("Afternoon", "Evening", "Night")
                 in 16..20 -> listOf("Evening", "Night")
-                else -> listOf("Night")
+                in 20..23-> listOf("Night")
+                else -> listOf("")
             }
 
         if (!availableTimeslots.contains(deliveryTimeSlot)) {
             val sd = SimpleDateFormat("dd/MM/yyyy")
             val cal = Calendar.getInstance()
-            cal.time = sd.parse(deliveryDate) as Date
+            cal.time = sd.parse(dlDate) as Date
             cal.add(Calendar.DATE, 1)
             val newDate = sd.format(cal.time)
             deliveryDatePicker.setText(newDate.toString())
+            deliveryDate = newDate
         }
 
         Log.e(
@@ -617,6 +602,8 @@ class BookFragment :
         }
         return false
     }
+
+    //----------------------------------- API Calls ------------------------------------------------
 
     private fun cutoffTimeCheck() {
         Log.e(
@@ -892,40 +879,4 @@ class BookFragment :
             findNavController().popBackStack()
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-/*
-        if (destinationLocation != null && pickUpLocation != null) {
-            deliveryType = ""
-            with(viewBinding.contentBook) {
-                categories.clear()
-                Log.e("book", "Category size: ${categories.size}")
-
-                tvDestinationAddress.text = destinationLocation!!.address
-                tvPickupAddress.text = pickUpLocation!!.address
-                acCategory.setText(categoryName)
-                acSubCategory.setText(subCategoryName)
-                val pickupRanges = listOf(2, 5, 10, 15, 20, 25, 30, 40)
-                val arrayAdapter = ArrayAdapter(context!!, R.layout.single_text_view, pickupRanges)
-                viewBinding.contentBook.acPickupRange.run {
-                    setAdapter(arrayAdapter)
-                    addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            p0: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
-                        ) {
-                        }
-
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                        override fun afterTextChanged(p0: Editable?) {}
-                    })
-                }
-                setServices()
-            }
-        }*/
-    }
-
 }

@@ -72,6 +72,9 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
         val args: OrderConfirmationFragmentArgs by navArgs()
         orderConfirmationData =
             Gson().fromJson(args.orderConfirmationData, OrderConfirmationData::class.java)
+
+        Log.e("order confirm", "Delivery date : ${orderConfirmationData.deliveryDate}")
+
         setData()
     }
 
