@@ -4,6 +4,7 @@ import android.util.Log
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
 import com.a2a.app.data.network.UserApi
+import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -178,6 +179,10 @@ class UserRepositoryImpl @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun addressList1(userId: String): Flow<AddressListModel> {
+        return userApi.allAddress1(userId = userId)
     }
 
     override suspend fun deleteAddress(

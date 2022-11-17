@@ -2,6 +2,7 @@ package com.a2a.app.data.repository
 
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
+import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Query
 
 interface UserRepository {
@@ -40,6 +41,10 @@ interface UserRepository {
     suspend fun addressList(
         userId: String
     ): Status<AddressListModel>
+
+    fun addressList1(
+        userId: String
+    ): Flow<AddressListModel>
 
     suspend fun deleteAddress(
         addressId: String

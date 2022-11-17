@@ -8,4 +8,5 @@ sealed class Status<out T>{
         val errorBody: String?
     ): Status<Nothing>()
     object Loading: Status<Nothing>()
+    //object Idle: Status<Nothing>()
 }

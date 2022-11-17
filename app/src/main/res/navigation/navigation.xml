@@ -167,7 +167,7 @@
         tools:layout="@layout/fragment_basic_customer_detail" />
     <fragment
         android:id="@+id/addressListFragment"
-        android:name="com.a2a.app.ui.address.AddressListFragment"
+        android:name="com.a2a.app.ui.address.addresslist.AddressListFragment"
         android:label="AddressListFragment" >
         <action
             android:id="@+id/action_addressListFragment_to_addNewAddressFragment"
@@ -175,7 +175,7 @@
     </fragment>
     <fragment
         android:id="@+id/addNewAddressFragment"
-        android:name="com.a2a.app.ui.address.AddNewAddressFragment"
+        android:name="com.a2a.app.ui.address.addeditaddress.AddNewAddressFragment"
         android:label="fragment_add_new_address"
         tools:layout="@layout/fragment_add_new_address" >
         <argument

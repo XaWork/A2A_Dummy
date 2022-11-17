@@ -1,6 +1,7 @@
 package com.a2a.app.data.network
 
 import com.a2a.app.data.model.*
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -44,6 +45,11 @@ interface UserApi {
     suspend fun allAddress(
         @Query("id") userId: String
     ): AddressListModel
+
+    @GET("all-address")
+    fun allAddress1(
+        @Query("id") userId: String
+    ): Flow<AddressListModel>
 
     @FormUrlEncoded
     @POST("assign-plan")
