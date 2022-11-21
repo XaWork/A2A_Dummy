@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,11 +28,15 @@ fun A2AButton(
     Box(
         modifier = modifier
             .background(Blue200)
-            .padding(vertical = 15.dp)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = if (allCaps) title.uppercase() else title, color = Color.White)
+        Text(
+            modifier = modifier.padding(vertical = 15.dp),
+            text = if (allCaps) title.uppercase() else title,
+            color = Color.White,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

@@ -3,15 +3,15 @@ package com.a2a.app.ui.address.addeditaddress
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -40,14 +40,9 @@ import com.a2a.app.data.model.StateListModel
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentAddNewAddressBinding
-import com.a2a.app.hideSoftKeyboard
-import com.a2a.app.setupDropDown
 import com.a2a.app.ui.address.AddressViewModel
 import com.a2a.app.ui.address.LocationPickerActivity
-import com.a2a.app.ui.components.A2AButton
-import com.a2a.app.ui.components.A2ARadioButton
-import com.a2a.app.ui.components.A2ATopAppBar
-import com.a2a.app.ui.components.TextFieldPlaceHolder
+import com.a2a.app.ui.components.*
 import com.a2a.app.ui.theme.A2ATheme
 import com.a2a.app.ui.theme.MainBgColor
 import com.a2a.app.ui.theme.ScreenPadding
@@ -87,6 +82,14 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
         viewBinding = FragmentAddNewAddressBinding.bind(view)
 
         getArgument()
+
+        if (address != null) {
+            selectedCityId = address!!.city.id
+            selectedStateId = address!!.state.id
+            getCityByState()
+            getZipList()
+
+        }
         /*setToolbar()
         with(viewBinding) {
             addressType.setOnCheckedChangeListener { _, checkedId ->
@@ -167,6 +170,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
 
         if (address != null)
             //setData()*/
+
     }
 
     private fun getArgument() {
@@ -180,6 +184,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
         if (requestCode == 23 && resultCode == RESULT_OK) {
             lat = data!!.getDoubleExtra("lat", 0.toDouble())
             long = data.getDoubleExtra("long", 0.toDouble())
+            addressViewModel.updateLatLang(lat.toString(), long.toString())
         }
     }
 
@@ -337,7 +342,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 when (response) {
                     is Status.Success -> {
                         viewUtils.stopShowingLoading()
-                        if (response.value.result.isNullOrEmpty()) {
+                        if (response.value.result.isEmpty()) {
                             viewUtils.showError("No available pin code, select another city/state")
                         }
                         viewBinding.run {
@@ -479,7 +484,6 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
         })
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun ContentAddOrEditAddress(
         fullName: String,
@@ -526,6 +530,12 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
         else
             Icons.Filled.KeyboardArrowDown
 
+        var pinExpanded by remember { mutableStateOf(false) }
+        val pinIcon = if (pinExpanded)
+            Icons.Filled.KeyboardArrowUp
+        else
+            Icons.Filled.KeyboardArrowDown
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -537,13 +547,14 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                     .fillMaxWidth()
                     .padding(ScreenPadding)
                     .align(Alignment.TopCenter)
-                    .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
+                    .verticalScroll(rememberScrollState())
+                //.scrollable(rememberScrollState(), orientation = Orientation.Vertical)
             ) {
                 // full name
                 OutlinedTextField(
                     value = fullName,
                     onValueChange = { onNameChange(it) },
-                    placeholder = { TextFieldPlaceHolder(text = "Full name") },
+                    label = { Text(text = "Full name") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     maxLines = 1,
@@ -557,7 +568,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { if (it.length <= maxMobile) onPhoneChange(it) },
-                    placeholder = { TextFieldPlaceHolder(text = "Phone") },
+                    label = { Text(text = "Phone") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     maxLines = 1,
@@ -576,7 +587,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 OutlinedTextField(
                     value = address1,
                     onValueChange = { onAddress1Change(it) },
-                    placeholder = { TextFieldPlaceHolder(text = "House No, Building Name") },
+                    label = { Text(text = "House No, Building Name") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
@@ -589,7 +600,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 OutlinedTextField(
                     value = address2,
                     onValueChange = { onAddress2Change(it) },
-                    placeholder = { TextFieldPlaceHolder(text = "Road no, Area, Colony") },
+                    label = { Text(text = "Road no, Area, Colony") },
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -629,7 +640,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                         onDismissRequest = { countryExpanded = false },
                         modifier = Modifier.width(with(LocalDensity.current) { textFieldSize.width.toDp() })
                     ) {
-                        countries.forEach { label ->
+                        countries.sorted().forEach { label ->
                             DropdownMenuItem(onClick = {
                                 onCountryChange(label)
                                 countryExpanded = false
@@ -670,6 +681,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                         modifier = Modifier
                             .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
                     ) {
+                        stateResponse.sortBy { it.name }
                         stateResponse.forEach { label ->
                             DropdownMenuItem(onClick = {
                                 onStateChange(label.name)
@@ -678,6 +690,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
 
                                 // set city and pin to empty when user change state
                                 // bcoz according to state we city and pin
+                                addressViewModel.updateLatLang("", "")
                                 onCityChange("")
                                 onPincodeChange("")
                                 getCityByState()
@@ -686,7 +699,6 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                             }
                         }
                     }
-
                 }
                 Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
@@ -716,10 +728,14 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                         expanded = cityExpanded,
                         onDismissRequest = { cityExpanded = false },
                         modifier = Modifier
-                            .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+                            .width(with(LocalDensity.current) { textFieldSize.width.toDp() }),
+                        // This line here will accomplish what you want
+                        //properties = PopupProperties(focusable = false)
                     ) {
+                        cities.sortBy { it.name }
                         cities.forEach { label ->
                             DropdownMenuItem(onClick = {
+                                addressViewModel.updateLatLang("", "")
                                 onPincodeChange("")
                                 cityExpanded = false
                                 onCityChange(label.name)
@@ -736,65 +752,59 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    // pincode
-                    var pinCodeExpanded by remember { mutableStateOf(false) }
-                    val pinCodeIcon = if (pinCodeExpanded)
-                        Icons.Filled.KeyboardArrowUp
-                    else
-                        Icons.Filled.KeyboardArrowDown
 
-                    ExposedDropdownMenuBox(
-                        expanded = pinCodeExpanded,
-                        onExpandedChange = { pinCodeExpanded = !pinCodeExpanded },
-                        modifier = Modifier.weight(1f),
-                    ) {
+                    var pinTextFieldSize by remember { mutableStateOf(Size.Zero) }
+                    // Pincode
+                    Column(modifier = Modifier.weight(1f)) {
                         OutlinedTextField(
                             value = pincode,
-                            onValueChange = { onPincodeChange(it) },
-                            label = { Text(text = "PinCode") },
+                            onValueChange = {
+                                onPincodeChange(it)
+                            },
+                            label = { Text("Pincode") },
+                            modifier = Modifier
+                                .clickable {
+                                    pinExpanded = !pinExpanded
+                                }
+                                .onGloballyPositioned { coordinate ->
+                                    pinTextFieldSize = coordinate.size.toSize()
+                                },
+                            // keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                             maxLines = 1,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            readOnly = true,
                             trailingIcon = {
                                 Icon(
-                                    pinCodeIcon,
+                                    pinIcon,
                                     "",
-                                    modifier = Modifier.clickable { pinCodeExpanded = !pinCodeExpanded })
-                            },
+                                    modifier = Modifier.clickable {
+                                        pinExpanded = !pinExpanded
+                                    })
+                            }
                         )
 
-                        val filteropt = pinList.filter { it.contains(pincode, ignoreCase = true) }
-                        if (filteropt.isNotEmpty()) {
-                            ExposedDropdownMenu(
-                                expanded = pinCodeExpanded,
-                                onDismissRequest = { pinCodeExpanded = false }
-                            ) {
-                                filteropt.forEach { pin ->
-                                    DropdownMenuItem(onClick = {
-                                        onPincodeChange(pin)
-                                        pinCodeExpanded = false
-                                    }) {
-                                        Text(text = pin)
-                                    }
+                        DropdownMenu(
+                            expanded = pinExpanded,
+                            onDismissRequest = { pinExpanded = false },
+                            modifier = Modifier.width(with(LocalDensity.current) { pinTextFieldSize.width.toDp() })
+                        ) {
+                            pinList.sorted().forEach { label ->
+                                DropdownMenuItem(onClick = {
+                                    addressViewModel.updateLatLang("", "")
+                                    onPincodeChange(label)
+                                    pinExpanded = false
+                                }) {
+                                    Text(text = label)
                                 }
                             }
                         }
                     }
-                    /*val maxpin = 6
-                    OutlinedTextField(
-                        value = pincode,
-                        onValueChange = { if (it.length <= maxpin) onPincodeChange(it) },
-                        placeholder = { TextFieldPlaceHolder(text = "PinCode") },
-                        modifier = Modifier.weight(1f),
-                        maxLines = 1,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    )*/
 
                     Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
                     // landmark
                     OutlinedTextField(
                         value = landmark,
                         onValueChange = { onLandmarkChange(it) },
-                        placeholder = { TextFieldPlaceHolder(text = "Landmark") },
+                        label = { Text(text = "Landmark") },
                         modifier = Modifier.weight(1f),
                         maxLines = 1,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -804,12 +814,15 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 //address types
                 Row(modifier = Modifier.fillMaxWidth()) {
                     addressTypes.forEach { label ->
+                        Log.e("Address", "Address type : $label")
+                        if(address!=null)
+                            Log.e("Address", "Already : ${address!!.title}")
+
                         A2ARadioButton(label = label, addressType) {
                             onAddressTypeChange(it)
                         }
                     }
                 }
-
             }
 
             A2AButton(
@@ -819,7 +832,87 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                 title = "Add",
                 allCaps = false
             ) {
+                Log.e(
+                    "Add Address",
+                    "Full name : $fullName\n" +
+                            "Phone : $phone\n" +
+                            "Address1 : $address1\n" +
+                            "Address2 : $address2\n" +
+                            "State : $state\n" +
+                            "City : $city\n" +
+                            "Pincode : $pincode\n" +
+                            "Address Type : $addressType\n" +
+                            "Lat : ${addressViewModel.lat}\n" +
+                            "Lang : ${addressViewModel.lang}"
+                )
+                //first check all fields are fill
+                when {
+                    (fullName.isEmpty()
+                            || phone.isEmpty()
+                            || address1.isEmpty()
+                            || address2.isEmpty()
+                            || state.isEmpty()
+                            || city.isEmpty()
+                            || pincode.isEmpty()
+                            || addressType.isEmpty()) ->
+                        viewUtils.showError("Fill all fields, or select options")
 
+                    (addressViewModel.lat.isEmpty() || addressViewModel.lang.isEmpty()) ->
+                        startActivityForResult(
+                            Intent(
+                                context,
+                                LocationPickerActivity::class.java
+                            ), 23
+                        )
+
+                    else -> {
+                        val userId = appUtils.getUser()!!.id
+                        if (address != null)
+                            editAddress()
+                        else
+                            addAddress(userId)
+                    }
+
+
+                }
+            }
+        }
+    }
+
+    private fun addAddress(userId: String) {
+        addressViewModel.addAddress(
+            userId = userId,
+            cityId = selectedCityId.toString(),
+            stateId = selectedStateId.toString()
+        )
+
+        addressViewModel.saveAddressResponse.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> viewUtils.showLoading(parentFragmentManager)
+                is Status.Success -> {
+                    viewUtils.stopShowingLoading()
+                    findNavController().popBackStack()
+                }
+                is Status.Failure -> viewUtils.stopShowingLoading()
+            }
+        }
+    }
+
+    private fun editAddress() {
+        addressViewModel.editAddress(
+            addressId = address!!.id,
+            cityId = selectedCityId.toString(),
+            stateId = selectedStateId.toString()
+        )
+
+        addressViewModel.editAddressResponse.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> viewUtils.showLoading(parentFragmentManager)
+                is Status.Success -> {
+                    viewUtils.stopShowingLoading()
+                    findNavController().popBackStack()
+                }
+                is Status.Failure -> viewUtils.stopShowingLoading()
             }
         }
     }

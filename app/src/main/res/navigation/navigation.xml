@@ -33,7 +33,7 @@
         app:destination="@id/profileFragment" />
     <fragment
         android:id="@+id/bulkOrderFragment"
-        android:name="com.a2a.app.ui.user.BulkOrderFragment"
+        android:name="com.a2a.app.ui.bulkinquiry.BulkOrderFragment"
         android:label="fragment_bulk_order"
         tools:layout="@layout/fragment_bulk_order" />
     <fragment
