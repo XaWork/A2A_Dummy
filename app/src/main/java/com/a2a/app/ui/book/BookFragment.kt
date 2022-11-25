@@ -2,7 +2,6 @@ package com.a2a.app.ui.book
 
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -31,11 +30,8 @@ import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
 class BookFragment :
@@ -44,6 +40,7 @@ class BookFragment :
     private val customViewModel by viewModels<CustomViewModel>()
     private val viewModel by viewModels<UserViewModel>()
     private val serviceTypes = ArrayList<String>()
+    private lateinit var cutOffTimeResponse: CheckCutOffTimeModel.Result
     private var pickupTime: String = ""
     private val cutOffTimeServices = ArrayList<String>()
     private lateinit var viewBinding: FragmentBookBinding
@@ -128,6 +125,7 @@ class BookFragment :
                 })
                 addressSelection.show(parentFragmentManager, addressSelection.tag)
             }
+
             clDestinationLocation.setOnClickListener {
                 if (pickUpLocation == null)
                     viewUtils.showShortToast("First select pickup location")
@@ -230,9 +228,7 @@ class BookFragment :
     }
 
 
-
     //----------------------------------- Date Time Handler ----------------------------------------
-
 
 
     private fun showNormalDeliveryDialog(whatToDo: String) {
@@ -430,8 +426,7 @@ class BookFragment :
                     if (deliveryTimeSlot.isEmpty()) {
                         showExpressDeliveryDialog()
                         viewUtils.showShortToast("Select timeslot for delivery")
-                    }
-                    else {
+                    } else {
                         moveToOrderConfirmationScreen()
                     }
                 }
@@ -493,23 +488,37 @@ class BookFragment :
         deliveryTimeSlot: String
     ) {
         val sdf = SimpleDateFormat("HH:mm")
-        val calendar = Calendar.getInstance()
-        val currentTime = sdf.format(calendar.time).split(":").toList()[0].toInt()
+        //val calendar = Calendar.getInstance()
+        //val currentTime = sdf.format(calendar.time).split(":").toList()[0].toInt()
 
         /*8AM to 12 -> Morning
         12AM to 16PM -> Afternoon
         16PM to 19:30PM -> Evening
         19:30PM to 22:30AM -> Night*/
 
+        val settings = appUtils.getSettings()!!
+        val morning: Date = sdf.parse(settings.result.morning_end) as Date
+        val afternoon = sdf.parse(settings.result.afternoon_end) as Date
+        val evening = sdf.parse(settings.result.evening_end) as Date
+        val night = sdf.parse(settings.result.night_end) as Date
+
+        val finalDeliveryTime = when (deliveryType) {
+            "Normal" -> sdf.parse(cutOffTimeResponse.final_delivery_time)
+            "Express" -> sdf.parse(cutOffTimeResponse.express_final_delivery_time_first)
+            else -> sdf.parse(cutOffTimeResponse.super_final_delivery_time_first)
+        }
 
         val availableTimeslots =
-            when (currentTime) {
-                in 8..12 -> listOf("Morning", "Afternoon", "Evening", "Night")
-                in 12..16 -> listOf("Afternoon", "Evening", "Night")
-                in 16..20 -> listOf("Evening", "Night")
-                in 20..23-> listOf("Night")
-                else -> listOf("")
-            }
+            if (finalDeliveryTime?.before(morning) == true)
+                listOf("Morning", "Afternoon", "Evening", "Night")
+            else if (finalDeliveryTime?.before(afternoon) == true)
+                listOf("Afternoon", "Evening", "Night")
+            else if (finalDeliveryTime?.before(evening) == true)
+                listOf("Evening", "Night")
+            else if (finalDeliveryTime?.before(night) == true)
+                listOf("Night")
+            else
+                listOf("")
 
         if (!availableTimeslots.contains(deliveryTimeSlot)) {
             val sd = SimpleDateFormat("dd/MM/yyyy")
@@ -524,8 +533,12 @@ class BookFragment :
         Log.e(
             "book",
             "Check Delivery Data -> \n " +
-                    "Current time : $currentTime\n" +
-                    "Current timeslot : $availableTimeslots\n"
+                    "Final Delivery time : $finalDeliveryTime\n" +
+                    "Current timeslot : $availableTimeslots\n" +
+                    "Morning end : $morning\n" +
+                    "Afternoon end : $afternoon\n" +
+                    "Evening end : $evening\n" +
+                    "Night end : $night\n"
         )
     }
 
@@ -581,7 +594,7 @@ class BookFragment :
         val timeslotList = timeSlot.split("-").toList()
         pickupTime = timeslotList[0]
         val datetime1 = "$pickupDate ${timeslotList[0]}"
-        val dateTime2 = timeslotList[1]
+        timeslotList[1]
 
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm")
         val calendar = Calendar.getInstance()
@@ -621,13 +634,8 @@ class BookFragment :
                     }
                     is Status.Success -> {
                         viewUtils.stopShowingLoading()
-                        cutOffTimeServices.clear()
-                        if (result.value.result.normal)
-                            cutOffTimeServices.add("normal")
-                        if (result.value.result.express)
-                            cutOffTimeServices.add("express")
-                        if (result.value.result.super_fast)
-                            cutOffTimeServices.add("super fast")
+                        cutOffTimeResponse = result.value.result
+                        additionalServiceToBeEnabled()
                         setServices()
                     }
                     is Status.Failure -> {
@@ -635,6 +643,22 @@ class BookFragment :
                     }
                 }
             }
+    }
+
+    private fun additionalServiceToBeEnabled() {
+        //if any additional service value is 0 then that should be disable
+        with(viewBinding.contentBook) {
+            cutOffTimeResponse.run {
+                if (picture_recording == "0")
+                    cbPictureOfPickupAndDelivery.isEnabled = false
+                else if (video_recording == "0")
+                    cbVideoRecording.isEnabled = false
+                else if (live_temparature == "0")
+                    cbTemperature.isEnabled = false
+                else if (live_tracking == "0")
+                    cbGps.isEnabled = false
+            }
+        }
     }
 
     private fun checkAvailableTimeslots() {
@@ -780,9 +804,9 @@ class BookFragment :
                 is Status.Loading -> {}
                 is Status.Success -> {
                     serviceTypes.clear()
-                    for (service in result.value.result)
+                    result.value.result.forEach { service ->
                         serviceTypes.add(service.name.lowercase())
-                    //setServices(serviceTypes)
+                    }
                 }
                 is Status.Failure -> {}
             }
@@ -790,6 +814,14 @@ class BookFragment :
     }
 
     private fun setServices() {
+        cutOffTimeServices.clear()
+        if (cutOffTimeResponse.normal)
+            cutOffTimeServices.add("normal")
+        if (cutOffTimeResponse.express)
+            cutOffTimeServices.add("express")
+        if (cutOffTimeResponse.super_fast)
+            cutOffTimeServices.add("super fast")
+
         val finalServiceList = ArrayList<String>()
         for (service in serviceTypes) {
             for (cutOffService in cutOffTimeServices) {

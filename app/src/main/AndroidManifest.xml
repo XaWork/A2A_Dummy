@@ -4,7 +4,6 @@
 
 
     <uses-sdk tools:overrideLibrary="com.maps.route" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.EXTERNAL_STORAGE_READ " />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -41,7 +40,11 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAj0qAw3RL4AhbO3ly22EFMqThPbm7dBT4" />
+            android:value="AIzaSyDEZrLgH6C2hit6yLBqbEpRBgL9tgVspHI" /><!--
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAj0qAw3RL4AhbO3ly22EFMqThPbm7dBT4" />-->
 
         <meta-data
             android:name="com.razorpay.ApiKey"

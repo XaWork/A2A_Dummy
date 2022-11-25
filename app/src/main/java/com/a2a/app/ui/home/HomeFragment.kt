@@ -2,6 +2,7 @@ package com.a2a.app.ui.home
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.view.View
@@ -10,7 +11,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,8 +26,8 @@ import com.a2a.app.data.model.SettingsModel
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentHomeBinding
 import com.a2a.app.mappers.toCommonModel
+import com.a2a.app.ui.address.LocationPickerActivity
 import com.a2a.app.ui.city.CityFragmentDirections
-import com.a2a.app.ui.theme.A2ATheme
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
@@ -53,7 +53,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     @Inject
     lateinit var appUtils: AppUtils
 
-/*    private val pickUpLocationResultLauncher =
+    private val pickUpLocationResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val address = result.data?.getStringExtra("address")
@@ -69,7 +69,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 viewBinding.edtDropOf.setText(address)
                 destinationLocation = address
             }
-        }*/
+        }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,9 +79,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentHomeBinding.bind(view)
-/*
         viewBinding.mainLayout.foreground =
-            ContextCompat.getDrawable(context!!, R.drawable.rect_white)*/
+            ContextCompat.getDrawable(context!!, R.drawable.rect_white)
 
         mainActivity.showToolbarAndBottomNavigation()
         mainActivity.selectHomeNavMenu()
@@ -91,78 +90,68 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         if (appUtils.getHome() == null)
             getHome()
+        else
+            setData()
 
-        viewBinding.homeComposeView.apply {
+        /*   viewBinding.homeComposeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 A2ATheme {
                     HomeScreen()
                 }
             }
-        }
+        }*/
 
-    }
-        //setData()
-/*
         with(viewBinding) {
             tvAboutUs.text = Html.fromHtml(settings!!.result.about_us, 0)
-            *//*  edtPickup.setOnClickListener {
-                  pickUpLocationResultLauncher.launch(
-                      Intent(
-                          context,
-                          LocationPickerActivity::class.java
-                      )
-                  )
-              }
-              edtDropOf.setOnClickListener {
-                  dropOfLocationResultLauncher.launch(
-                      Intent(
-                          context,
-                          LocationPickerActivity::class.java
-                      )
-                  )
-              }*//*
+            edtPickup.setOnClickListener {
+                pickUpLocationResultLauncher.launch(
+                    Intent(
+                        context,
+                        LocationPickerActivity::class.java
+                    )
+                )
+            }
+            edtDropOf.setOnClickListener {
+                dropOfLocationResultLauncher.launch(
+                    Intent(
+                        context,
+                        LocationPickerActivity::class.java
+                    )
+                )
+            }
             btnCalculatePrice.setOnClickListener {
                 mainActivity.hideToolbarAndBottomNavigation()
                 val action = HomeFragmentDirections.actionGlobalBookFragment(
-                    *//*pickupLocation = pickupLocation,
-                    destinationLocation = destinationLocation*//*
+                    pickupLocation = pickupLocation,
+                    destinationLocation = destinationLocation
                 )
                 findNavController().navigate(action)
-                *//*if (pickupLocation.isNullOrEmpty() || destinationLocation.isNullOrEmpty())
-                    toast("Select pickup and delivery location")
-                else {
-                    mainActivity.hideToolbarAndBottomNavigation()
-                    val action = HomeFragmentDirections.actionGlobalBookFragment(
-                        *//**//*pickupLocation = pickupLocation,
-                        destinationLocation = destinationLocation*//**//*
-                    )
-                    findNavController().navigate(action)
-                }*//*
             }
-        }*/
+        }
+    }
 
-            private fun getHome() {
-            viewModel.getHome().observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Status.Loading -> {
-                        viewUtils.showLoading(parentFragmentManager)
-                    }
-                    is Status.Success -> {
-                        viewUtils.stopShowingLoading()
-                        //home = result.value.result
-                        val appUtils = AppUtils(context!!)
-                        appUtils.saveHomePage(result.value.result)
-                        //setData()
-                    }
-                    is Status.Failure -> {
-                        viewUtils.stopShowingLoading()
-                    }
+    private fun getHome() {
+        viewModel.getHome().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Status.Loading -> {
+                    viewUtils.showLoading(parentFragmentManager)
+                }
+                is Status.Success -> {
+                    viewUtils.stopShowingLoading()
+                    home = result.value.result
+                    val appUtils = AppUtils(context!!)
+                    appUtils.saveHomePage(result.value.result)
+                    setData()
+                }
+                is Status.Failure -> {
+                    viewUtils.stopShowingLoading()
                 }
             }
         }
+    }
 
-        /* private fun setData() {
+    private fun setData() {
         viewBinding.mainLayout.foreground = null
         home = AppUtils(context!!).getHome()!!
 
@@ -171,9 +160,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setTestimonials()
         setCustomer()
         setBlog()
-    }*/
+    }
 
-        /*private fun setCities() {
+    private fun setCities() {
         viewBinding.rvCity.run {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = CityAdapter(
@@ -248,54 +237,55 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             })
         }
-    }*/
+    }
+
+    val drawerItemList = listOf(
+        NavigationDrawerItem(
+            id = "home",
+            title = "Home",
+            icon = R.drawable.ic_store_mall_directory_green_24dp
+        ),
+        NavigationDrawerItem(
+            id = "booking",
+            title = "Booking",
+            icon = R.drawable.ic_local_dining_green_24dp
+        ),
+        NavigationDrawerItem(
+            id = "profile",
+            title = "Profile",
+            icon = R.drawable.ic_person_pin_green_24dp
+        ),
+        NavigationDrawerItem(
+            id = "bulk",
+            title = "Bulk Inquiry",
+            icon = R.drawable.shopping_bag
+        ),
+        NavigationDrawerItem(
+            id = "membership",
+            title = "Membership Plan",
+            icon = R.drawable.ic_rank
+        ),
+        NavigationDrawerItem(id = "wallet", title = "Wallet", icon = R.drawable.wallet),
+        NavigationDrawerItem(
+            id = "rate",
+            title = "Rate App",
+            icon = R.drawable.ic_thumb_up_green_24dp
+        ),
+        NavigationDrawerItem(
+            id = "share",
+            title = "Refer App & Earn Points",
+            icon = R.drawable.ic_share_green_24dp
+        ),
+        NavigationDrawerItem(
+            id = "contact",
+            title = "Contact Us",
+            icon = R.drawable.ic_person_pin_green_24dp
+        ),
+        NavigationDrawerItem(id = "logout", title = "Logout", icon = R.drawable.ic_logout),
+    )
 
     @Composable
     fun HomeScreen() {
-        val drawerItemList = listOf(
-            NavigationDrawerItem(
-                id = "home",
-                title = "Home",
-                icon = R.drawable.ic_store_mall_directory_green_24dp
-            ),
-            NavigationDrawerItem(
-                id = "booking",
-                title = "Booking",
-                icon = R.drawable.ic_local_dining_green_24dp
-            ),
-            NavigationDrawerItem(
-                id = "profile",
-                title = "Profile",
-                icon = R.drawable.ic_person_pin_green_24dp
-            ),
-            NavigationDrawerItem(
-                id = "bulk",
-                title = "Bulk Inquiry",
-                icon = R.drawable.shopping_bag
-            ),
-            NavigationDrawerItem(
-                id = "membership",
-                title = "Membership Plan",
-                icon = R.drawable.ic_rank
-            ),
-            NavigationDrawerItem(id = "wallet", title = "Wallet", icon = R.drawable.wallet),
-            NavigationDrawerItem(
-                id = "rate",
-                title = "Rate App",
-                icon = R.drawable.ic_thumb_up_green_24dp
-            ),
-            NavigationDrawerItem(
-                id = "share",
-                title = "Refer App & Earn Points",
-                icon = R.drawable.ic_share_green_24dp
-            ),
-            NavigationDrawerItem(
-                id = "contact",
-                title = "Contact Us",
-                icon = R.drawable.ic_person_pin_green_24dp
-            ),
-            NavigationDrawerItem(id = "logout", title = "Logout", icon = R.drawable.ic_logout),
-        )
 
         val scaffoldState = rememberScaffoldState()
         val scope = rememberCoroutineScope()
@@ -304,7 +294,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             topBar = {
                 A2AMainAppBar(onNavigationItemClick = {
                     scope.launch {
-                         scaffoldState.drawerState.open()
+                        scaffoldState.drawerState.open()
                     }
                 })
             },
@@ -319,6 +309,5 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     @Composable
     fun ContentHome() {
-
     }
 }

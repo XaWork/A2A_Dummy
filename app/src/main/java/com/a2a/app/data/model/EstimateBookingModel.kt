@@ -13,7 +13,7 @@ data class EstimateBookingModel(
         val estimated_price_with_gst: EstimatedPriceWithGst,
         val live_temparature: Int,
         val live_tracking: Int,
-        val pickup_price: Int,
+        val pickup_price: String,
         val picture_recording: Int,
         val video_recording: Int
     ) {

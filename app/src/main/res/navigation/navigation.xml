@@ -226,12 +226,12 @@
         android:label="fragment_book"
         tools:layout="@layout/fragment_book" >
         <argument
-            android:name="PickupLocation"
+            android:name="pickupLocation"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
-            android:name="DestinationLocation1"
+            android:name="destinationLocation"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null" />

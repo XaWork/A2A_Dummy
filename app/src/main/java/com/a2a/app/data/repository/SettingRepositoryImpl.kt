@@ -1,14 +1,10 @@
 package com.a2a.app.data.repository
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.SettingsModel
 import com.a2a.app.data.network.SettingApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
