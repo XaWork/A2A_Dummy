@@ -29,7 +29,8 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun A2ATheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun A2ATheme(darkTheme: Boolean = isSystemInDarkTheme(),
+             content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {

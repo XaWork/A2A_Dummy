@@ -1,4 +1,4 @@
-package com.a2a.app.ui.home
+package com.a2a.app.ui.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +24,8 @@ import com.a2a.app.R
 import com.a2a.app.ui.theme.LowPadding
 import com.a2a.app.ui.theme.MediumPadding
 import com.a2a.app.ui.theme.SpaceBetweenViewsAndSubViews
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun DrawerHeader() {
@@ -60,21 +63,28 @@ fun DrawerHeader() {
 fun DrawerBody(
     items: List<NavigationDrawerItem>,
     modifier: Modifier = Modifier,
+    scope: CoroutineScope,
+    state: ScaffoldState,
     onItemClick: (NavigationDrawerItem) -> Unit
 ) {
     LazyColumn(modifier) {
         items(items = items) { item ->
-            DrawerBodyItem(item = item, onItemClick)
+            DrawerBodyItem(item = item, onItemClick = {
+                scope.launch {
+                    state.drawerState.close()
+                    onItemClick(item)
+                }
+            })
         }
     }
 }
 
 @Composable
-fun DrawerBodyItem(item: NavigationDrawerItem, onItemClick: (NavigationDrawerItem) -> Unit) {
+fun DrawerBodyItem(item: NavigationDrawerItem, onItemClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onItemClick(item) }
+            .clickable { onItemClick() }
             .padding(all = MediumPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {

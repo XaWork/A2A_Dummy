@@ -116,7 +116,7 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                     viewUtils.stopShowingLoading()
                     stateResponse.clear()
                     stateNameList.clear()
-                    if (response.value.result.isNullOrEmpty()) {
+                    if (response.value.result.isEmpty()) {
                         viewUtils.showError("No Data!")
                     } else {
                         stateResponse = response.value.result.toMutableList()
@@ -396,39 +396,6 @@ class AddNewAddressFragment : Fragment(R.layout.fragment_add_new_address) {
                         },
                         list = pinList
                     )
-                    /*Column(modifier = Modifier.weight(1f)) {
-                        OutlinedTextField(value = pincode, onValueChange = {
-                            onPincodeChange(it)
-                        }, label = { Text("Pincode") }, modifier = Modifier
-                            .clickable {
-                                pinExpanded = !pinExpanded
-                            }
-                            .onGloballyPositioned { coordinate ->
-                                pinTextFieldSize = coordinate.size.toSize()
-                            },
-                            // keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            maxLines = 1, readOnly = true, trailingIcon = {
-                                Icon(pinIcon, "", modifier = Modifier.clickable {
-                                    pinExpanded = !pinExpanded
-                                })
-                            })
-
-                        DropdownMenu(
-                            expanded = pinExpanded,
-                            onDismissRequest = { pinExpanded = false },
-                            modifier = Modifier.width(with(LocalDensity.current) { pinTextFieldSize.width.toDp() })
-                        ) {
-                            pinList.sorted().forEach { label ->
-                                DropdownMenuItem(onClick = {
-                                    addressViewModel.updateLatLang("", "")
-                                    onPincodeChange(label)
-                                    pinExpanded = false
-                                }) {
-                                    Text(text = label)
-                                }
-                            }
-                        }
-                    }*/
 
                     Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
                     // landmark

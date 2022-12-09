@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,7 @@ import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCityBinding
 import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.ui.components.A2ATopAppBar
 import com.a2a.app.ui.components.SingleCommon
 import com.a2a.app.ui.theme.*
 import com.a2a.app.utils.ViewUtils
@@ -55,7 +57,7 @@ class CityFragment : Fragment(R.layout.fragment_city) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainActivity.showToolbarAndBottomNavigation()
+        // mainActivity.showToolbarAndBottomNavigation()
         viewBinding = FragmentCityBinding.bind(view)
 
         //setData()
@@ -99,7 +101,7 @@ class CityFragment : Fragment(R.layout.fragment_city) {
         viewBinding.cityComposeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                CityScreen(cityList = cityList)
+                CityScreen(cityList = cityList.sortedBy { it.name })
             }
         }
         //cityList.add(CommonModel("1", "", "customer name", "", "", ""))
@@ -130,34 +132,41 @@ class CityFragment : Fragment(R.layout.fragment_city) {
 
     @Composable
     fun CityScreen(cityList: List<CommonModel>) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.MainBgColor)
-                .padding(ScreenPadding)
-        ) {
-            LazyColumn(
+        Scaffold(topBar = {
+            A2ATopAppBar(title = "Cities") {
+                findNavController().popBackStack()
+            }
+        }, content = {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(CardCornerRadius))
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.MainBgColor)
+                    .padding(ScreenPadding)
             ) {
-                items(cityList) { city ->
-                    SingleCommon(city) { task, item ->
-                        when (task) {
-                            "details" -> {
-                                mainActivity.hideToolbarAndBottomNavigation()
-                                val details =
-                                    Gson().toJson(item, CommonModel::class.java)
-                                val action = CityFragmentDirections.actionGlobalViewDetailsFragment(
-                                    details = details,
-                                    name = "City Details"
-                                )
-                                findNavController().navigate(action)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(CardCornerRadius))
+                ) {
+                    items(cityList) { city ->
+                        SingleCommon(city) { task, item ->
+                            when (task) {
+                                "details" -> {
+                                    //mainActivity.hideToolbarAndBottomNavigation()
+                                    val details =
+                                        Gson().toJson(item, CommonModel::class.java)
+                                    val action =
+                                        CityFragmentDirections.actionGlobalViewDetailsFragment(
+                                            details = details,
+                                            name = "City Details"
+                                        )
+                                    findNavController().navigate(action)
+                                }
                             }
                         }
                     }
                 }
             }
-        }
+        })
     }
 }

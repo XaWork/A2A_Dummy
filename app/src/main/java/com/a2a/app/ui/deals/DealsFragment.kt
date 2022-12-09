@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.a2a.app.MainActivity
@@ -29,6 +31,7 @@ import com.a2a.app.common.Status
 import com.a2a.app.data.model.OfferDealModel
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentDealsBinding
+import com.a2a.app.ui.components.A2ATopAppBar
 import com.a2a.app.ui.components.DialogCoupon
 import com.a2a.app.ui.components.SingleDeal
 import com.a2a.app.ui.theme.MainBgColor
@@ -59,7 +62,7 @@ class DealsFragment : Fragment(R.layout.fragment_deals) {
 
     override fun onResume() {
         super.onResume()
-        mainActivity.showToolbarAndBottomNavigation()
+       // mainActivity.showToolbarAndBottomNavigation()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -132,24 +135,30 @@ class DealsFragment : Fragment(R.layout.fragment_deals) {
         if (showDialog)
             DialogCoupon(setShowDialog = { showDialog = it })
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colors.MainBgColor)
-                .padding(ScreenPadding)
-        ) {
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(offerAndDeals) { deal ->
-                    SingleDeal(deal) { name ->
-                        when (name) {
-                            "Coupon of the day" -> {
-                                getDeals()
-                                showDialog = true
+        Scaffold(topBar = {
+            A2ATopAppBar(title = "Deals") {
+                findNavController().popBackStack()
+            }
+        }, content = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.MainBgColor)
+                    .padding(ScreenPadding)
+            ) {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(offerAndDeals) { deal ->
+                        SingleDeal(deal) { name ->
+                            when (name) {
+                                "Coupon of the day" -> {
+                                    getDeals()
+                                    showDialog = true
+                                }
                             }
                         }
                     }
                 }
             }
-        }
+        })
     }
 }

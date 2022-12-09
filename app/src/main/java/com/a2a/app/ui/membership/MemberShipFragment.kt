@@ -157,6 +157,6 @@ class MemberShipFragment : Fragment(R.layout.fragment_member_ship), PaymentResul
 
     override fun onResume() {
         super.onResume()
-        mainActivity.hideToolbarAndBottomNavigation()
+        //mainActivity.hideToolbarAndBottomNavigation()
     }
 }

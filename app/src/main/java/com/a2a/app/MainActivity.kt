@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-        //pushNotification()
+       /* //pushNotification()
 
         activityTitles = resources.getStringArray(R.array.nav_item_activity_titles)
         setUpNavigationView()
@@ -90,10 +90,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             return@setOnNavigationItemSelectedListener true
-        }
+        }*/
     }
 
-    private fun selectNavMenu() {
+    /*private fun selectNavMenu() {
         viewBinding.navView.menu.getItem(navItemIndex).isChecked = true
     }
 
@@ -270,7 +270,7 @@ class MainActivity : AppCompatActivity() {
         val headerTitle = viewBinding.navView.getHeaderView(0).findViewById<TextView>(R.id.name)
         headerTitle.text = AppUtils(this).getUser()!!.email
     }
-
+*/
 
     private fun pushNotification() {
         try {
@@ -311,6 +311,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+/*
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.book -> {
@@ -353,7 +354,7 @@ class MainActivity : AppCompatActivity() {
         navItemIndex = 0
         invalidateOptionsMenu()
         selectNavMenu()
-    }
+    }*/
 
     override fun onDestroy() {
         super.onDestroy()

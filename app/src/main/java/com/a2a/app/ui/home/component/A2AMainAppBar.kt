@@ -1,4 +1,4 @@
-package com.a2a.app.ui.home
+package com.a2a.app.ui.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,9 @@ import com.a2a.app.ui.theme.TopAppBarBg
 
 @Composable
 fun A2AMainAppBar(
-    onNavigationItemClick: () -> Unit
+    onNavigationItemClick: () -> Unit,
+    onNavigateToWallet: () -> Unit,
+    onNavigateToBook: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -50,14 +52,19 @@ fun A2AMainAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onNavigateToBook() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.home_app_bar_icon1),
-                    contentDescription = ""
+                    contentDescription = "",
+                    tint = Color.White
                 )
             }
-            IconButton(onClick = { }) {
-                Icon(painter = painterResource(id = R.drawable.wallet), contentDescription = "")
+            IconButton(onClick = { onNavigateToWallet() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.wallet),
+                    contentDescription = "",
+                    tint = Color.White
+                )
             }
         }
     )

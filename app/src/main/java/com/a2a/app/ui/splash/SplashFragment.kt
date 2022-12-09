@@ -49,7 +49,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentSplashBinding.bind(view)
-        mainActivity.hideToolbarAndBottomNavigation()
+       // mainActivity.hideToolbarAndBottomNavigation()
 
         viewBinding.splashComposeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

@@ -259,7 +259,7 @@ class OrderConfirmationFragment : Fragment(R.layout.fragment_order_confirmation)
                         viewUtils
                             .showLongToast("Sorry, Pickup Boy is Not Available in selected range. Please increase the pickup Range & Try to Book Again.")
                     } else {
-                        when (result.value.message) {
+                        when (result.value.result.status) {
                             "waiting" -> {}
                             "pickup_boy_assigned" -> {
                                 handler.removeCallbacks(runnable)

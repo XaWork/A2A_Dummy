@@ -88,6 +88,7 @@ class BulkOrderFragment : Fragment(R.layout.fragment_bulk_order) {
     // ------------------------------------ Compose UI ---------------------------------------------
     @Composable
     fun BulkInquiryScreen() {
+
         Scaffold(topBar = {
             A2ATopAppBar("Bulk Inquiry") {
                 findNavController().popBackStack()

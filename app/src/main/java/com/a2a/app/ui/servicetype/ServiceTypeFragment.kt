@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +32,7 @@ import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentServiceTypeBinding
 import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.ui.components.A2ATopAppBar
 import com.a2a.app.ui.components.SingleCommon
 import com.a2a.app.ui.theme.*
 import com.a2a.app.utils.ViewUtils
@@ -59,7 +61,7 @@ class ServiceTypeFragment : Fragment(R.layout.fragment_service_type) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentServiceTypeBinding.bind(view)
-        mainActivity.showToolbarAndBottomNavigation()
+        //mainActivity.showToolbarAndBottomNavigation()
 
         if (this::serviceTypes.isInitialized)
             setData()
@@ -132,7 +134,7 @@ class ServiceTypeFragment : Fragment(R.layout.fragment_service_type) {
     }
 
     private fun moveToViewDetailsScreen(service: CommonModel) {
-        mainActivity.hideToolbarAndBottomNavigation()
+        //  mainActivity.hideToolbarAndBottomNavigation()
         val details = Gson().toJson(service, CommonModel::class.java)
         val action =
             ServiceTypeFragmentDirections.actionGlobalViewDetailsFragment(
@@ -144,26 +146,32 @@ class ServiceTypeFragment : Fragment(R.layout.fragment_service_type) {
 
     @Composable
     fun ServiceTypeScreen(services: List<CommonModel>) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.MainBgColor)
-                .padding(ScreenPadding)
-        ) {
-            LazyColumn(
+        Scaffold(topBar = {
+            A2ATopAppBar(title = "Services") {
+                findNavController().popBackStack()
+            }
+        }, content = {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(CardCornerRadius))
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.MainBgColor)
+                    .padding(ScreenPadding)
             ) {
-                items(services) { service ->
-                    SingleCommon(item = service) { task, item ->
-                        when (task) {
-                            "details" -> moveToViewDetailsScreen(service = item)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(CardCornerRadius))
+                ) {
+                    items(services) { service ->
+                        SingleCommon(item = service) { task, item ->
+                            when (task) {
+                                "details" -> moveToViewDetailsScreen(service = item)
+                            }
                         }
                     }
                 }
             }
-        }
+        })
     }
 
 }

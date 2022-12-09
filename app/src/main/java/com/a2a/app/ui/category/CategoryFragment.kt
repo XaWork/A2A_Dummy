@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +31,7 @@ import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentCategoryBinding
 import com.a2a.app.mappers.toCommonModel
 import com.a2a.app.ui.common.CommonAdapter
+import com.a2a.app.ui.components.A2ATopAppBar
 import com.a2a.app.ui.components.SingleCommon
 import com.a2a.app.ui.theme.CardCornerRadius
 import com.a2a.app.ui.theme.MainBgColor
@@ -59,7 +61,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentCategoryBinding.bind(view)
 
-        mainActivity.showToolbarAndBottomNavigation()
+       // mainActivity.showToolbarAndBottomNavigation()
 
         if (this::allCategories.isInitialized)
             setData()
@@ -124,7 +126,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     }
 
     private fun moveToViewDetailsScreen(category: CommonModel) {
-        mainActivity.hideToolbarAndBottomNavigation()
+       // mainActivity.hideToolbarAndBottomNavigation()
         val details = Gson().toJson(category, CommonModel::class.java)
         val action =
             CategoryFragmentDirections.actionGlobalViewDetailsFragment(
@@ -135,7 +137,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     }
 
     private fun moveToSubCategoryScreen(category: CommonModel) {
-        mainActivity.hideToolbarAndBottomNavigation()
+       // mainActivity.hideToolbarAndBottomNavigation()
         val categoryId = category.id
         val action =
             CategoryFragmentDirections.actionCategoryFragmentToSubCategoryFragment(
@@ -147,26 +149,32 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
 
     @Composable
     fun CategoryScreen(categories: List<CommonModel>) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.MainBgColor)
-                .padding(ScreenPadding)
-        ) {
-            LazyColumn(
+        Scaffold(topBar = {
+            A2ATopAppBar(title = "Category") {
+                findNavController().popBackStack()
+            }
+        }, content = {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(CardCornerRadius))
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.MainBgColor)
+                    .padding(ScreenPadding)
             ) {
-                items(categories) { service ->
-                    SingleCommon(item = service) { task, item ->
-                        when (task) {
-                            "details" -> moveToViewDetailsScreen(category = item)
-                            "subcategory" -> moveToSubCategoryScreen(category = item)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(CardCornerRadius))
+                ) {
+                    items(categories) { service ->
+                        SingleCommon(item = service) { task, item ->
+                            when (task) {
+                                "details" -> moveToViewDetailsScreen(category = item)
+                                "subcategory" -> moveToSubCategoryScreen(category = item)
+                            }
                         }
                     }
                 }
             }
-        }
+        })
     }
 }

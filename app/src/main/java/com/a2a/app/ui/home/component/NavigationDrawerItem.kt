@@ -1,4 +1,4 @@
-package com.a2a.app.ui.home
+package com.a2a.app.ui.home.component
 
 data class NavigationDrawerItem(
     val id: String,

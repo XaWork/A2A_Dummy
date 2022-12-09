@@ -181,7 +181,7 @@ interface UserApi {
 
     @GET("check-order-status")
     suspend fun checkOrderStatus(
-        @Query("req.query.order_id") orderId: String
+        @Query("order_id") orderId: String
     ): CheckOrderStatusModel
 
     @GET("cutofftime-check")

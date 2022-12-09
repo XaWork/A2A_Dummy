@@ -488,13 +488,6 @@ class BookFragment :
         deliveryTimeSlot: String
     ) {
         val sdf = SimpleDateFormat("HH:mm")
-        //val calendar = Calendar.getInstance()
-        //val currentTime = sdf.format(calendar.time).split(":").toList()[0].toInt()
-
-        /*8AM to 12 -> Morning
-        12AM to 16PM -> Afternoon
-        16PM to 19:30PM -> Evening
-        19:30PM to 22:30AM -> Night*/
 
         val settings = appUtils.getSettings()!!
         val morning: Date = sdf.parse(settings.result.morning_end) as Date
@@ -651,11 +644,11 @@ class BookFragment :
             cutOffTimeResponse.run {
                 if (picture_recording == "0")
                     cbPictureOfPickupAndDelivery.isEnabled = false
-                else if (video_recording == "0")
+                if (video_recording == "0")
                     cbVideoRecording.isEnabled = false
-                else if (live_temparature == "0")
+                if (live_temparature == "0")
                     cbTemperature.isEnabled = false
-                else if (live_tracking == "0")
+                if (live_tracking == "0")
                     cbGps.isEnabled = false
             }
         }
