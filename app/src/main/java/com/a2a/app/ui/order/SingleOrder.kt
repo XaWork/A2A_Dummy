@@ -23,7 +23,10 @@ import com.a2a.app.ui.theme.*
 import java.util.*
 
 @Composable
-fun SingleOrder(order: OrderModel.Result, onClick: (order: OrderModel.Result) -> Unit) {
+fun SingleOrder(
+    order: OrderModel.Result,
+    onClick: (order: OrderModel.Result) -> Unit
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

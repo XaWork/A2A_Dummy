@@ -32,12 +32,12 @@ class AppUtils @Inject constructor(@ApplicationContext private val context: Cont
         private val KEY_TOKEN = stringPreferencesKey("key_token")
     }
 
-    val getToken1 : Flow<String?> = context.dataStore.data
-        .map {preference ->
-            preference[USER_TOKEN_KEY]?:""
+    val getToken1: Flow<String?> = context.dataStore.data
+        .map { preference ->
+            preference[USER_TOKEN_KEY] ?: ""
         }
 
-    suspend fun saveToken1(token: String){
+    suspend fun saveToken1(token: String) {
         context.dataStore.edit { preference ->
             preference[USER_TOKEN_KEY] = token
             Log.e("apputils", "token saved and token is : $token")
@@ -86,7 +86,13 @@ class AppUtils @Inject constructor(@ApplicationContext private val context: Cont
     fun getUser(): VerifyOtpModel.Data? {
         val prefs = context.getSharedPreferences(_myPrefName, Context.MODE_PRIVATE)
         val userGson = prefs.getString("user", "")
+
         Log.d("user", "get user is -> \n$userGson")
+        Log.d(
+            "user",
+            "User id is  -> \n${Gson().fromJson(userGson, VerifyOtpModel.Data::class.java).id}"
+        )
+
         return if (TextUtils.isEmpty(userGson))
             null
         else
@@ -150,7 +156,7 @@ class AppUtils @Inject constructor(@ApplicationContext private val context: Cont
             Gson().fromJson(settings, SettingsModel::class.java)
     }
 
-    fun clearSettings(){
+    fun clearSettings() {
         val editor = context.getSharedPreferences(_myPrefName, Context.MODE_PRIVATE).edit()
         editor.putString(setting, null)
         editor.apply()

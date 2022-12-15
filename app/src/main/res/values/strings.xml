@@ -323,4 +323,13 @@
     <string name="calculate_price">Calculate Price</string>
     <string name="view_details">View Details</string>
 
+    <string name="video_recording_pd">Video Recording of Pickup and Delivery</string>
+    <string name="picture_pd">Picture of Pickup and Delivery</string>
+    <string name="live_gps_tracking">Live GPS Tracking</string>
+    <string name="delivery_charges">Delivery Charges</string>
+    <string name="packaging_fee">Packaging Fees</string>
+    <string name="discount">Discount</string>
+    <string name="live_temperature_tracking">Live Temperature Tracking</string>
+    <string name="price">Price</string>
+
 </resources>

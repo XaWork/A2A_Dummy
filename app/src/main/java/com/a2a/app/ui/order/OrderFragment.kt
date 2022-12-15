@@ -25,6 +25,7 @@ import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentOrderBinding
 import com.a2a.app.ui.components.A2AButton
 import com.a2a.app.ui.components.A2ATopAppBar
+import com.a2a.app.ui.theme.A2ATheme
 import com.a2a.app.ui.theme.MainBgColor
 import com.a2a.app.ui.theme.ScreenPadding
 import com.a2a.app.utils.AppUtils
@@ -81,7 +82,9 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
         viewBinding.orderComposeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                OrderScreen()
+                A2ATheme {
+                    OrderScreen()
+                }
             }
         }
     }
@@ -127,7 +130,9 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
                     moveToServiceTypeScreen()
                 }
             else {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                LazyColumn(modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)) {
                     items(orderList) { order ->
                         SingleOrder(order = order, onClick = {
                             moveToOrderDetailsScreen(order)

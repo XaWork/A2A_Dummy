@@ -217,20 +217,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     onItemClick = { navigationDrawerItem ->
                         when (navigationDrawerItem.id) {
                             "home" -> findNavController().navigate(R.id.action_global_homeFragment)
-                            "booking" -> {
-                                findNavController().navigate(R.id.action_global_orderFragment)
-                            }
+                            "booking" -> findNavController().navigate(R.id.action_global_orderFragment)
                             "profile" -> findNavController().navigate(R.id.action_global_profileFragment)
                             "membership" -> findNavController().navigate(R.id.action_global_memberShipFragment)
                             "bulk" -> findNavController().navigate(R.id.action_global_bulkOrderFragment)
                             "my plan" -> findNavController().navigate(R.id.action_global_myPlanFragment)
                             "wallet" -> findNavController().navigate(R.id.action_global_walletFragment)
-                            "rate" -> {
-                                rateApp()
-                            }
-                            "share" -> {
-                                shareApp()
-                            }
+                            "rate" -> rateApp()
+                            "share" -> shareApp()
                             "contact" -> findNavController().navigate(R.id.action_global_contactUsFragment)
                             "logout" -> {
                                 appUtils.logOut()

@@ -3,6 +3,23 @@ package com.a2a.app.ui.order
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,12 +29,14 @@ import com.a2a.app.R
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.OrderModel
-import com.a2a.app.data.model.tIGST
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentOrderDetailsBinding
 import com.a2a.app.toDate
 import com.a2a.app.toDateObject
 import com.a2a.app.toSummary
+import com.a2a.app.ui.components.A2ATopAppBar
+import com.a2a.app.ui.order.order_details.component.*
+import com.a2a.app.ui.theme.*
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
@@ -45,24 +64,6 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
         viewBinding = FragmentOrderDetailsBinding.bind(view)
 
         getArgument()
-        setToolbar()
-
-        /* with(viewBinding.incContentOrderDetails) {
-             tvTrackOrder.setOnClickListener {
-                 if (order.status?.contentEquals("delivery_boy_started")!!) {
-
-                 } else {
-                     showTrackDialog()
-                 }
-             }
-         }*/
-    }
-
-    private fun setToolbar() {
-        viewBinding.incToolbar.toolbar.title = "Order : ${order.orderid}"
-        viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun getArgument() {
@@ -70,114 +71,16 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
         Log.d("order details", "${args.orderDetails}")
         order = Gson().fromJson(args.orderDetails, OrderModel.Result::class.java)
         serverTime = args.serverTime.toString()
-        setData()
 
-    }
-
-    private fun setData() {
-        try {
-            val serverTimeDate = serverTime.toDateObject("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            val createdAt = order.createdDate.toDateObject("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            val diffHours: Long = (serverTimeDate.time - createdAt.time) / (60 * 60 * 1000)
-
-            with(viewBinding.incContentOrderDetails) {
-                /*if (diffHours < 4 && !order.status.contentEquals("cancel")) {
-                    btnCancelOrder.visibility = View.VISIBLE
-                } else {
-                    btnCancelOrder.visibility = View.GONE
+        viewBinding.orderDetailComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                A2ATheme {
+                    OrderDetailsScreen()
                 }
-
-                if (order.status.contentEquals("cancel")) {
-                    tvTrackOrder.visibility = View.GONE
-                } else {
-                    tvTrackOrder.visibility = View.VISIBLE
-                }*/
-
-                //set service
-                val serviceList = ArrayList<String>()
-                //if (!order.status.contentEquals("cancel"))
-                serviceList.add("Track Order")
-                serviceList.add("Live Temperature: ")
-                serviceList.add("View Video Recording of Pickup")
-                serviceList.add("View Video Recording of Delivery")
-                serviceList.add("View Photo of Pickup")
-                serviceList.add("View Photo of Delivery")
-
-                if (serviceList.isEmpty())
-                    rvServices.visibility = View.GONE
-                else
-                    setServices(serviceList)
-
-                //set category, subcategory and price
-                //tvTitle.text = order.category
-                tvWeight.text = "Weight: ${order.totalWeight}Kg"
-                tvTotalItemCost.text = "Rs ${order.finalprice}"
-                tvPrice.text = "Rs ${order.finalprice}"
-
-                deliveryDate.text =
-                    "Delivery Date: ${order.deliveryDate.toDate("dd-MM-yyyy")} ${order.deliveryType}"
-
-                //update shipping info
-                //totalShippingCost = order.totalShippingPrice!!.toFloat()
-                //totalPackagingCost = order.totalPackingPrice!!.toFloat()
-                //tvTotalItemCostValue.text = getString(R.string.Rs_double, order.price.toDouble())
-
-                dFee.text = getString(R.string.Rs_double, totalShippingCost)
-                packingPrice.text = "Rs  $totalPackagingCost"
-
-                if ((order.tIGST().toFloat() != 0f)) {
-                    //llIGSTLayout.visibility = View.VISIBLE
-                    //tvIGSTCost.text = "Rs ${order.tIGST().toFloat()}"
-                } else {
-                    //llSGSTLayout.visibility = View.VISIBLE
-                    //llCGSTLayout.visibility = View.VISIBLE
-                    //tvSGSTCost.text = getString(R.string.Rs_double, order.tSGST().toFloat())
-                    //tvCGSTCost.text = getString(R.string.Rs_double, order.tIGST().toFloat())
-                }
-
-                tvTotal.text = order.finalprice
-
-
-                //update shipping address
-                val userAddress = buildString {
-                    appendln(order.user.address)
-                    //appendln(order.user.address2)
-                    appendln(order.user.city)
-                    appendln(order.user.state)
-                    //append("Pin: ${order.user}")
-                }
-                tvShippingAddress.text = userAddress.trim()
-                tvShippingAddressEdit.visibility = View.GONE
-
             }
-
-            getOrderUpdate()
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
-    }
 
-    private fun setServices(serviceList: ArrayList<String>) {
-        viewBinding.incContentOrderDetails.rvServices.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = OrderServiceAdapter(
-                data = serviceList,
-                context = context,
-                itemClick = object : RvItemClick {
-                    override fun clickWithPosition(name: String, position: Int) {
-                        when (name) {
-                            "Track Order" -> {
-                                val action =
-                                    OrderDetailsFragmentDirections.actionOrderDetailsFragmentToTrackLocationFragment(
-                                        order = Gson().toJson(order, OrderModel.Result::class.java)
-                                    )
-                                findNavController().navigate(action)
-                            }
-                        }
-                    }
-                }
-            )
-        }
     }
 
     private fun getOrderUpdate() {
@@ -187,7 +90,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                     viewUtils.showLoading(parentFragmentManager)
                 }
                 is Status.Success -> {
-                    viewUtils.stopShowingLoading()
+                    viewUtils.stopShowingLoading()/*
                     with(viewBinding.incContentOrderDetails) {
                         if (result.value.updates.isNotEmpty()) {
 
@@ -214,7 +117,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                             updateTitle.visibility = View.GONE
                             rvUpdates.visibility = View.GONE
                         }
-                    }
+                    }*/
                 }
                 is Status.Failure -> {
                     viewUtils.stopShowingLoading()
@@ -223,18 +126,230 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
         }
     }
 
-    private fun showTrackDialog() {
-        /* var dialog: Dialog? = null
-         val handleButtonClick = View.OnClickListener {
-             dialog?.dismiss()
-         }
-         dialog = Utils.showDialog(
-             context!!,
-             AppUtils(context!!).appData,
-             Utils.COMPANION_TRACK,
-             handleButtonClick
-         )
-         dialog.show()*/
+    //----------------------------------- Compose UI ----------------------------------------------
+
+    @Composable
+    fun OrderDetailsScreen() {
+        Scaffold(
+            topBar = {
+                A2ATopAppBar(title = "Order ${order.orderid}") {
+                    findNavController().popBackStack()
+                }
+            },
+            content = {
+                Surface(
+                    color = MaterialTheme.colors.MainBgColor,
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    ContentOrderDetails()
+                }
+            }
+        )
+    }
+
+    @Composable
+    fun ContentOrderDetails() {
+        LazyColumn(modifier = Modifier.padding(ScreenPadding)) {
+            item {
+                OrderItemCard(order.toOrderItemCardData())
+
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+            }
+
+            items(priceList()) { item ->
+                PriceInfoItem(priceInfo = item)
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+                Divider()
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = SpaceBetweenViews),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Final Total: ",
+                        style = MaterialTheme.typography.h6,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "Rs. ${finalCost()}",
+                        style = MaterialTheme.typography.h6,
+                        color = Color.Black
+                    )
+                }
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+                Text(
+                    text = "Updates",
+                    style = MaterialTheme.typography.h6,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+            }
+
+            items(orderServiceList()) { service ->
+                OrderService(service, onClick = { serviceName ->
+                    when (serviceName) {
+                        "live_temperature" -> {}
+                        "pickup_video" -> {}
+                        "delivery_video" -> {}
+                        "pickup_photo" -> {}
+                        "delivery_photo" -> {}
+                    }
+                })
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+                Text(
+                    text = "Shipping To",
+                    style = MaterialTheme.typography.h6,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+                Text(
+                    text = "${order.user.address}\n ${order.user.city} ${order.user.state} ${order.user.zipcode} \n${order.user.country}",
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.White)
+                        .clip(RoundedCornerShape(CardCornerRadius))
+                        .padding(ScreenPadding)
+                )
+            }
+        }
+    }
+
+    private fun priceList(): List<PriceInfo> {
+        return listOf(
+            PriceInfo(
+                tag = getString(R.string.price),
+                price = order.finalprice
+            ),
+            PriceInfo(
+                tag = getString(R.string.video_recording_pd),
+                price = "0"
+            ),
+            PriceInfo(
+                tag = getString(R.string.picture_pd),
+                price = "0"
+            ),
+            PriceInfo(
+                tag = getString(R.string.live_gps_tracking),
+                price = "0"
+            ),
+            PriceInfo(
+                tag = getString(R.string.live_temperature_tracking),
+                price = "0"
+            ),
+            PriceInfo(
+                tag = getString(R.string.delivery_charges),
+                price = order.totalShippingPrice
+            ),
+            PriceInfo(
+                tag = getString(R.string.packaging_fee),
+                price = order.totalPackingPrice
+            ),
+            PriceInfo(
+                tag = getString(R.string.cgst),
+                price = order.cgst
+            ),
+            PriceInfo(
+                tag = getString(R.string.sgst),
+                price = order.sgst
+            ),
+            PriceInfo(
+                tag = getString(R.string.igst),
+                price = order.igst
+            ),
+            PriceInfo(
+                tag = getString(R.string.discount),
+                price = "0"
+            ),
+            PriceInfo(
+                tag = getString(R.string.subscription_discount),
+                price = "0"
+            ),
+            PriceInfo(
+                tag = getString(R.string.wallet_discount),
+                price = order.walletDiscount
+            ),
+        )
+    }
+
+    private fun finalCost(): Float {
+        return order.run {
+            finalprice.toFloat() +
+                    cgst.toFloat() +
+                    igst.toFloat() +
+                    sgst.toFloat() +
+                    walletDiscount.toFloat() +
+                    totalShippingCost +
+                    totalPackagingCost
+        }
+    }
+
+    private fun orderServiceList(): List<OrderServiceData> {
+        val serviceList = ArrayList<OrderServiceData>()
+        serviceList.add(
+            OrderServiceData(
+                id = "track_order",
+                name = "Track Order",
+                enable = order.liveTracking == "Y"
+            )
+        )
+        serviceList.add(
+            OrderServiceData(
+                id = "live_temperature",
+                name = "Live Temperature: ${order.temparature}",
+                enable = order.liveTemparature == "Y"
+            )
+        )
+        serviceList.add(
+            OrderServiceData(
+                id = "pickup_video",
+                name = "View Video Recording of Pickup",
+                enable = order.videoRecording == "Y"
+            )
+        )
+        serviceList.add(
+            OrderServiceData(
+                id = "delivery_video",
+                name = "View Video Recording of Delivery",
+                enable = order.videoRecording == "Y"
+            )
+        )
+        serviceList.add(
+            OrderServiceData(
+                id = "pickup_photo",
+                name = "View Photo of Pickup",
+                enable = order.pictureRecording == "Y"
+            )
+        )
+        serviceList.add(
+            OrderServiceData(
+                id = "delivery_photo",
+                name = "View Photo of Delivery",
+                enable = order.pictureRecording == "Y"
+            )
+        )
+
+        return serviceList
     }
 }
-
