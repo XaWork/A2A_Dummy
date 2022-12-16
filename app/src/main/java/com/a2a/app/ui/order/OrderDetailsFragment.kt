@@ -159,6 +159,13 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                 Divider()
 
                 Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+                Text(
+                    text = "Delivery Date: ${order.deliveryDate.toDate()}",
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(SpaceBetweenViews))
             }
 
             items(priceList()) { item ->

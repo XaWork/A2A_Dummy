@@ -23,6 +23,7 @@ fun A2AButton(
     modifier: Modifier = Modifier,
     title: String = "A2A",
     allCaps: Boolean = true,
+    textColor: Color = Color.White,
     onClick: () -> Unit,
 ) {
     Box(
@@ -34,7 +35,7 @@ fun A2AButton(
         Text(
             modifier = modifier.padding(vertical = 15.dp),
             text = if (allCaps) title.uppercase() else title,
-            color = Color.White,
+            color = textColor,
             textAlign = TextAlign.Center
         )
     }

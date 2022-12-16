@@ -110,8 +110,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             }
                             withStyle(style = SpanStyle(fontSize = 16.sp, color = Color.Gray)) {
                                 //append("Email: ${user.email}\n\nMobile: ${user.mobile}\n")
-                                append(user.email.let{"Email : $it\n\n"})
-                                append(user.mobile.let{"Mobile : $it\n\n"})
+                                append(user.email.let { "Email : $it\n\n" })
+                                append(user.mobile.let { "Mobile : $it\n\n" })
                             }
                         }
                     },
@@ -136,7 +136,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = MaterialTheme.colors.CardBg)
-                    .padding(HighPadding)
                     .clip(RoundedCornerShape(CardCornerRadius))
                     .clickable { moveToAddressListScreen() },
                 contentAlignment = Alignment.Center
@@ -144,7 +143,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 Text(
                     text = stringResource(id = R.string.your_addresses),
                     fontSize = 18.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = HighPadding)
                 )
             }
         }

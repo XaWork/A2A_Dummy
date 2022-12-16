@@ -3,6 +3,15 @@ package com.a2a.app.ui.membership
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,6 +24,9 @@ import com.a2a.app.data.model.AllPlanModel
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentMemberShipBinding
+import com.a2a.app.ui.components.A2ATopAppBar
+import com.a2a.app.ui.theme.LowPadding
+import com.a2a.app.ui.theme.SpaceBetweenViewsAndSubViews
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
 import com.razorpay.Checkout
@@ -158,5 +170,31 @@ class MemberShipFragment : Fragment(R.layout.fragment_member_ship), PaymentResul
     override fun onResume() {
         super.onResume()
         //mainActivity.hideToolbarAndBottomNavigation()
+    }
+
+
+    //----------------------------------- Compose UI -----------------------------------------------
+    @Composable
+    fun MembershipScreen() {
+        Scaffold(topBar = {
+            A2ATopAppBar(title = "Membership Plan") {
+                findNavController().popBackStack()
+            }
+        }, content = {
+
+        })
+    }
+
+    @Composable
+    fun ContentMembership() {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(SpaceBetweenViewsAndSubViews),
+            verticalArrangement = Arrangement.spacedBy(LowPadding)
+        ) {
+            items(allPlans) { plan ->
+
+            }
+        }
     }
 }
