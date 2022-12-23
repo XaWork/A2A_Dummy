@@ -29,6 +29,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.a2a.app.R
 import com.a2a.app.data.model.AllPlanModel
 import com.a2a.app.ui.components.A2AButton
+import com.a2a.app.ui.components.PlanButton
 import com.a2a.app.ui.theme.CardBg
 import com.a2a.app.ui.theme.CardCornerRadius
 import com.a2a.app.ui.theme.MediumPadding
@@ -170,17 +171,9 @@ fun MembershipPlanItem(
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
-            Text(
-                text = "Buy Now",
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(5.dp)
-                    .background(Color.White)
-                    .padding(5.dp)
-                    .clip(RoundedCornerShape(50.dp))
-                    .clickable { onBuyNowClick() }
-            )
+            PlanButton(title = "Buy Now") {
+                onBuyNowClick()
+            }
         }
     }
 

@@ -68,7 +68,7 @@
     <string name="title_activity_order">OrderActivity</string>
     <string name="items">items in cart</string>
     <string name="total">Total</string>
-    <string name="Rs">\u20B9 %d</string>
+    <string name="Rs">\u20B9</string>
     <string name="Rs_double">\u20B9 %.02f</string>
     <string name="nav_home">Home</string>
     <string name="nav_orders">Orders</string>
@@ -331,5 +331,9 @@
     <string name="discount">Discount</string>
     <string name="live_temperature_tracking">Live Temperature Tracking</string>
     <string name="price">Price</string>
+    <string name="recharge">Recharge</string>
+    <string name="wallet_recharge">Wallet Recharge</string>
+    <string name="enter_amount">Enter Amount</string>
+    <string name="customer_support">Customer Support</string>
 
 </resources>

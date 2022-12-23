@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.a2a.app.common.Status
 import com.a2a.app.data.model.OrderModel
 import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentOrderBinding
+import com.a2a.app.ui.common.ErrorLayout
 import com.a2a.app.ui.components.A2AButton
 import com.a2a.app.ui.components.A2ATopAppBar
 import com.a2a.app.ui.theme.A2ATheme
@@ -126,13 +128,19 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
             contentAlignment = Alignment.Center
         ) {
             if (orderList.isEmpty())
-                NoOrderFound {
+                ErrorLayout(
+                    title = "No item in Cart",
+                    description = stringResource(id = R.string.when_you_add_items_to_cart_they_will_appear_here),
+                    showButton = true
+                ) {
                     moveToServiceTypeScreen()
                 }
             else {
-                LazyColumn(modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter)) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                ) {
                     items(orderList) { order ->
                         SingleOrder(order = order, onClick = {
                             moveToOrderDetailsScreen(order)

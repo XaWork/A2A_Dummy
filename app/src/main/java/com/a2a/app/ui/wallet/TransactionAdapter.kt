@@ -38,7 +38,7 @@ class TransactionAdapter(
         MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(context), parent, false))
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(position,data[position], itemClick)
+        holder.bind(position, data[position], itemClick)
     }
 
     override fun getItemCount() = data.size

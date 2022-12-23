@@ -4,11 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.a2a.app.BR
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.data.model.AddressListModel
 import com.a2a.app.databinding.SingleAddressBinding
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 class AddressAdapter(
     private val context: Context,

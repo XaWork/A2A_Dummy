@@ -24,16 +24,17 @@ fun A2AButton(
     title: String = "A2A",
     allCaps: Boolean = true,
     textColor: Color = Color.White,
+    backgroundColor: Color = Blue200,
     onClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
-            .background(Blue200)
+            .background(backgroundColor)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
-            modifier = modifier.padding(vertical = 15.dp),
+            modifier = Modifier.padding(vertical = 15.dp),
             text = if (allCaps) title.uppercase() else title,
             color = textColor,
             textAlign = TextAlign.Center
@@ -44,5 +45,5 @@ fun A2AButton(
 @Preview
 @Composable
 fun A2AButtonPreview() {
-    A2AButton(modifier = Modifier.fillMaxWidth()) {}
+   // A2AButton(modifier = Modifier.fillMaxWidth()) {}
 }

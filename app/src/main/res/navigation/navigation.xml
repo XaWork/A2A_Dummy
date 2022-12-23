@@ -38,7 +38,7 @@
         tools:layout="@layout/fragment_bulk_order" />
     <fragment
         android:id="@+id/contactUsFragment"
-        android:name="com.a2a.app.ui.ContactUsFragment"
+        android:name="com.a2a.app.ui.about.ContactUsFragment"
         android:label="fragment_contact_us"
         tools:layout="@layout/fragment_contact_us" />
     <fragment
@@ -48,7 +48,7 @@
         tools:layout="@layout/fragment_member_ship" />
     <fragment
         android:id="@+id/myPlanFragment"
-        android:name="com.a2a.app.ui.membership.MyPlanFragment"
+        android:name="com.a2a.app.ui.my_plan.MyPlanFragment"
         android:label="fragment_my_plan"
         tools:layout="@layout/fragment_my_plan" />
     <fragment
