@@ -335,5 +335,16 @@
     <string name="wallet_recharge">Wallet Recharge</string>
     <string name="enter_amount">Enter Amount</string>
     <string name="customer_support">Customer Support</string>
+    <string name="booking">Booking</string>
+    <string name="select_service_type">Select Service Type</string>
+    <string name="pickup_range_km">Pickup Range(KM)</string>
+    <string name="weight_kg">Weight(KG)</string>
+    <string name="width_cm">Width(CM)</string>
+    <string name="height_cm">Height(CM)</string>
+    <string name="length_cm">Length(CM)</string>
+    <string name="paid_additional_service_optional">Paid Additional Services(Optional)</string>
+    <string name="remarks">Remarks</string>
+    <string name="select_address">Select Address</string>
+    <string name="no_address_saved">No Address Saved</string>
 
 </resources>

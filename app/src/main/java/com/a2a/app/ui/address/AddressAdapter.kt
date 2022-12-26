@@ -56,3 +56,4 @@ class AddressAdapter(
 
     override fun getItemCount() = data.size
 }
+

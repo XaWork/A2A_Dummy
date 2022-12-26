@@ -11,12 +11,30 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.a2a.app.*
+import com.a2a.app.R
 import com.a2a.app.common.RvItemClick
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.*
@@ -25,10 +43,14 @@ import com.a2a.app.data.viewmodel.UserViewModel
 import com.a2a.app.databinding.FragmentBookBinding
 import com.a2a.app.ui.address.AddressSelectionFragment
 import com.a2a.app.ui.address.SaveAddressListener
+import com.a2a.app.ui.book.component.AddressPicker
+import com.a2a.app.ui.components.*
+import com.a2a.app.ui.theme.*
 import com.a2a.app.utils.AppUtils
 import com.a2a.app.utils.ViewUtils
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -46,6 +68,7 @@ class BookFragment :
     private lateinit var viewBinding: FragmentBookBinding
     private lateinit var mainActivity: MainActivity
     private var categories = ArrayList<AllCategoryModel.Result>()
+    private var addressList: Status<AddressListModel> = Status.Loading
     private lateinit var selectedCategory: AllCategoryModel.Result
     private lateinit var selectedSubCategory: AllSubCategoryModel.Result
     private var categoryNames = ArrayList<String>()
@@ -93,12 +116,12 @@ class BookFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentBookBinding.bind(view)
-        setToolbar()
+        //setToolbar()
 
         getAllCategories()
         getServiceTypes()
 
-        with(viewBinding.contentBook) {
+        /*with(viewBinding.contentBook) {
             val user = appUtils.getUser()
             tvPickupUserName.text = user?.fullName
             tvDestinationUserName.text = user?.fullName
@@ -148,10 +171,10 @@ class BookFragment :
         }
         viewBinding.btnBookNow.setOnClickListener {
             checkFieldData()
-        }
+        }*/
     }
 
-    private fun checkFieldData() {
+    /*private fun checkFieldData() {
         with(viewBinding.contentBook) {
             //get data that user enter
             pickupRange = acPickupRange.text.toString().trim()
@@ -225,7 +248,7 @@ class BookFragment :
                 }
             }
         }
-    }
+    }*/
 
 
     //----------------------------------- Date Time Handler ----------------------------------------
@@ -377,7 +400,7 @@ class BookFragment :
         val orderConfirmationData = OrderConfirmationData(
             selectedCategory,
             selectedSubCategory,
-            viewBinding.contentBook.edtWight.text.toString(),
+            "viewBinding.contentBook.edtWight.text.toString()",
             estimateBookingResponse,
             deliveryType,
             pickupDate,
@@ -640,7 +663,7 @@ class BookFragment :
 
     private fun additionalServiceToBeEnabled() {
         //if any additional service value is 0 then that should be disable
-        with(viewBinding.contentBook) {
+        /*with(viewBinding.contentBook) {
             cutOffTimeResponse.run {
                 if (picture_recording == "0")
                     cbPictureOfPickupAndDelivery.isEnabled = false
@@ -651,7 +674,7 @@ class BookFragment :
                 if (live_tracking == "0")
                     cbGps.isEnabled = false
             }
-        }
+        }*/
     }
 
     private fun checkAvailableTimeslots() {
@@ -758,7 +781,7 @@ class BookFragment :
     }
 
     private fun setAllCategories() {
-        viewBinding.contentBook.acSubCategory.setText("")
+       // viewBinding.contentBook.acSubCategory.setText("")
 
         for (category in categories) {
             categoryNames.add(category.name)
@@ -766,7 +789,7 @@ class BookFragment :
 
         val arrayAdapter = ArrayAdapter(context!!, R.layout.single_text_view, categoryNames)
 
-        viewBinding.contentBook.acCategory.run {
+        /*viewBinding.contentBook.acCategory.run {
             setAdapter(arrayAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -788,6 +811,17 @@ class BookFragment :
                     getSubCategories(categoryId)
                 }
             })
+        }*/
+    }
+
+    private fun setData(){
+        viewBinding.bookComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                A2ATheme {
+                    BookScreen()
+                }
+            }
         }
     }
 
@@ -800,6 +834,7 @@ class BookFragment :
                     result.value.result.forEach { service ->
                         serviceTypes.add(service.name.lowercase())
                     }
+                    setData()
                 }
                 is Status.Failure -> {}
             }
@@ -824,8 +859,7 @@ class BookFragment :
             }
         }
 
-        //finalServiceList.add("normal")
-        viewBinding.contentBook.rvServiceType.run {
+       /* viewBinding.contentBook.rvServiceType.run {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = BookingFormServiceTypeAdapter(
                 data = finalServiceList,
@@ -845,7 +879,7 @@ class BookFragment :
                     }
                 }
             )
-        }
+        }*/
     }
 
 
@@ -875,7 +909,7 @@ class BookFragment :
 
         val arrayAdapter = ArrayAdapter(context!!, R.layout.single_text_view, subCategoryNames)
 
-        viewBinding.contentBook.acSubCategory.run {
+        /*viewBinding.contentBook.acSubCategory.run {
             setAdapter(arrayAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -895,13 +929,370 @@ class BookFragment :
                     }
                 }
             })
+        }*/
+    }
+
+    private fun getAddressList() {
+        val userId = appUtils.getUser()!!.id
+        viewModel.addressList(userId).observe(viewLifecycleOwner) { result ->
+            addressList = when (result) {
+                is Status.Loading -> {
+                    result
+                }
+                is Status.Success -> {
+                    result
+                }
+                is Status.Failure -> {
+                    result
+                }
+            }
         }
     }
 
-    private fun setToolbar() {
+    /*private fun setToolbar() {
         viewBinding.incToolbar.toolbar.title = "Booking"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+    }*/
+
+    //-------------------------------------------- Compose UI --------------------------------------
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun BookScreen() {
+        val bottomSheetScaffoldState =
+            rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+        val scaffoldState =
+            rememberBottomSheetScaffoldState(bottomSheetState = bottomSheetScaffoldState)
+        val scope = rememberCoroutineScope()
+
+        val addresses by remember {
+            mutableStateOf(addressList)
+        }
+
+        var pickupAddress by remember {
+            mutableStateOf("")
+        }
+        var destinationAddress by remember {
+            mutableStateOf("")
+        }
+        var addressType = ""
+
+        BottomSheetScaffold(
+            scaffoldState = scaffoldState,
+            topBar = {
+                A2ATopAppBar(title = stringResource(R.string.booking)) {
+                    findNavController().popBackStack()
+                }
+            }, sheetContent = {
+                Log.e("book", addresses.toString())
+                A2ABottomSheetDialog(
+                    addresses = addresses,
+                    onAddressChange = { address ->
+                        when (addressType) {
+                            "pickup" -> pickupAddress = address
+                            "destination" -> destinationAddress = address
+                        }
+                    },
+                    onClose = {
+                        scope.launch {
+                            bottomSheetScaffoldState.collapse()
+                        }
+                    })
+            },
+            sheetBackgroundColor = MaterialTheme.colors.CardBg,
+            sheetPeekHeight = 0.dp
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.MainBgColor),
+                contentAlignment = Alignment.Center
+            ) {
+                ContentBook(
+                    pickUpAddress = pickupAddress,
+                    destinationAddress = destinationAddress,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(it),
+                    onAddressTypeChange = { type ->
+                        getAddressList()
+                        addressType = type
+                        scope.launch {
+                            if (bottomSheetScaffoldState.isCollapsed)
+                                bottomSheetScaffoldState.expand()
+                            else
+                                bottomSheetScaffoldState.collapse()
+                        }
+                    }
+                )
+
+                A2AButton(
+                    title = stringResource(id = R.string.book_now),
+                    allCaps = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                ) {
+
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ContentBook(
+        pickUpAddress: String,
+        destinationAddress: String,
+        modifier: Modifier = Modifier,
+        onAddressTypeChange: (String) -> Unit
+    ) {
+        val fullName by remember {
+            mutableStateOf("")
+        }
+        var serviceType by remember {
+            mutableStateOf("Normal")
+        }
+        var category by remember {
+            mutableStateOf("")
+        }
+        var subCategory by remember {
+            mutableStateOf("")
+        }
+        var pickupRange by remember {
+            mutableStateOf("")
+        }
+        var weight by remember {
+            mutableStateOf("")
+        }
+        var width by remember {
+            mutableStateOf("")
+        }
+        var height by remember {
+            mutableStateOf("")
+        }
+        var length by remember {
+            mutableStateOf("")
+        }
+        var remarks by remember {
+            mutableStateOf("")
+        }
+        var videoRecording by remember {
+            mutableStateOf(false)
+        }
+        var picture by remember {
+            mutableStateOf(false)
+        }
+        var liveGps by remember {
+            mutableStateOf(false)
+        }
+        var liveTemperature by remember {
+            mutableStateOf(false)
+        }
+        val context = LocalContext.current
+
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(
+                    start = ScreenPadding,
+                    end = ScreenPadding,
+                    top = ScreenPadding,
+                    bottom = 50.dp
+                )
+                .verticalScroll(rememberScrollState())
+        ) {
+            AddressPicker(
+                icon = R.drawable.pickuplocation_icon,
+                title = "Pickup\nLocation",
+                fullName = fullName,
+                address = pickUpAddress,
+                backgroundColor = MaterialTheme.colors.primaryVariant,
+                onClick = {
+                    onAddressTypeChange("pickup")
+                }
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            AddressPicker(
+                icon = R.drawable.destination_icon,
+                title = "Destination\nLocation",
+                fullName = fullName,
+                address = destinationAddress,
+                backgroundColor = MaterialTheme.colors.primary,
+                onClick = {
+                    onAddressTypeChange("destination")
+                }
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+            Text(
+                text = stringResource(id = R.string.select_service_type),
+                fontSize = 14.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        shape = RoundedCornerShape(CardCornerRadius)
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                A2ARadioButton(
+                    label = serviceType,
+                    addressType = serviceType,
+                    onRadioButtonSelected = {
+                        serviceType = it
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViews))
+
+            Text(
+                text = "More Information",
+                color = MaterialTheme.colors.primaryVariant,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ADropDown(
+                value = category,
+                label = stringResource(id = R.string.category),
+                onValueChange = { category = it },
+                list = listOf()
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ADropDown(
+                value = subCategory,
+                label = stringResource(id = R.string.sub_category),
+                onValueChange = { subCategory = it },
+                list = listOf()
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ADropDown(
+                value = pickupRange,
+                label = stringResource(id = R.string.pickup_range_km),
+                onValueChange = { pickupRange = it },
+                list = listOf()
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                A2ATextField(
+                    value = weight,
+                    label = stringResource(id = R.string.weight_kg),
+                    onValueChange = { weight = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
+                A2ATextField(
+                    value = width,
+                    label = stringResource(id = R.string.width_cm),
+                    onValueChange = { width = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                A2ATextField(
+                    value = height,
+                    label = stringResource(id = R.string.height_cm),
+                    onValueChange = { height = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
+                A2ATextField(
+                    value = length,
+                    label = stringResource(id = R.string.length_cm),
+                    onValueChange = { length = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ATextField(
+                value = remarks,
+                label = stringResource(id = R.string.remarks),
+                onValueChange = { remarks = it },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            Text(
+                text = stringResource(id = R.string.paid_additional_service_optional),
+                color = MaterialTheme.colors.primary,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ACheckbox(
+                checked = videoRecording,
+                onCheckedChange = { videoRecording = !videoRecording },
+                title = stringResource(id = R.string.video_recording_pd)
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ACheckbox(
+                checked = picture,
+                onCheckedChange = { picture = !picture },
+                title = stringResource(id = R.string.picture_pd)
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ACheckbox(
+                checked = liveGps,
+                onCheckedChange = { liveGps = !liveGps },
+                title = stringResource(id = R.string.live_gps_tracking)
+            )
+
+            Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
+
+            A2ACheckbox(
+                checked = liveTemperature,
+                onCheckedChange = { liveTemperature = !liveTemperature },
+                title = stringResource(id = R.string.live_temperature_tracking)
+            )
+        }
+    }
+
+    @Preview
+    @Composable
+    fun BookScreenPreview() {
+        BookScreen()
     }
 }
