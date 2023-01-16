@@ -294,4 +294,10 @@
             app:nullable="true"
             android:defaultValue="null" />
     </fragment>
+    <fragment
+        android:id="@+id/bookFragment1"
+        android:name="com.a2a.app.ui.book.BookFragment1"
+        android:label="fragment_book1"
+        tools:layout="@layout/fragment_book1" />
+    <action android:id="@+id/action_global_bookFragment1" app:destination="@id/bookFragment1"/>
 </navigation>

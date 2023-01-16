@@ -50,6 +50,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
+
     private lateinit var mainActivity: MainActivity
     private lateinit var home: HomeModel.Result
     private var settings: SettingsModel? = null
@@ -202,7 +203,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         scaffoldState.drawerState.open()
                     }
                 }, onNavigateToBook = {
-                    findNavController().navigate(R.id.action_global_bookFragment)
+                    findNavController().navigate(R.id.action_global_bookFragment1)
                 }, onNavigateToWallet = {
                     findNavController().navigate(R.id.action_global_walletFragment)
                 })

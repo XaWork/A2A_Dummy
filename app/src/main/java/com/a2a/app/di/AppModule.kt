@@ -3,8 +3,11 @@ package com.a2a.app.di
 import com.a2a.app.data.network.CustomApi
 import com.a2a.app.data.network.SettingApi
 import com.a2a.app.data.network.UserApi
-import com.a2a.app.data.repository.SettingRepository
-import com.a2a.app.data.repository.SettingRepositoryImpl
+import com.a2a.app.data.repository.*
+import com.a2a.app.domain.repository.ProfileRepository
+import com.a2a.app.domain.use_case.custom_use_case.*
+import com.a2a.app.domain.use_case.user_use_case.AddressListUseCase
+import com.a2a.app.domain.use_case.user_use_case.BookUseCases
 import com.a2a.app.utils.Constant.BASE_URL
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -75,9 +78,45 @@ object AppModule {
     @Provides
     fun provideSettingApi(retrofit: Retrofit): SettingApi = retrofit.create()
 
-    /*  @Singleton
+    @Singleton
       @Provides
       fun provideSettingRepository(settingApi: SettingApi): SettingRepository {
           return SettingRepositoryImpl(settingApi)
-      }*/
+      }
+
+    @Singleton
+    @Provides
+    fun provideProfileRepository(userApi: UserApi): ProfileRepository {
+        return ProfileRepositoryImpl(userApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserRepository(userApi: UserApi): UserRepository {
+        return UserRepositoryImpl(userApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCustomRepository(customApi: CustomApi): CustomRepository {
+        return CustomRepositoryImpl(customApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBookUseCases(
+        profileRepository: ProfileRepository,
+        customRepository: CustomRepository,
+        userRepository: UserRepository
+    ): BookUseCases {
+        return BookUseCases(
+            addressListUseCase = AddressListUseCase(profileRepository),
+            categoryUseCase = CategoryUseCase(customRepository),
+            checkAvailableTimeSlotsUseCase = CheckAvailableTimeSlotsUseCase(customRepository),
+            estimateBookingUseCase = EstimateBookingUseCase(userRepository),
+            serviceTypeUseCase = ServiceTypeUseCase(customRepository),
+            subCategoryUseCase = SubCategoryUseCase(customRepository),
+            cutoffTimeCheckUseCase = CutoffTimeCheckUseCase(customRepository)
+        )
+    }
 }

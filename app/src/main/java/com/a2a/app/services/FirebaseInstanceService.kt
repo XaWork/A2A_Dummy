@@ -63,7 +63,7 @@ class FirebaseInstanceService : FirebaseMessagingService() {
         )
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        var pendingIntent: PendingIntent? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val pendingIntent: PendingIntent? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             PendingIntent.getActivity(
                 this, 0, notificationIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

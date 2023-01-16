@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,23 +22,28 @@ import com.a2a.app.ui.theme.*
 @Composable
 fun AddressItem(
     address: AddressListModel.Result,
-    onClick:(String)-> Unit
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
-            .padding(bottom = SpaceBetweenViewsAndSubViews)
             .fillMaxWidth()
+            .padding(bottom = SpaceBetweenViewsAndSubViews)
             .clip(RoundedCornerShape(CardCornerRadius))
-            .background(color = MaterialTheme.colors.CardBg),
+            .background(color = MaterialTheme.colors.MainBgColor)
+            .clickable { onClick() },
         elevation = CardElevation
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(MediumPadding)
-                .clickable { onClick("") }
         ) {
-            Text(text = address.address, fontSize = 18.sp, maxLines = 2, color = Color.DarkGray)
+            Text(
+                text = address.address,
+                fontSize = 18.sp,
+                maxLines = 2,
+                color = Color.DarkGray,
+            )
         }
     }
 }

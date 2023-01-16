@@ -11,15 +11,21 @@ interface CustomRepository {
 
     suspend fun serviceTypes(): Status<ServiceTypeModel>
 
-    suspend fun allCities(): Status<CityModel>
+    suspend fun getAllServices(): ServiceTypeModel
 
+    suspend fun allCities(): Status<CityModel>
 
     suspend fun allCategories(): Status<AllCategoryModel>
 
+    suspend fun getAllCategories(): AllCategoryModel
 
     suspend fun allSubCategories(
         categoryId: String
     ): Status<AllSubCategoryModel>
+
+    suspend fun getAllSubCategories(
+        categoryId: String
+    ): AllSubCategoryModel
 
     suspend fun allStates(): Status<StateListModel>
 
@@ -35,7 +41,13 @@ interface CustomRepository {
     suspend fun checkCutOffTime(
         startCity: String,
         endCity: String,
-    ): Status<CheckCutOffTimeModel>
+    ): CheckCutOffTimeModel
+
+    suspend fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ): NormalTimeslotModel
 
     suspend fun offerDeal(): Status<OfferDealModel>
 }

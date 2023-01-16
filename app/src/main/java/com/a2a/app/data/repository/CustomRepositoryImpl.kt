@@ -203,25 +203,8 @@ class CustomRepositoryImpl @Inject constructor(private val api: CustomApi) : Cus
     override suspend fun checkCutOffTime(
         startCity: String,
         endCity: String
-    ): Status<CheckCutOffTimeModel> {
-        return try {
-            val response = api.checkCutOffTime(startCity, endCity)
-            Status.Success(response)
-        } catch (throwable: Throwable) {
-            Log.e("exception", "safeapicall: $throwable")
-            when (throwable) {
-                is HttpException -> {
-                    Status.Failure(
-                        false,
-                        throwable.code(),
-                        throwable.response()?.errorBody().toString()
-                    )
-                }
-                else -> {
-                    Status.Failure(true, null, throwable.message.toString())
-                }
-            }
-        }
+    ): CheckCutOffTimeModel {
+       return api.checkCutOffTime(startCity, endCity)
     }
 
     override suspend fun offerDeal(): Status<OfferDealModel> {
@@ -243,5 +226,25 @@ class CustomRepositoryImpl @Inject constructor(private val api: CustomApi) : Cus
                 }
             }
         }
+    }
+
+    override suspend fun getAllCategories(): AllCategoryModel{
+        return api.allCategories()
+    }
+
+    override suspend fun getAllSubCategories(categoryId: String): AllSubCategoryModel {
+        return api.allSubCategories(categoryId)
+    }
+
+    override suspend fun normalTimeSlots(
+        scheduleDate: String,
+        destinationAddress: String,
+        pickupAddress: String
+    ): NormalTimeslotModel {
+        return api.normalTimeslots(scheduleDate, destinationAddress, pickupAddress)
+    }
+
+    override suspend fun getAllServices(): ServiceTypeModel {
+        return api.serviceTypes()
     }
 }

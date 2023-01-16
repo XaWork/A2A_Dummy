@@ -40,11 +40,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDEZrLgH6C2hit6yLBqbEpRBgL9tgVspHI" /><!--
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAj0qAw3RL4AhbO3ly22EFMqThPbm7dBT4" />-->
+            android:value="AIzaSyDEZrLgH6C2hit6yLBqbEpRBgL9tgVspHI" />
 
         <meta-data
             android:name="com.razorpay.ApiKey"

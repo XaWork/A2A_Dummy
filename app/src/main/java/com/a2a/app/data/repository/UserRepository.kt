@@ -134,6 +134,27 @@ interface UserRepository {
         liveTracking: String,
     ): Status<EstimateBookingModel>
 
+    suspend fun getEstimateBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String,
+    ):EstimateBookingModel
+
     suspend fun checkOrderStatus(orderId: String): Status<CheckOrderStatusModel>
 
     suspend fun normalTimeSlots(

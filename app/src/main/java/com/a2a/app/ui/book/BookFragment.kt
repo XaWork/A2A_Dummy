@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -116,12 +117,12 @@ class BookFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = FragmentBookBinding.bind(view)
-        //setToolbar()
+        setToolbar()
 
         getAllCategories()
         getServiceTypes()
 
-        /*with(viewBinding.contentBook) {
+        with(viewBinding.contentBook) {
             val user = appUtils.getUser()
             tvPickupUserName.text = user?.fullName
             tvDestinationUserName.text = user?.fullName
@@ -171,10 +172,10 @@ class BookFragment :
         }
         viewBinding.btnBookNow.setOnClickListener {
             checkFieldData()
-        }*/
+        }
     }
 
-    /*private fun checkFieldData() {
+    private fun checkFieldData() {
         with(viewBinding.contentBook) {
             //get data that user enter
             pickupRange = acPickupRange.text.toString().trim()
@@ -248,7 +249,7 @@ class BookFragment :
                 }
             }
         }
-    }*/
+    }
 
 
     //----------------------------------- Date Time Handler ----------------------------------------
@@ -365,8 +366,8 @@ class BookFragment :
                     )
                     deliveryTimeslots = delivery_slots
 
-                    /*deliveryTimeSlot = deliveryTimeslots[0]
-                    tvDeliveryTimeSlot.text = deliveryTimeSlot*/
+                    deliveryTimeSlot = deliveryTimeslots[0]
+                    tvDeliveryTimeSlot.text = deliveryTimeSlot
 
                     tvDeliveryTimeSlot.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
 
@@ -437,9 +438,9 @@ class BookFragment :
         val tvEstimateCost = dialog.findViewById<TextView>(R.id.tvEstimateCost)
         val tvCutOffText = dialog.findViewById<TextView>(R.id.tvCutOffText)
 
-        /*deliveryDatePicker.setOnClickListener {
+        deliveryDatePicker.setOnClickListener {
             showDatePickerDialog("delivery", deliveryDatePicker)
-        }*/
+        }
 
         confirmButton.setOnClickListener {
             dialog.dismiss()
@@ -477,8 +478,8 @@ class BookFragment :
         deliveryTimeslots =
             estimateBookingResponse.delivery_slots
 
-        /* deliveryTimeSlot = deliveryTimeslots[0]
-         timePicker.text = deliveryTimeSlot*/
+         deliveryTimeSlot = deliveryTimeslots[0]
+         timePicker.text = deliveryTimeSlot
 
         timePicker.setupDropDown(deliveryTimeslots.toTypedArray(), { it }, {
 
@@ -663,7 +664,7 @@ class BookFragment :
 
     private fun additionalServiceToBeEnabled() {
         //if any additional service value is 0 then that should be disable
-        /*with(viewBinding.contentBook) {
+        with(viewBinding.contentBook) {
             cutOffTimeResponse.run {
                 if (picture_recording == "0")
                     cbPictureOfPickupAndDelivery.isEnabled = false
@@ -674,7 +675,7 @@ class BookFragment :
                 if (live_tracking == "0")
                     cbGps.isEnabled = false
             }
-        }*/
+        }
     }
 
     private fun checkAvailableTimeslots() {
@@ -781,7 +782,7 @@ class BookFragment :
     }
 
     private fun setAllCategories() {
-       // viewBinding.contentBook.acSubCategory.setText("")
+        // viewBinding.contentBook.acSubCategory.setText("")
 
         for (category in categories) {
             categoryNames.add(category.name)
@@ -789,7 +790,7 @@ class BookFragment :
 
         val arrayAdapter = ArrayAdapter(context!!, R.layout.single_text_view, categoryNames)
 
-        /*viewBinding.contentBook.acCategory.run {
+        viewBinding.contentBook.acCategory.run {
             setAdapter(arrayAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -811,10 +812,10 @@ class BookFragment :
                     getSubCategories(categoryId)
                 }
             })
-        }*/
+        }
     }
 
-    private fun setData(){
+    /*private fun setData() {
         viewBinding.bookComposeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -823,7 +824,7 @@ class BookFragment :
                 }
             }
         }
-    }
+    }*/
 
     private fun getServiceTypes() {
         customViewModel.serviceTypes().observe(viewLifecycleOwner) { result ->
@@ -834,7 +835,7 @@ class BookFragment :
                     result.value.result.forEach { service ->
                         serviceTypes.add(service.name.lowercase())
                     }
-                    setData()
+                    //setData()
                 }
                 is Status.Failure -> {}
             }
@@ -859,29 +860,28 @@ class BookFragment :
             }
         }
 
-       /* viewBinding.contentBook.rvServiceType.run {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = BookingFormServiceTypeAdapter(
-                data = finalServiceList,
-                context = context,
-                itemClick = object : RvItemClick {
-                    override fun clickWithPosition(name: String, position: Int) {
-                        Log.e("book", "Select service is ${name.replace(" ", "")}")
-                        deliveryType = name
-                        when (name) {
-                            "Normal" ->
-                                viewBinding.contentBook.acPickupRange.isEnabled = false
-                            "Express" ->
-                                viewBinding.contentBook.acPickupRange.isEnabled = true
-                            "Suprefast" ->
-                                viewBinding.contentBook.acPickupRange.isEnabled = true
-                        }
-                    }
-                }
-            )
-        }*/
+         viewBinding.contentBook.rvServiceType.run {
+             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+             adapter = BookingFormServiceTypeAdapter(
+                 data = finalServiceList,
+                 context = context,
+                 itemClick = object : RvItemClick {
+                     override fun clickWithPosition(name: String, position: Int) {
+                         Log.e("book", "Select service is ${name.replace(" ", "")}")
+                         deliveryType = name
+                         when (name) {
+                             "Normal" ->
+                                 viewBinding.contentBook.acPickupRange.isEnabled = false
+                             "Express" ->
+                                 viewBinding.contentBook.acPickupRange.isEnabled = true
+                             "Suprefast" ->
+                                 viewBinding.contentBook.acPickupRange.isEnabled = true
+                         }
+                     }
+                 }
+             )
+         }
     }
-
 
     private fun getSubCategories(categoryId: String) {
         customViewModel.getAllSubCategories(categoryId)
@@ -909,7 +909,7 @@ class BookFragment :
 
         val arrayAdapter = ArrayAdapter(context!!, R.layout.single_text_view, subCategoryNames)
 
-        /*viewBinding.contentBook.acSubCategory.run {
+        viewBinding.contentBook.acSubCategory.run {
             setAdapter(arrayAdapter)
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -929,7 +929,7 @@ class BookFragment :
                     }
                 }
             })
-        }*/
+        }
     }
 
     private fun getAddressList() {
@@ -949,12 +949,12 @@ class BookFragment :
         }
     }
 
-    /*private fun setToolbar() {
+    private fun setToolbar() {
         viewBinding.incToolbar.toolbar.title = "Booking"
         viewBinding.incToolbar.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-    }*/
+    }
 
     //-------------------------------------------- Compose UI --------------------------------------
     @OptIn(ExperimentalMaterialApi::class)
@@ -987,7 +987,12 @@ class BookFragment :
             }, sheetContent = {
                 Log.e("book", addresses.toString())
                 A2ABottomSheetDialog(
-                    addresses = addresses,
+                    viewModel = viewModel,
+                    lifecycleOwner = viewLifecycleOwner,
+                    userId = appUtils.getUser()!!.id,
+                    navigateToAddNewAddressScreen = {
+                        findNavController().navigate(R.id.action_global_addNewAddressFragment)
+                    },
                     onAddressChange = { address ->
                         when (addressType) {
                             "pickup" -> pickupAddress = address
@@ -1105,7 +1110,7 @@ class BookFragment :
             AddressPicker(
                 icon = R.drawable.pickuplocation_icon,
                 title = "Pickup\nLocation",
-                fullName = fullName,
+                fullName = appUtils.getUser()!!.fullName,
                 address = pickUpAddress,
                 backgroundColor = MaterialTheme.colors.primaryVariant,
                 onClick = {
@@ -1118,11 +1123,15 @@ class BookFragment :
             AddressPicker(
                 icon = R.drawable.destination_icon,
                 title = "Destination\nLocation",
-                fullName = fullName,
+                fullName = appUtils.getUser()!!.fullName,
                 address = destinationAddress,
                 backgroundColor = MaterialTheme.colors.primary,
                 onClick = {
-                    onAddressTypeChange("destination")
+                    if (pickUpAddress.isEmpty())
+                        Toast.makeText(context, "First select pickup location", Toast.LENGTH_SHORT)
+                            .show()
+                    else
+                        onAddressTypeChange("destination")
                 }
             )
 

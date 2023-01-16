@@ -571,4 +571,46 @@ class UserRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getEstimateBooking(
+        userId: String,
+        pickupAddress: String,
+        destinationAddress: String,
+        category: String,
+        subCategory: String,
+        pickupRange: String,
+        weight: String,
+        width: String,
+        height: String,
+        length: String,
+        pickupType: String,
+        deliveryType: String,
+        scheduleTime: String,
+        scheduleDate: String,
+        videoRecording: String,
+        pictureRecording: String,
+        liveTemparature: String,
+        liveTracking: String
+    ): EstimateBookingModel {
+        return userApi.estimateBooking(
+            userId,
+            pickupAddress,
+            destinationAddress,
+            category,
+            subCategory,
+            pickupRange,
+            weight,
+            width,
+            height,
+            length,
+            pickupType,
+            deliveryType,
+            scheduleTime,
+            scheduleDate,
+            videoRecording,
+            pictureRecording,
+            liveTemparature,
+            liveTracking
+        )
+    }
 }

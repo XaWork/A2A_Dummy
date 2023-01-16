@@ -51,5 +51,13 @@ interface CustomApi {
     @GET("service-type")
     suspend fun serviceTypes(): ServiceTypeModel
 
+    @FormUrlEncoded
+    @POST("normal-timeslots")
+    suspend fun normalTimeslots(
+        @Field("schedule_date") scheduleDate: String,
+        @Field("destination_address") destinationAddress: String,
+        @Field("pickup_address") pickupAddress: String
+    ): NormalTimeslotModel
+
 
 }
