@@ -36,6 +36,31 @@ class EstimateBookingUseCase @Inject constructor(
     ): Flow<Resource<EstimateBookingModel>> = flow {
         emit(Resource.Loading(true))
         try {
+            if (pickupAddress.isEmpty())
+                emit(Resource.Error(message = "Select pickup address."))
+            if (destinationAddress.isEmpty())
+                emit(Resource.Error(message = "Select destination address."))
+            if (category.isEmpty())
+                emit(Resource.Error(message = "Select category."))
+            if (subCategory.isEmpty())
+                emit(Resource.Error(message = "Select sub category."))
+            if (pickupRange.isEmpty())
+                emit(Resource.Error(message = "Select pickup range."))
+            if (weight.isEmpty())
+                emit(Resource.Error(message = "Enter weight."))
+            if (width.isEmpty())
+                emit(Resource.Error(message = "Enter width"))
+            if (height.isEmpty())
+                emit(Resource.Error(message = "Enter height"))
+            if (length.isEmpty())
+                emit(Resource.Error(message = "Enter length"))
+            if (pickupAddress.isEmpty() || destinationAddress.isEmpty())
+                emit(Resource.Error(message = "Choose a service."))
+            if (scheduleDate.isEmpty())
+                emit(Resource.Error(message = "Select date."))
+            if (scheduleTime.isEmpty())
+                emit(Resource.Error(message = "Choose timeslot."))
+
             val response = userRepository.getEstimateBooking(
                 userId,
                 pickupAddress,

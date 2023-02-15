@@ -28,10 +28,10 @@ fun AddressItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = SpaceBetweenViewsAndSubViews)
-            .clip(RoundedCornerShape(CardCornerRadius))
-            .background(color = MaterialTheme.colors.MainBgColor)
             .clickable { onClick() },
-        elevation = CardElevation
+        elevation = CardElevation,
+        shape = RoundedCornerShape(CardCornerRadius),
+        backgroundColor = MaterialTheme.colors.CardBg
     ) {
         Column(
             modifier = Modifier

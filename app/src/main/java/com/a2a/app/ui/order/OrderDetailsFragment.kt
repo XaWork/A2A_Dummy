@@ -137,6 +137,7 @@ class OrderDetailsFragment : Fragment(R.layout.fragment_order_details) {
                 }
             },
             content = {
+                val paddingValue= it
                 Surface(
                     color = MaterialTheme.colors.MainBgColor,
                     modifier = Modifier

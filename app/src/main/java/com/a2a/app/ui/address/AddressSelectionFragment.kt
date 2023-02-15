@@ -79,7 +79,7 @@ class AddressSelectionFragment(
         }
 
         userId = appUtils.getUser()!!.id
-            viewModel.addressList(userId).observe(this) {
+        viewModel.addressList(userId).observe(this) {
                 when (it) {
                     is Status.Success -> {
                         bindingModel.loader.visibility = View.GONE
@@ -115,6 +115,8 @@ class AddressSelectionFragment(
        // saveListener.onSaved()
         dismiss()
     }
+
+
 }
 
 interface SaveAddressListener{

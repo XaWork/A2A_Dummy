@@ -8,10 +8,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun A2ACheckbox(
+    enabled: Boolean,
     checked: Boolean,
     onCheckedChange: () -> Unit,
     title: String,
@@ -21,13 +23,13 @@ fun A2ACheckbox(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = checked, onCheckedChange = { onCheckedChange() })
-        Text(text = title)
+        Checkbox(checked = checked, enabled = enabled, onCheckedChange = { onCheckedChange() })
+        Text(text = title, color = if (enabled) Color.Black else Color.LightGray)
     }
 }
 
 @Preview
 @Composable
 fun A2ACheckBoxPreview() {
-    A2ACheckbox(checked = true, onCheckedChange = { /*TODO*/ }, title = "Checkbox")
+    //A2ACheckbox(checked = true, onCheckedChange = { /*TODO*/ }, title = "Checkbox")
 }

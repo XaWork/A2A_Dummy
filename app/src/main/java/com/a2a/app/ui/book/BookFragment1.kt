@@ -28,9 +28,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import com.a2a.app.R
 import com.a2a.app.data.model.AllCategoryModel
+import com.a2a.app.data.model.AllSubCategoryModel
 import com.a2a.app.data.viewmodel.CustomViewModel
 import com.a2a.app.databinding.FragmentBook1Binding
 import com.a2a.app.ui.book.component.AddressPicker
@@ -75,26 +77,20 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
     fun BookScreen(
         viewModel: BookViewModel = hiltViewModel()
     ) {
-        val state = viewModel.state
+        val state = viewModel.state.value
+        Log.e("Book1", state.toString())
+        val context = LocalContext.current
 
         LaunchedEffect(key1 = state) {
-            Log.e("Book ", "BookScreen: ${state.value.isLoading}", )
-            if (state.value.isLoading) {
+            if (state.isLoading)
                 viewUtils.showLoading(parentFragmentManager)
+            if (!state.isLoading)
+                viewUtils.stopShowingLoading()
+            if (state.error != null) {
+                //viewUtils.showLongToast(viewModel.state.value.error!!)
+                //findNavController().popBackStack()
+                Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
             }
-            if (!state.value.isLoading)
-                viewUtils.stopShowingLoading()
-            if (state.value.error != null) {
-                viewUtils.stopShowingLoading()
-                Toast.makeText(context, state.value.error, Toast.LENGTH_SHORT).show()
-            }
-            if (state.value.addresses.isNotEmpty() ||
-                state.value.categories.isNotEmpty() ||
-                state.value.subCategories.isNotEmpty() ||
-                state.value.additionalService.isNotEmpty() ||
-                state.value.serviceTypes.isNotEmpty()
-            )
-                viewUtils.stopShowingLoading()
         }
 
         val bottomSheetScaffoldState =
@@ -103,47 +99,57 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
             rememberBottomSheetScaffoldState(bottomSheetState = bottomSheetScaffoldState)
         val scope = rememberCoroutineScope()
 
-        val addresses by remember {
+        var addressType by remember {
             mutableStateOf("")
         }
 
-        val pickupAddress by remember {
+        var pickupAddress by remember {
             mutableStateOf("")
         }
         var destinationAddress by remember {
             mutableStateOf("")
         }
-        var addressType = ""
-
-        BottomSheetScaffold(
-            scaffoldState = scaffoldState,
-            topBar = {
-                A2ATopAppBar(title = stringResource(R.string.booking)) {
-                    findNavController().popBackStack()
-                }
-            }, sheetContent = {
-                Log.e("book", addresses)
-                /*A2ABottomSheetDialog(
-                    viewModel = viewModel,
-                    lifecycleOwner = viewLifecycleOwner,
-                    userId = appUtils.getUser()!!.id,
-                    navigateToAddNewAddressScreen = {
-                        findNavController().navigate(R.id.action_global_addNewAddressFragment)
-                    },
-                    onAddressChange = { address ->
-                        when (addressType) {
-                            "pickup" -> pickupAddress = address
-                            "destination" -> destinationAddress = address
+        BottomSheetScaffold(scaffoldState = scaffoldState, topBar = {
+            A2ATopAppBar(title = stringResource(R.string.booking)) {
+                findNavController().popBackStack()
+            }
+        }, sheetContent = {
+            //Log.e("book", addresses)
+            A2ABottomSheetDialog(addressList = viewModel.state.value.addresses,
+                navigateToAddNewAddressScreen = {
+                    findNavController().navigate(R.id.action_global_addNewAddressFragment)
+                },
+                onAddressChange = { address ->
+                    Log.e(
+                        "Book Fragment 1 ",
+                        "Address change: $address\nAddress type is $addressType"
+                    )
+                    when (addressType) {
+                        "pickup" -> viewModel.onEvent(
+                            BookEvent.PickupAddressChanged(
+                                listOf(
+                                    address
+                                )
+                            )
+                        )
+                        "destination" -> {
+                            if (viewModel.state.value.pickupAddress[0].id == address.id)
+                                viewUtils.showShortToast("Pickup and Destination addresses must be different.")
+                            else
+                                viewModel.onEvent(
+                                    BookEvent.DestinationAddressChanged(
+                                        listOf(address)
+                                    )
+                                )
                         }
-                    },
-                    onClose = {
-                        scope.launch {
-                            bottomSheetScaffoldState.collapse()
-                        }
-                    })*/
-            },
-            sheetBackgroundColor = MaterialTheme.colors.CardBg,
-            sheetPeekHeight = 0.dp
+                    }
+                },
+                onClose = {
+                    scope.launch {
+                        bottomSheetScaffoldState.collapse()
+                    }
+                })
+        }, sheetBackgroundColor = MaterialTheme.colors.CardBg, sheetPeekHeight = 0.dp
         ) {
             Box(
                 modifier = Modifier
@@ -151,23 +157,18 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
                     .background(color = MaterialTheme.colors.MainBgColor),
                 contentAlignment = Alignment.Center
             ) {
-                ContentBook(
-                    pickUpAddress = pickupAddress,
-                    destinationAddress = destinationAddress,
+                ContentBook(viewModel = viewModel,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(it),
                     onAddressTypeChange = { type ->
-                        //getAddressList()
+                        viewModel.onEvent(BookEvent.GetAddresses)
                         addressType = type
                         scope.launch {
-                            if (bottomSheetScaffoldState.isCollapsed)
-                                bottomSheetScaffoldState.expand()
-                            else
-                                bottomSheetScaffoldState.collapse()
+                            if (bottomSheetScaffoldState.isCollapsed) bottomSheetScaffoldState.expand()
+                            else bottomSheetScaffoldState.collapse()
                         }
-                    }
-                )
+                    })
 
                 A2AButton(
                     title = stringResource(id = R.string.book_now),
@@ -176,7 +177,7 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
                 ) {
-
+                    viewModel.onEvent(BookEvent.EstimateBooking)
                 }
             }
         }
@@ -184,11 +185,12 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
 
     @Composable
     fun ContentBook(
-        pickUpAddress: String,
-        destinationAddress: String,
+        viewModel: BookViewModel,
         modifier: Modifier = Modifier,
         onAddressTypeChange: (String) -> Unit
     ) {
+        val state = viewModel.state.value
+
         val fullName by remember {
             mutableStateOf("")
         }
@@ -198,12 +200,12 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
         var category by remember {
             mutableStateOf("")
         }
-        val categories by remember {
-            mutableStateOf("state.value.categories.map { it.name }")
+        /*val categories by remember {
+            mutableStateOf(state.value.serviceTypes)
         }
         val subCategories by remember {
-            mutableStateOf("state.value.subCategories.map { it.name }")
-        }
+            mutableStateOf(state.value.subCategories.map { it.name })
+        }*/
         var subCategory by remember {
             mutableStateOf("")
         }
@@ -243,40 +245,39 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
             modifier = modifier
                 .fillMaxWidth()
                 .padding(
-                    start = ScreenPadding,
-                    end = ScreenPadding,
-                    top = ScreenPadding,
-                    bottom = 50.dp
+                    start = ScreenPadding, end = ScreenPadding, top = ScreenPadding, bottom = 50.dp
                 )
                 .verticalScroll(rememberScrollState())
         ) {
-            AddressPicker(
-                icon = R.drawable.pickuplocation_icon,
+            AddressPicker(icon = R.drawable.pickuplocation_icon,
                 title = "Pickup\nLocation",
                 fullName = appUtils.getUser()!!.fullName,
-                address = pickUpAddress,
+                address = if (state.pickupAddress.isEmpty())
+                    "" else
+                    state.pickupAddress[0].address,
                 backgroundColor = MaterialTheme.colors.primaryVariant,
                 onClick = {
                     onAddressTypeChange("pickup")
-                }
-            )
+                })
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
-            AddressPicker(
-                icon = R.drawable.destination_icon,
+            AddressPicker(icon = R.drawable.destination_icon,
                 title = "Destination\nLocation",
                 fullName = appUtils.getUser()!!.fullName,
-                address = destinationAddress,
+                address = if (state.destinationAddress.isEmpty())
+                    "" else
+                    viewModel.state.value.destinationAddress[0].address,
                 backgroundColor = MaterialTheme.colors.primary,
                 onClick = {
-                    if (pickUpAddress.isEmpty())
-                        Toast.makeText(context, "First select pickup location", Toast.LENGTH_SHORT)
-                            .show()
-                    else
-                        onAddressTypeChange("destination")
-                }
-            )
+                    if (state.pickupAddress.isEmpty())
+                        Toast.makeText(
+                            context,
+                            "First select pickup location",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    else onAddressTypeChange("destination")
+                })
 
             Spacer(modifier = Modifier.height(SpaceBetweenViews))
 
@@ -296,16 +297,16 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
                         width = 1.dp,
                         color = Color.Gray,
                         shape = RoundedCornerShape(CardCornerRadius)
-                    ),
-                verticalAlignment = Alignment.CenterVertically
+                    ), verticalAlignment = Alignment.CenterVertically
             ) {
-                A2ARadioButton(
-                    label = serviceType,
-                    addressType = serviceType,
-                    onRadioButtonSelected = {
-                        serviceType = it
-                    }
-                )
+                state.serviceTypes.forEach { service ->
+                    A2ARadioButton(
+                        label = service,
+                        addressType = state.serviceType,
+                        onRadioButtonSelected = {
+                            viewModel.onEvent(BookEvent.ServiceTypeChanged(it))
+                        })
+                }
             }
 
             Spacer(modifier = Modifier.height(SpaceBetweenViews))
@@ -319,58 +320,54 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
-            A2ADropDown(
-                value = category,
+            A2ADropDown(value = category,
                 label = stringResource(id = R.string.category),
                 onValueChange = {
-                    /* state.value.categories.forEach { category ->
-                         if (category.name == it) {
-                             viewModel.onEvent(BookEvent.GetSubCategories(category.id))
-                         }
-                     }
-                     category = it*/
+                    state.categories.forEach { category ->
+                        if (category.name == it) {
+                            viewModel.onEvent(BookEvent.GetSubCategories(category.id))
+                            //onCatChange(category.id)
+                        }
+                    }
+                    category = it
                 },
-                list = listOf()
-            )
+                list = state.categories.map { it.name })
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
-            A2ADropDown(
-                value = subCategory,
+            A2ADropDown(value = subCategory,
                 label = stringResource(id = R.string.sub_category),
                 onValueChange = {
                     subCategory = it
                 },
-                list = listOf()
-            )
+                list = state.subCategories.map { it.name })
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             A2ADropDown(
-                value = pickupRange,
+                value = state.pickupRange,
                 label = stringResource(id = R.string.pickup_range_km),
-                onValueChange = { pickupRange = it },
-                list = listOf()
+                onValueChange = { viewModel.onEvent(BookEvent.PickupRangeChanged(it)) },
+                list = state.pickupRanges.sorted().map { it.toString() }
             )
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
             ) {
                 A2ATextField(
-                    value = weight,
+                    value = state.weight,
                     label = stringResource(id = R.string.weight_kg),
-                    onValueChange = { weight = it },
+                    onValueChange = { viewModel.onEvent(BookEvent.WeightChanged(it)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
                 A2ATextField(
-                    value = width,
+                    value = state.width,
                     label = stringResource(id = R.string.width_cm),
-                    onValueChange = { width = it },
+                    onValueChange = { viewModel.onEvent(BookEvent.WidthChanged(it))},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.weight(1f)
                 )
@@ -379,21 +376,20 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
             ) {
                 A2ATextField(
-                    value = height,
+                    value = state.height,
                     label = stringResource(id = R.string.height_cm),
-                    onValueChange = { height = it },
+                    onValueChange = { viewModel.onEvent(BookEvent.HeightChanged(it)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(SpaceBetweenViewsAndSubViews))
                 A2ATextField(
-                    value = length,
+                    value = state.length,
                     label = stringResource(id = R.string.length_cm),
-                    onValueChange = { length = it },
+                    onValueChange = { viewModel.onEvent(BookEvent.LengthChanged(it))},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.weight(1f)
                 )
@@ -402,9 +398,9 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             A2ATextField(
-                value = remarks,
+                value = state.remarks,
                 label = stringResource(id = R.string.remarks),
-                onValueChange = { remarks = it },
+                onValueChange = { viewModel.onEvent(BookEvent.RemarksChanged(it)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             )
 
@@ -420,32 +416,36 @@ class BookFragment1 : Fragment(R.layout.fragment_book1) {
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             A2ACheckbox(
-                checked = videoRecording,
-                onCheckedChange = { videoRecording = !videoRecording },
+                enabled = state.additionalService.videoRecordingAvailable,
+                checked = viewModel.state.value.videoRecording,
+                onCheckedChange = { viewModel.onEvent(BookEvent.VideoRecordingChanged(!viewModel.state.value.videoRecording)) },
                 title = stringResource(id = R.string.video_recording_pd)
             )
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             A2ACheckbox(
-                checked = picture,
-                onCheckedChange = { picture = !picture },
+                enabled = state.additionalService.pictureRecordingAvailable,
+                checked = state.picture,
+                onCheckedChange = { viewModel.onEvent(BookEvent.PictureChanged(!state.picture)) },
                 title = stringResource(id = R.string.picture_pd)
             )
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             A2ACheckbox(
-                checked = liveGps,
-                onCheckedChange = { liveGps = !liveGps },
+                enabled = state.additionalService.liveGPSTrackingAvailable,
+                checked = state.liveGPS,
+                onCheckedChange = { viewModel.onEvent(BookEvent.LiveGPSChanged(!state.liveGPS)) },
                 title = stringResource(id = R.string.live_gps_tracking)
             )
 
             Spacer(modifier = Modifier.height(SpaceBetweenViewsAndSubViews))
 
             A2ACheckbox(
-                checked = liveTemperature,
-                onCheckedChange = { liveTemperature = !liveTemperature },
+                enabled = state.additionalService.liveTemperatureTrackingAvailable,
+                checked = state.liveTemperature,
+                onCheckedChange = { viewModel.onEvent(BookEvent.LiveTemperatureChanged(!state.liveTemperature)) },
                 title = stringResource(id = R.string.live_temperature_tracking)
             )
         }

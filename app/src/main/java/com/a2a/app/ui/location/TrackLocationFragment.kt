@@ -134,6 +134,8 @@ class TrackLocationFragment : Fragment(R.layout.fragment_track_location), OnMapR
     }
 
     fun decodePolyline(encoded: String): List<LatLng> {
+        val dd: Char = 'c'
+
         val poly = ArrayList<LatLng>()
         var index = 0
         val len = encoded.length

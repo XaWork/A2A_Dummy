@@ -1,7 +1,6 @@
 package com.a2a.app.domain.use_case.custom_use_case
 
 import com.a2a.app.common.Resource
-import com.a2a.app.data.model.AllCategoryModel
 import com.a2a.app.data.model.CheckCutOffTimeModel
 import com.a2a.app.data.repository.CustomRepository
 import kotlinx.coroutines.flow.Flow
@@ -19,12 +18,14 @@ class CutoffTimeCheckUseCase @Inject constructor(
     ): Flow<Resource<CheckCutOffTimeModel>> = flow {
         emit(Resource.Loading(true))
         try {
-            val response = customRepository.checkCutOffTime(startCity, endCity)
+            if (startCity == endCity)
+                emit(Resource.Error(message = "Pickup and Destination address should not be same."))
 
-            if (response.status == "success") {
+            val response = customRepository.checkCutOffTime(startCity, endCity)
+            if (response.status == "success" && response.result != null) {
                 emit(Resource.Success(response))
             } else {
-                emit(Resource.Error(message = response.message))
+                emit(Resource.Error(message = response.message.ifEmpty { "Something went wrong, Try again!" }))
             }
         } catch (e: IOException) {
             emit(Resource.Error(message = "Couldn't load data"))

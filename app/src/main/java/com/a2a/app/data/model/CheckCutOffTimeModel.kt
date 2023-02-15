@@ -55,3 +55,10 @@ data class CheckCutOffTimeModel(
         val video_recording: String
     )
 }
+
+data class PaidAdditionalServices(
+    val pictureRecordingAvailable: Boolean = false,
+    val videoRecordingAvailable: Boolean = false,
+    val liveGPSTrackingAvailable: Boolean = false,
+    val liveTemperatureTrackingAvailable: Boolean = false,
+)

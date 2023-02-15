@@ -41,8 +41,8 @@ interface CustomApi {
 
     @GET("cutofftime-check")
     suspend fun checkCutOffTime(
-        @Query("start-city") startCity: String,
-        @Query("end-city") endCity: String,
+        @Query("start_city") startCity: String,
+        @Query("end_city") endCity: String,
     ): CheckCutOffTimeModel
 
     @GET("offer-deal")

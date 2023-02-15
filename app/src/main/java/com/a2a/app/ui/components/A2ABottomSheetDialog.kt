@@ -21,6 +21,8 @@ import com.a2a.app.R
 import com.a2a.app.common.Status
 import com.a2a.app.data.model.AddressListModel
 import com.a2a.app.data.viewmodel.UserViewModel
+import com.a2a.app.ui.book.BookEvent
+import com.a2a.app.ui.book.BookViewModel
 import com.a2a.app.ui.book.component.AddressItem
 import com.a2a.app.ui.theme.CardBg
 import com.a2a.app.ui.theme.ScreenPadding
@@ -28,36 +30,11 @@ import com.a2a.app.ui.theme.SpaceBetweenViewsAndSubViews
 
 @Composable
 fun A2ABottomSheetDialog(
-    viewModel: UserViewModel,
-    userId: String,
-    lifecycleOwner: LifecycleOwner,
-    onAddressChange: (String) -> Unit,
+    addressList: List<AddressListModel.Result>,
+    onAddressChange: (AddressListModel.Result) -> Unit,
     navigateToAddNewAddressScreen: () -> Unit,
     onClose: () -> Unit
 ) {
-    var addressList by remember {
-        mutableStateOf<List<AddressListModel.Result>>(emptyList())
-    }
-    var loading by remember {
-        mutableStateOf(false)
-    }
-
-    viewModel.addressList(userId).observe(lifecycleOwner) { result ->
-        when (result) {
-            is Status.Loading -> {
-                loading = true
-            }
-            is Status.Success -> {
-                loading = false
-                addressList = result.value.result
-            }
-            is Status.Failure -> {
-                loading = false
-                onClose()
-            }
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,7 +85,7 @@ fun A2ABottomSheetDialog(
                             AddressItem(
                                 address = address,
                                 onClick = {
-                                    onAddressChange(address.address)
+                                    onAddressChange(address)
                                     onClose()
                                 })
                         }

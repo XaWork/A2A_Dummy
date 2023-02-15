@@ -10,13 +10,13 @@ import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun A2ATextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
     maxLines: Int = 1,
     singleLine: Boolean = true,
-    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,

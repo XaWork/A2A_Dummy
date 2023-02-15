@@ -957,7 +957,7 @@ class BookFragment :
     }
 
     //-------------------------------------------- Compose UI --------------------------------------
-    @OptIn(ExperimentalMaterialApi::class)
+    /*@OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun BookScreen() {
         val bottomSheetScaffoldState =
@@ -1303,5 +1303,5 @@ class BookFragment :
     @Composable
     fun BookScreenPreview() {
         BookScreen()
-    }
+    }*/
 }
